@@ -1,0 +1,748 @@
+#arrange button
+{
+  background: none;
+  border-radius: none;
+  border: 0;
+}
+
+/* FEED */
+
+#set-username
+{
+    position: absolute;
+    display: inline-block;
+    visibility: visible;
+    margin: 3px; /* simulate padding and border without affecting height and width */
+    font-family: 'Archivo Narrow', sans-serif;
+    color: grey;
+    font-size: 14px;
+    padding: 10px;
+}
+
+
+
+body
+{
+    /*background-image: url('/img/diagonal_waves.png');*/
+  background: #FCFCFC
+}
+
+#search-container
+{
+  display: inline-block;
+}
+
+#filter-container
+{
+  display: inline-block;
+}
+
+#go_home
+{
+  display: inline-block;
+}
+
+#site-of-this-space-container
+{
+  display: inline-block;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#messages
+{
+  padding-left: 20px;
+  height: 100%;
+}
+
+
+.current-user,
+#youElement
+{
+  transition: -webkit-transform 0.3s;
+  opacity: 0.01;
+}
+
+.element 
+{
+  width: 110px;
+  color: white;
+  font-size: 12px;
+  margin: 1px;
+  padding: 5px;
+  float: left;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+  opacity: 0.001;
+}
+
+.element.block-filter.message,
+.element.block-filter.person,
+.element.block-filter.event,
+.element.block-filter.space,
+.element.block-filter.object
+{
+  color: whitesmoke;
+}
+
+.element.pass-filter.message,
+.element.pass-filter.person,
+.element.pass-filter.event,
+.element.pass-filter.space,
+.element.pass-filter.object
+{
+  color: #222;
+  text-shadow:  0px 0px 3px rgba(0,0,0,1);
+}
+
+.element .space
+{
+  font-family: 'LeagueGothicRegular', "Impact", Charcoal, Arial Black, Gadget, Sans serif;
+}
+
+.element-controls .votes
+{
+  font-size: 14px;
+  margin: 2px;
+  padding:0;
+  display:inline-block;
+  font-family: Arial, Helvetica, sans-serif
+  float:right;
+} 
+
+.element-controls
+{
+  padding: 2px;
+  z-index: 4;
+  position: absolute;
+  top: 0px;
+  color: white;
+  right: 0px;
+}
+
+.show-add-tag-form
+{
+  min-height: 20px;
+  display: inline-block;
+  margin: 4px;
+}
+
+.add-tag
+{
+  display: inline-block;
+}
+
+.add-tag
+{
+  margin: 0px;
+}
+
+.add-tag input[type="text"]
+{
+  border:0;
+  border-radius: 0;
+  font-size: 11px;
+  height: 12px;
+  line-height: 16px;
+}
+
+.add-tag button
+{
+  height: 20px;
+  margin: 0px 0px 0px 4px;
+  padding: 0px 6px 0px 6px;
+  border-radius: 0;
+  background: white;
+  border: 0;
+}
+
+.tag-votes
+{
+  padding-left: 8px;
+}
+
+.tag-text
+{
+  font-weight: bold;
+}
+
+.element-pulse-trans
+{
+
+  opacity: 0.5;
+
+}
+
+.element-pulse-opaque
+{
+  opacity: 1.0;
+}
+
+.element-pulse-trans.large,
+.element-pulse-opaque.large
+{
+  opacity: 1.0;
+}
+
+
+.element-controls i
+{
+  height: 20px;
+  float:right;
+  margin:7px;
+  display:inline-block;
+}
+
+
+.element.large
+{
+  color: white;
+}
+
+.element.message.large
+{
+  color:white;
+  background: #A7DBD8;
+}
+
+.element.event.large
+{
+    color:white;
+  background: #571B0B;
+}
+
+.element.space.large
+{
+    color:white;
+  background: #C9EA0E;
+}
+
+.element.object.large
+{
+    color:white;
+  background: #F2EA38;
+}
+
+.element.person.large
+{
+    color:white;
+  background: #F38630;
+}
+
+.element.message
+{
+  color: #A7DBD8;
+}
+
+.element.event
+{
+  color: #571B0B;
+}
+
+.element.space
+{
+  color: #C9EA0E;
+}
+
+.element.object
+{
+  color: #F2EA38;
+}
+
+.element.person
+{
+  color: #F38630;
+}
+
+.element-controls .downvote
+{
+   margin-right: 15px;
+}
+
+
+/* LIGHT COLORS
+.element.message
+{
+  color: #F2F9F9;
+}
+
+.element.event
+{
+  color: #EAD8D2;
+}
+
+.element.space
+{
+  color: #F7F6CD;
+}
+
+.element.object
+{
+   color: #FDFBE7;
+}
+
+.element.person
+{
+  color: #FDFBE7;
+}
+*/
+
+
+/*  ELEMENT TYPES  */
+.element .text
+{
+  width: 106px;
+  font-family: 'Archivo Narrow', sans-serif;
+}
+
+.element.width2 .text
+{
+  width: 222px;
+}
+
+.element.person .text
+{
+  font-family: 'Crete Round', serif; 
+}
+
+.element.message .text
+{
+  /*font-family: 'Libre Baskerville', serif;*/
+  font-family: 'Old Standard TT', serif;
+}
+
+.element.event .text
+{
+  font-family: 'Dosis', sans-serif;
+}
+
+.element.object .text
+{
+  font-family: 'Archivo Narrow', sans-serif;
+}
+
+.element.space .text
+{
+  font-family: 'Cutive Mono', serif;
+}
+
+.element.message:hover
+{
+  background: #A7DBD8;
+}
+
+.element.event:hover
+{
+  background: #571B0B;
+}
+
+.element.space:hover
+{
+  background: #C9EA0E;
+}
+
+.element.object:hover
+{
+  background: #F2EA38;
+}
+
+.element.person:hover
+{
+  background: #F38630;
+} 
+
+
+
+.element.old
+{
+    color: whitesmoke;
+}
+
+
+
+.element.kindaold
+{
+    color: whitesmoke;
+}
+
+
+.element.old
+{
+    color: whitesmoke;
+}
+
+.date
+{
+  font-size:10px;
+  text-transform: uppercase;
+  font-weight:800;
+}
+
+
+.text
+{
+  
+  text-align:left;         
+  line-height:1;             
+  font-size:300%;
+  /* Remember to set the correct font weight if using fontface */
+  font-weight:400;
+}
+
+.resizeElement
+{
+  position:fixed;
+  top:8px;
+  right:0;
+  margin:8px;
+
+}
+
+#title
+{
+  font-family: 'Cutive Mono', serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 36px;
+  text-transform: none;
+  text-decoration: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 1l4;
+}
+
+#inputElement:hover
+{
+  color: black;
+}
+
+#inputElement.large
+{
+  background: whitesmoke;
+}
+
+#inputElement #plus
+{
+  margin: 15px;
+  text-align: center;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 100px;
+  text-transform: none;
+  text-decoration: none;
+  letter-spacing: 0em;
+  word-spacing: 0em;
+  line-height: 70px;
+}
+
+#users-in-this-space
+{
+  padding: 10px 0px 5px 0px;
+}
+
+#users-in-this-space span
+{
+  padding:5px 5px;
+  margin: 3px;
+}
+
+.user-in-this-space
+{
+  background: whitesmoke;
+}
+
+#error-message
+{
+  margin:5px 0px 2px 0px;
+}
+
+.element .text
+{
+  text-shadow: 1px 1px 1px rgba(255,255,255,1);
+}
+
+#name-of-this-space
+{
+  margin: 15px 0px 25px 20px;
+  font-size: 40px;
+  color: #333;
+  text-shadow: 2px 2px 0px rgba(255,255,255,1);
+}
+
+#name-of-this-space-container
+{
+  opacity
+}
+
+.element.message:hover,
+.element.event:hover,
+.element.space:hover,
+.element.object:hover,
+.element.group:hover,
+.element.person:hover
+{
+  color:white;
+}
+.element:hover .text,
+.element.large .text
+{
+  text-shadow: 2px 2px 0px rgba(255,255,255,0);
+}
+
+.element.message:hover
+{
+    background: #A7DBD8;
+}
+
+.element.event:hover
+{
+    background: #571B0B;
+}
+
+.element.space:hover
+{
+    background: #C9EA0E;
+}
+
+.element.object:hover
+{
+    background: #F2EA38;
+}
+
+.element.person:hover
+{
+    background: #F38630;
+}
+
+
+/*.element.message-comment:hover
+{
+    color: #A7DBD8;
+}
+
+.element.message-issue:hover
+{
+    color: #F38630;
+}
+
+.element.message-question:hover
+{
+    color: #2C2648;
+}
+
+.element.event:hover
+{
+    color: #571B0B;
+}
+
+.element.space:hover
+{
+    color: #C9EA0E;
+}
+
+.element.object:hover
+{
+    color: #F2EA38;
+}
+
+.element.person:hover
+{
+    color: #F38630;
+}
+
+.element.group:hover
+{
+    color: #F38630;
+}*/
+
+
+#usernames
+{
+    position: fixed;
+    left: 0%;
+    bottom:0%;
+    border: 1px solid #DDD;
+    padding: 10px 0px 0px 0px;
+    text-align: center; 
+    width: 200px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 0px 10px 0px 0px;
+    -webkit-box-shadow: #666 0px 2px 3px;
+    -moz-box-shadow: #666 0px 2px 3px;
+    box-shadow: #666 0px 2px 3px;
+    background: whiteSmoke;
+}
+
+#feedBroadcastContainer
+{
+    position: fixed;
+    width: 500px;
+    height: 30px;
+    bottom:0;
+    right:0;
+    padding: 10px;
+    background: whiteSmoke;
+    z-index: 3;
+}
+
+/* Start: Recommended Isotope styles */
+
+/**** Isotope Filtering ****/
+
+.isotope-item {
+  z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+  pointer-events: none;
+  z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+
+.isotope,
+.isotope .isotope-item {
+  -webkit-transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+      -ms-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+}
+
+.isotope {
+  -webkit-transition-property: height, width;
+     -moz-transition-property: height, width;
+      -ms-transition-property: height, width;
+       -o-transition-property: height, width;
+          transition-property: height, width;
+}
+
+/*.isotope .isotope-item {
+  -webkit-transition: -webkit-transform 0s;
+     -moz-transition:    -moz-transform 0s;
+      -ms-transition:     -ms-transform 0s;
+       -o-transition:      -o-transform 0s;
+          transition:         transform 0s;
+}
+
+
+/*.isotope .isotope-item {
+  -webkit-transition: opacity 2s;
+     -moz-transition: opacity 2s;
+      -ms-transition: opacity 2s;
+       -o-transition: opacity 2s;
+          transition: opacity 2s;
+}*/
+
+/*.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+      -ms-transition-property:     -ms-transform, opacity;
+       -o-transition-property:      -o-transform, opacity;
+          transition-property:         transform, opacity;
+}*/
+
+/*.isotope .isotope-item {
+  -webkit-transition-property: none;
+     -moz-transition-property:    none;
+      -ms-transition-property:     none;
+       -o-transition-property:       none;
+          transition-property:         none;
+}*/
+
+/*.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+      -ms-transition-property:     -ms-transform, opacity;
+       -o-transition-property:      -o-transform, opacity;
+          transition-property:         transform, opacity;
+}*/
+
+
+/* disable CSS transitions for containers with infinite scrolling*/
+/*.isotope {
+  -webkit-transition: none;
+     -moz-transition: none;
+      -ms-transition: none;
+       -o-transition: none;
+          transition: none;
+}*/
+
+/* The Magnificent Clearfix: nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+.element .text {
+  padding-top:2px;
+/*  left: 0.5em;
+  bottom: 1.6em;*/
+/*  font-size: 1.05em;*/
+}
+
+.variable-sizes .element.width2 { width: 232px; }
+
+.variable-sizes .element.height2 { height: 230px; }
+
+.variable-sizes .element.width2.height2 {
+
+}
+
+.element.large,
+.variable-sizes .element.large,
+.variable-sizes .element.large.width2.height2 {
+  width: 354px;
+  /*height: 350px;*/
+  z-index: 50;
+}
+
+/*
+.element {
+  margin: 5px 1%;
+  width: 18%;
+}
+
+.variable-sizes .element.width2 { width: 38%; }
+
+.element.large, 
+.variable-sizes .element.large, 
+.variable-sizes .element.large.width2.height2 {
+  width: 38%;
+  overflow-y:scroll;
+}*/
+
+#container {
+  padding: 5px 0;
+}
+
+.slabtexted .slabtext
+        {
+        display:-moz-inline-box;
+        display:inline-block;
+        white-space:nowrap;
+        }
+.slabtextinactive .slabtext
+        {
+        display:inline;
+        white-space:normal;
+        font-size:1em !important;
+        letter-spacing:inherit !important;
+        word-spacing:inherit !important;
+        *letter-spacing:0 !important;
+        *word-spacing:0 !important;
+        }
+.slabtextdone .slabtext
+        {
+        display:block;
+        }
+
+#you-as-user-in-this-space
+{
+  color: #222;
+
+}
