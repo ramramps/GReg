@@ -1,7 +1,9 @@
 var PackageModel = require('../lib/models').PackageModel
   , _ = require('underscore')
-  , error = require('../lib/error_response');
+  , error = require('../lib/error')
+  , packages = require('../lib/packages')
 
+// TODO: validation for all data
 
 exports.byId = function(req, res) {
 
@@ -35,40 +37,42 @@ exports.all = function(req, res) {
     return pkgs;
 
   });
+
 };
 
 // not implemented
 exports.download = exports.byId;
 
 // requires authentication
-
 exports.add = function(req, res) {
 
   var pkg = req.body;
   console.log('Adding pkg: ' + JSON.stringify(pkg));
 
-  // create the object
-  var instance = new PackageModel({
-    type: type  
-    , creator: socket.user_id
-    , text: text
-    , site: socket.site_id
-  });
-  
-  // if (public_space) {
-  //   Search.add( text, type, [], instance._id, socket.site_id );
-  // }
-
-  instance.save( function(err){  
-
-    if (err)
-    {
-      console.error(err);
-      callback({success: false, errornum: 3, message: 'Database error writing the space'});
-      return
+  packages.add(package_data, function(err) {
+    if (err) {
+      res.send('Failed to add the package data');
+      return;
     }
 
-    callback(instance);
+    res.send('Successfully added package data');
+
+  });
+
+}
+
+exports.add_version = function(req, res) {
+
+  var pkg = req.body;
+  console.log('Adding pkg: ' + JSON.stringify(pkg));
+
+  packages.add(package_data, function(err) {
+    if (err) {
+      res.send('Failed to add the package data');
+      return;
+    }
+
+    res.send('Successfully added package data');
 
   });
 
@@ -79,7 +83,6 @@ exports.update = function(req, res) {
   var pkg = req.body;
   console.log('Updating pkg: ' + id);
   res.send({thing: 'hi'});
-
 }
 
 exports.remove = function(req, res) {
@@ -89,6 +92,7 @@ exports.remove = function(req, res) {
 }
 
 exports.populateDB = function() {
+
 
 
 
