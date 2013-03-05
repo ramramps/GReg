@@ -3,22 +3,22 @@ var PackageModel = require('../lib/models').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
 
-// TODO: validation for all data
 
 exports.byId = function(req, res) {
 
   var id = req.params.id;
   console.log('Retrieving pkg: ' + id);
 
-  PackageModel.findById( id, function(err, pkg) {
+  PackageModel.findOne( {id: id}, function(err, pkg) {
 
-    if ( err || !pkg )
-    {
-      res.send( error.create("Could not find package") );
+    if ( err || !pkg ) {
+      console.log('Could not find pkg')
+      console.log(err);
+      res.send( error.fail("Could not find package") );
+      return;
     }
 
-    // we want to populate the most recent version, get its innards
-
+    console.log('Sending pkg')
     return res.send( pkg );
 
   });
@@ -29,19 +29,20 @@ exports.all = function(req, res) {
 
   PackageModel.find( {}, function(err, pkgs) {
 
-    if ( err || !pkg )
+    if ( err || !pkgs )
     {
-      res.send( error.create("There are no packages") );
+      res.send( error.fail("There are no packages") );
+      return;
     }
 
-    return pkgs;
+    return res.send( pkgs );
 
   });
 
 };
 
 // not implemented
-exports.download = exports.byId;
+exports.download = exports.byId; // this gets both the package and its dependencies
 
 // requires authentication
 exports.add = function(req, res) {
@@ -49,13 +50,9 @@ exports.add = function(req, res) {
   var pkg = req.body;
   console.log('Adding pkg: ' + JSON.stringify(pkg));
 
-  packages.add(package_data, function(err) {
-    if (err) {
-      res.send('Failed to add the package data');
-      return;
-    }
+  packages.save_new_pkg(pkg, function(err) {
 
-    res.send('Successfully added package data');
+    res.send(err);
 
   });
 
@@ -66,7 +63,8 @@ exports.add_version = function(req, res) {
   var pkg = req.body;
   console.log('Adding pkg: ' + JSON.stringify(pkg));
 
-  packages.add(package_data, function(err) {
+  packages.add(req, package_data, function(err) {
+
     if (err) {
       res.send('Failed to add the package data');
       return;

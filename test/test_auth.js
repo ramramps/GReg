@@ -3,19 +3,17 @@ var request = require('supertest')
   , mocha = require('mocha')
   , request = request('http://localhost:8000');
 
-describe('POST /login', function(){
+describe('POST /', function(){
 
   it('should respond with json', function(done){
 
-      request
-        .get('/login')
-        .auth('tobi', 'learnboost')
-        .end(function(res){
-          res.status.should.equal(200);
-          done();
-        });
+    request
+      .get('/login')
+      .auth('test','e0jlZfJfKS')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
 
-  });
+  })
 
 });
 

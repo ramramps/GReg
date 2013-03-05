@@ -3,7 +3,10 @@ var express = require('express')
   , path = require('path')
   , mongoose = require('mongoose')
   , routes = require('./routes')
-  , packages = require('./routes/packages');
+  , packages = require('./routes/packages')
+  , passport = require('passport')
+  , users = require('./lib/users')
+  , auth = require('./lib/auth');
 
 ////////////////////////
 // Mongo
@@ -23,13 +26,15 @@ var express = require('express')
 // Config
 ////////////////////////
 
-  app.configure(function () {
-      app.set('views', __dirname + '/views')
-      app.set('view engine', 'jade')
-      app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
-      app.use(app.router)
-      app.use(express.bodyParser());
-      app.use(express.static(path.join(__dirname, 'public')))
+  app.configure(function() {
+    app.use(express.logger());
+    app.set('views', __dirname + '/views')
+    app.set('view engine', 'jade')
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(passport.initialize());
+    app.use(app.router);
+    app.use(express.static(path.join(__dirname, 'public')));
   });
 
 ////////////////////////
@@ -40,10 +45,22 @@ var express = require('express')
   app.get('/pkg', packages.all );
   app.get('/pkg/:id', packages.byId );
   app.get('/pkg-download/:id', packages.download );
-  app.post('/pkg', packages.add);
-  app.put('/pkg/:id', packages.update);
-  app.delete('/pkg/:id/:version', packages.remove);
 
+  app.post('/pkg', passport.authenticate('basic', { session: false }), packages.add);
+  app.put('/pkg/:id', passport.authenticate('basic', { session: false }), packages.update);
+  app.delete('/pkg/:id/:version', passport.authenticate('basic', { session: false }), packages.remove);
+
+  // for testing purposes, note: no session support
+  app.get('/login', passport.authenticate('basic', { session: false }),
+  function(req, res){
+   res.json({ username: req.user.username });
+  });
+
+////////////////////////
+// Debug
+////////////////////////
+
+  users.initDebugUser();
 
 ////////////////////////
 // Server
