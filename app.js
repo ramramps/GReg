@@ -44,11 +44,13 @@ var express = require('express')
   app.get('/', routes.index);
   app.get('/pkg', packages.all );
   app.get('/pkg/:id', packages.byId );
-  app.get('/pkg-download/:id', packages.download );
-
+  app.get('/pkg-dl/:id', packages.download );
   app.post('/pkg', passport.authenticate('basic', { session: false }), packages.add);
-  app.put('/pkg/:id', passport.authenticate('basic', { session: false }), packages.update);
+  app.put('/pkg', passport.authenticate('basic', { session: false }), packages.add_version);
   app.delete('/pkg/:id/:version', passport.authenticate('basic', { session: false }), packages.remove);
+
+  app.get('/user/:name', users.byName );
+  app.put('/user/:name', passport.authenticate('basic', { session: false }), users.update );
 
   // for testing purposes, note: no session support
   app.get('/login', passport.authenticate('basic', { session: false }),

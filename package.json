@@ -10,7 +10,8 @@
     "passport": "~0.1.16",
     "passport-twitter": "0.1.4",
     "passport-local": "0.1.6",
-    "passport-http": "0.2.1"
+    "passport-http": "0.2.1",
+    "async": "~0.2.6"
   },
   "devDependencies": {
     "grunt-simple-mocha": "0.3.2",

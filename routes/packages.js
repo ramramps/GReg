@@ -48,12 +48,9 @@ exports.download = exports.byId; // this gets both the package and its dependenc
 exports.add = function(req, res) {
 
   var pkg = req.body;
-  console.log('Adding pkg: ' + JSON.stringify(pkg));
 
-  packages.save_new_pkg(pkg, function(err) {
-
-    res.send(err);
-
+  packages.save_new_pkg(req, pkg, function(result) {
+    res.send(result);
   });
 
 }
@@ -61,26 +58,11 @@ exports.add = function(req, res) {
 exports.add_version = function(req, res) {
 
   var pkg = req.body;
-  console.log('Adding pkg: ' + JSON.stringify(pkg));
 
-  packages.add(req, package_data, function(err) {
-
-    if (err) {
-      res.send('Failed to add the package data');
-      return;
-    }
-
-    res.send('Successfully added package data');
-
+  packages.save_new_pkg_version(req, pkg, function(result) {
+    res.send(result);
   });
 
-}
-
-exports.update = function(req, res) {
-  var id = req.params.id;
-  var pkg = req.body;
-  console.log('Updating pkg: ' + id);
-  res.send({thing: 'hi'});
 }
 
 exports.remove = function(req, res) {
