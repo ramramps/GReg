@@ -2,7 +2,7 @@ var request = require('supertest')
   , express = require('express')
   , mocha = require('mocha')
   , should = require('should')
-  , request = request('http://localhost:8000');
+  , request = request('http://localhost:80');
 
 
 // test user_id

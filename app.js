@@ -79,7 +79,7 @@ var express = require('express')
 // Server
 ////////////////////////
 
-  var port = process.env.PORT || 8000;
+  var port = process.env.PORT || 80;
   app.listen(port);
   console.log('Starting server on port: ' + port);
 
