@@ -1,7 +1,10 @@
 var PackageModel = require('../lib/models').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
-  , mongoose = require('mongoose');
+  , mongoose = require('mongoose')
+  , search = require('../lib/search')
+  , _ = require('underscore');
+
 
 /**
  * Lookup a package by id
@@ -18,8 +21,6 @@ exports.by_id = function(req, res) {
   PackageModel.findById(id, function(err, pkg) {
 
     if ( err || !pkg ) {
-      console.log('Could not find pkg')
-      console.log(err);
       res.send( error.fail("Could not find package") );
       return;
     }
@@ -41,21 +42,24 @@ exports.by_id = function(req, res) {
 
 exports.all = function(req, res) {
 
-  PackageModel.find( {}, function(err, pkgs) {
+  PackageModel
+  .find({})
+  .populate('maintainers', 'username')
+  .populate('versions.direct_dependency_ids', 'name')
+  .populate('versions.full_dependency_ids', 'name')
+  .exec(function (err, pkgs) {
 
-    if ( err || !pkgs )
-    {
+    if ( err || !pkgs ) {
       res.send( error.fail("There are no packages") );
       return;
     }
+    console.dir(pkgs)
 
     var data = error.success_with_content('Found packages', pkgs);
     return res.send( data );
-
-  });
+  })
 
 };
-
 
 /**
  * Lookup all packages with a particular engine
@@ -113,6 +117,56 @@ exports.by_engine_and_name = function(req, res) {
 
 };
 
+/**
+ * Search for a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.search = function(req, res) {
+
+  var q = req.params.query;
+
+  if (!q) {
+    exports.all(req, res);
+    return;
+  }
+
+  search.pkg_search(q, function(err, data) {
+
+    if (err) {
+      res.send(error.fail('Something wrong with the pkg_search'));
+      return;
+    }
+
+    if (data.Body.hits.found === 0) {
+      res.send( error.success_with_content( "Succeeded", [] ) );
+      return;
+    }
+
+    var ids = [];
+    _.each( data.Body.hits.hit, function(id){
+
+      ids.push(id.id);
+
+    });
+
+    packages.get_pkg_list(ids, function(err, pkgs) {
+
+      if (err) {
+        res.send(err);
+        return;
+      }
+
+      res.send(error.success_with_content('Search succeeded', pkgs));
+
+    });
+
+  });
+
+}
 
 /**
  * Download a package (along with all its dependencies)
