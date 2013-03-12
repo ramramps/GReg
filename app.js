@@ -25,38 +25,26 @@ var express = require('express')
       }
   })
 
-// search.add( '1029ud23234li24', { keywords:['thing','peter'], name: 'poodle-town', group: 'poodles', engine: 'dynamo'}, function(err, data) {
-//   if (err) {
-//     console.log(err);
-//     console.log('Things arent so great with adding');
-//     return;
-//   }
-    
-//   console.log(data);
-//   console.log('Added new item to search');
-
-// });
-
 ////////////////////////
 // Config
 ////////////////////////
 
   app.configure(function() {
     app.use(express.logger());
-    app.set('views', __dirname + '/views')
+    app.set('views', __dirname + '/views');
     app.set('view engine', 'jade')
+    app.engine('html', require('ejs').renderFile);
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(passport.initialize());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
+
   });
 
 ////////////////////////
 // Routing
 ////////////////////////
-
-  app.get('/', function(res, req) { res.send('index.html'); } );
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg/', pkg.all );

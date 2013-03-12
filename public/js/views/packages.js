@@ -38,7 +38,7 @@
       });
 
       var options = {
-          valueNames: [ 'engine', 'name', 'keywords', 'group', 'description', 'maintainers' ]
+          valueNames: [ 'engine', 'votes', 'name', 'keywords', 'group', 'description', 'maintainers' ]
       };
 
       this.list = new List('app', options);

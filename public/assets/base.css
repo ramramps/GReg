@@ -13,10 +13,22 @@ body { margin: 0 }
 }
 
 #search_container { 
+	color: white;
 	top: 0;
 	height: 65px;
 	background: black;
 	width: 100%;
+}
+
+#sorting {
+	padding-left: 20px;
+	padding-top: 20px;
+}
+
+#search_container span { 
+	font-weight: 100;
+	padding-top: 50px;
+	margin-left: 20px;
 }
 
 .package {
@@ -45,7 +57,7 @@ body { margin: 0 }
 }
 
 .package h2 {
-	font-size: 30px;
+	font-size: 25px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
@@ -57,7 +69,9 @@ body { margin: 0 }
 
 .search {
 	font-family: 'Titillium Web', sans-serif;
-	font-weight: 400;
+	color: black;
+	font-weight: 200;
+	float: left;
 	font-size: 20px;
 	padding: 5px;
 	margin: 10px;
