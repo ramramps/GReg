@@ -59,13 +59,10 @@ var express = require('express')
   app.get('/', function(res, req) { res.send('index.html'); } );
 
   app.get('/pkgs', pkg.all );
-  app.get('/pkg_id/:id', pkg.by_id );
+  app.get('/pkg/', pkg.all );
+  app.get('/pkg/:id', pkg.by_id );
   app.get('/pkg_engine/:engine', pkg.by_engine );
   app.get('/pkg_engine_name/:engine/:name', pkg.by_engine_and_name );
-  // app.get('/pkg_group/:group/:name', pkg.byEngineAndPkgName );
-  // app.get('/pkg_engine_query/:engine/:query', pkg.byEngineAndPkgName );
-  
-  app.get('/pkg_download/:id', pkg.download );
 
   // package search
   app.get('/pkg_search/', pkg.all );
@@ -74,12 +71,10 @@ var express = require('express')
   app.post('/pkg', passport.authenticate('basic', { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate('basic', { session: false }), pkg.add_version);
 
-  app.delete('/pkg/:id/:version', passport.authenticate('basic', { session: false }), pkg.remove);
+  app.delete('/pkg/:id', passport.authenticate('basic', { session: false }), pkg.remove);
 
   app.get('/user_name/:name', user.by_name );
-  app.get('/user_id/:id', user.by_id );
-  // app.put('/user_name/:name', passport.authenticate('basic', { session: false }), users.update_name );
-  // app.put('/user_name/:name', passport.authenticate('basic', { session: false }), users.update_name );
+  app.get('/user/:id', user.by_id );
 
   // for testing purposes, note: no session support
   app.get('/login', passport.authenticate('basic', { session: false }),

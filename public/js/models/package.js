@@ -18,7 +18,8 @@ var app = app || {};
       maintainers: [],
       version_deps: [],
       full_dl_deps: [],
-      versions: []
+      versions: [],
+      used_by: []
     },
 
     urlRoot: '/pkg/',
@@ -51,7 +52,6 @@ var app = app || {};
 
       }
 
-      console.log(stuff.version_deps);
       return stuff;
     }
 

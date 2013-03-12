@@ -16,7 +16,6 @@
     query: "",
 
     parse : function(resp) {
-
       return resp.content;
     },
 

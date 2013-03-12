@@ -1,1 +1,76 @@
 .highlight { background-color: yellow }
+
+/* http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/ */
+body { margin: 0 }
+.row, .col { overflow: hidden; position: absolute; }
+.row { left: 0; right: 0; }
+.col { top: 0; bottom: 0; }
+.scroll-x { overflow-x: auto; }
+.scroll-y { overflow-y: auto; }
+
+#app {
+	font-family: 'Titillium Web', sans-serif;
+}
+
+#search_container { 
+	top: 0;
+	height: 65px;
+	background: black;
+	width: 100%;
+}
+
+.package {
+	font-weight: 100;
+	padding: 10px;
+	border-left: solid 4px grey;
+	background: whitesmoke;
+	border-bottom: solid 1px #DDD;
+}
+
+.package:hover {
+	background: white;
+	border-left: solid 4px yellow;
+}
+
+.package span {
+	color: grey;
+}
+
+.package p {
+	margin: 0;
+}
+
+.package ul {
+	list-style: none;
+}
+
+.package h2 {
+	font-size: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.package strong {
+	font-size: 8px;
+	text-transform: uppercase;
+}
+
+.search {
+	font-family: 'Titillium Web', sans-serif;
+	font-weight: 400;
+	font-size: 20px;
+	padding: 5px;
+	margin: 10px;
+ 	width: 50%;
+ 	height: 30px;
+}
+
+.list {
+	top: 65px;
+	bottom: 0px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}

@@ -9,7 +9,7 @@
 
     // Instead of generating a new element, bind to the existing skeleton of
     // the App already present in the HTML.
-    el: '#search_container',
+    el: '#app',
 
     // Delegated events for creating new items, and clearing completed ones.
     events: {
@@ -41,7 +41,7 @@
           valueNames: [ 'engine', 'name', 'keywords', 'group', 'description', 'maintainers' ]
       };
 
-      this.list = new List('search_container', options);
+      this.list = new List('app', options);
 
     },
 

@@ -7,12 +7,22 @@
 
   app.PackageView = Backbone.View.extend({
 
-    tagName: 'li',
+    tagName: 'div',
+
+    className: 'package',
 
     template: _.template( $('#item-template').html() ),
 
     events: {
-      // 'click .toggle': 'togglecompleted', // NEW
+      'click .showdeps': 'toggleDeps', 
+    },
+
+    toggleDeps: function(event) {
+
+      this.$('.deps-container').toggle();
+      this.$('.full_deps-container').toggle();
+      event.preventDefault();
+
     },
 
     initialize: function() {

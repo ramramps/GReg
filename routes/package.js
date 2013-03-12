@@ -21,12 +21,19 @@ exports.by_id = function(req, res) {
   PackageModel.findById(id, function(err, pkg) {
 
     if ( err || !pkg ) {
-      res.send( error.fail("Could not find package") );
-      return;
+      try {
+        return res.send( error.fail("Could not find package") );
+      } catch (exception) {
+        return console.log('Log error');
+      }
     }
 
     var data = error.success_with_content('Found package', pkg);
-    return res.send( data );
+    try {
+      return res.send(result);
+    } catch (exception) {
+      return console.log('Log error');
+    }
 
   });
 
@@ -47,16 +54,24 @@ exports.all = function(req, res) {
   .populate('maintainers', 'username')
   .populate('versions.direct_dependency_ids', 'name')
   .populate('versions.full_dependency_ids', 'name')
+  .populate('used_by', 'name')
   .exec(function (err, pkgs) {
 
     if ( err || !pkgs ) {
-      res.send( error.fail("There are no packages") );
-      return;
+      try {
+        return res.send( error.fail("There are no packages") );
+      } catch (exception) {
+        return console.log('Log error');
+      }
     }
-    console.dir(pkgs)
 
     var data = error.success_with_content('Found packages', pkgs);
-    return res.send( data );
+    try {
+      return res.send( data );
+    } catch (exception) {
+      return console.log('Log error');
+    }
+
   })
 
 };
@@ -156,8 +171,7 @@ exports.search = function(req, res) {
     packages.get_pkg_list(ids, function(err, pkgs) {
 
       if (err) {
-        res.send(err);
-        return;
+        return res.send(err);
       }
 
       res.send(error.success_with_content('Search succeeded', pkgs));
@@ -167,16 +181,6 @@ exports.search = function(req, res) {
   });
 
 }
-
-/**
- * Download a package (along with all its dependencies)
- *
- * @param {Object} HTTP request 
- * @param {Object} HTTP response
- * @api public
- */
-
-exports.download = exports.by_id; // this gets both the package and its dependencies
 
 /**
  * Add a new package
@@ -191,7 +195,11 @@ exports.add = function(req, res) {
   var pkg = req.body;
 
   packages.save_new_pkg(req, pkg, function(result) {
-    res.send(result);
+    try {
+      return res.send(result);
+    } catch (exception) {
+      return console.log('Log error');
+    }
   });
 
 }
@@ -209,7 +217,11 @@ exports.add_version = function(req, res) {
   var pkg = req.body;
 
   packages.save_new_pkg_version(req, pkg, function(result) {
-    res.send(result);
+    try {
+      return res.send(result);
+    } catch (exception) {
+      return console.log('Log error');
+    }
   });
 
 }
