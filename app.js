@@ -50,7 +50,7 @@ var express = require('express')
   app.get('/pkg/', pkg.all );
   app.get('/pkg/:id', pkg.by_id );
   app.get('/pkg_engine/:engine', pkg.by_engine );
-  app.get('/pkg_engine_name/:engine/:name', pkg.by_engine_and_name );
+  app.get('/pkg_engine/:engine/:name', pkg.by_engine_and_name );
 
   // package search
   app.get('/pkg_search/', pkg.all );
@@ -58,8 +58,6 @@ var express = require('express')
 
   app.post('/pkg', passport.authenticate('basic', { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate('basic', { session: false }), pkg.add_version);
-
-  app.delete('/pkg/:id', passport.authenticate('basic', { session: false }), pkg.remove);
 
   app.get('/user_name/:name', user.by_name );
   app.get('/user/:id', user.by_id );

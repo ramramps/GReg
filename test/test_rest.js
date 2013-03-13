@@ -36,11 +36,14 @@ var groups = ['global', 'the cool group', 'cool kidz', 'adsk'];
 var pkg_datas = [];
 var ds_pkg_datas = [];
 
+// This code attempts to insert a large number of elements into the package manager database.
+// It has the side effect of actually populating the database with these elements, so be wary of
+// when and how you use it.
 describe('/pkg', function(){
 
   var j = 0;
 
-  for (var i = 0; i < birds.length; i++) {
+  for (var i = 0; i < 5; i++) {
 
     var pkg_keywords = [];
     var num_keywords = Math.floor( Math.random() * 6 );
@@ -112,88 +115,6 @@ describe('/pkg', function(){
 
 });
 
-describe('/pkg', function(){
-
-  var j = 0;
-
-  for (var i = 0; i < reptiles.length; i++) {
-
-    var pkg_keywords = [];
-    var num_keywords = Math.floor( Math.random() * 6 );
-
-    for (j = 0; j < num_keywords; j++) {
-      pkg_keywords.push( keywords[ Math.floor( Math.random() * keywords.length )] );
-    }
-
-    pkg_datas.push( {
-        name: reptiles[i]
-      , description: pkg_keywords.join(' ') + ' ' + 'package'
-      , keywords: pkg_keywords
-      , version: '0.0.1'
-      , engine: 'dynamo'
-      , group: groups[Math.floor(Math.random() * 4)]
-      , engine_version: '0.3.1'
-      , license: 'MIT'
-      , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-    });
-
-    // add some dependencies
-    var num_deps = 2;
-
-    if ( i >= num_deps ) {
-      var deps = [];
-      var deps_map = {};
-      var name = "";
-      
-      // search for few dependencies, making sure there are no dups
-      while( deps.length < num_deps ) {
-        name = pkg_datas[ Math.floor( Math.random() * i ) ].name;
-
-        if ( deps_map[name] === undefined ){
-          deps.push(name);
-          deps_map[name] = 1;
-        }
-        
-      }
-      
-      // define the dependencies array
-      pkg_datas[i].dependencies = [];
-
-      for (var k = 0; k < num_deps; k++) {
-        pkg_datas[i].dependencies.push( { name: deps[k], version: "0.0.1", engine: "dynamo" } )
-      }
-    
-    }
-
-    it('POST should respond with success json', (function(pkg_in) { return (function(done){
-
-      request
-        .post('/pkg')
-        .auth('test','e0jlZfJfKS')
-        .set('Content-Type', 'application/json')
-        .send(pkg_in)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end(function(err, res){
-          if (err)  return done(err);
-
-          if (res.body.success === false) {
-            console.log('FAILURE')
-            console.log(res.body);
-          }
-
-          should.equal(res.body.success, true);
-          new_version_correct(pkg_in, done);
-
-        });
-
-    }) })(pkg_datas[i]) );
-
-  }
-
-});
-
 function increment_version(version) {
 
   var split_version = version.split('.')
@@ -221,6 +142,7 @@ function new_version_correct(pkg_data, done) {
       if (err) 
         return done(err);
       should.equal(res.body.success, true);
+      pkg_data._id = res.body.contents._id;
       new_version_fail(pkg_data, done);
     });
 }
@@ -258,36 +180,35 @@ function lookup_success( pkg_id, done) {
 
 }
 
+describe('GET /pkg_search/:query', function(){
 
-// describe('GET /pkg_search/:query', function(){
+  it('should respond with data as this is a valid query', function(done){
+    request
+      .get('/pkg_search/cool')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res){
+        if (err) return done(err);
+        should.equal(res.body.success, true);
+        done();
+      });
+  });
 
-//   it('should respond with data as this is a valid query', function(done){
-//     request
-//       .get('/pkg_search/cool')
-//       .set('Accept', 'application/json')
-//       .expect('Content-Type', /json/)
-//       .expect(200)
-//       .end(function(err, res){
-//         if (err) return done(err);
-//         should.equal(res.body.success, true);
-//         done();
-//       });
-//   });
+  it('should respond with data as this is a valid query', function(done){
+    request
+      .get('/pkg_search/')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res){
+        if (err) return done(err);
+        should.equal(res.body.success, true);
+        done();
+      });
+  });
 
-//   it('should respond with data as this is a valid query', function(done){
-//     request
-//       .get('/pkg_search/')
-//       .set('Accept', 'application/json')
-//       .expect('Content-Type', /json/)
-//       .expect(200)
-//       .end(function(err, res){
-//         if (err) return done(err);
-//         should.equal(res.body.success, true);
-//         done();
-//       });
-//   });
-
-// });
+});
 
 // test user_id
 // describe('GET /user/:id', function(){
