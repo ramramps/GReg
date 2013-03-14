@@ -9,7 +9,8 @@ var express = require('express')
   , users = require('./lib/users')
   , auth = require('./lib/auth')
   , search = require('./lib/search')
-  , error = require('./lib/error');
+  , error = require('./lib/error')
+  , request = require('superagent');
 
 ////////////////////////
 // Mongo
@@ -61,6 +62,23 @@ var express = require('express')
 
   app.get('/user_name/:name', user.by_name );
   app.get('/user/:id', user.by_id );
+
+  app.get('/auth/', function(req, res) {
+
+    console.log(req.headers.authorization);
+
+    var url = 'https://accounts-staging.autodesk.com/api/oauth/v1/ValidateAuthorization?requestUrl=10.0.0.6&httpMethod=GET&responseFormat=json';
+
+    request
+    .post(url)
+    .set('authorization', req.headers.authorization )
+    .set('Accept', 'application/json')
+    .end(function(res2){
+      console.log(res2);
+      res.send(res2.body);
+    });
+    
+  });
 
   // for testing purposes, note: no session support
   app.get('/login', passport.authenticate('basic', { session: false }),

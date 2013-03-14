@@ -2,7 +2,7 @@ var request = require('supertest')
   , express = require('express')
   , mocha = require('mocha')
   , should = require('should')
-  , request = request('http://localhost:8000');
+  , request = request('http://localhost:80');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
