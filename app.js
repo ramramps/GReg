@@ -7,7 +7,8 @@ var express = require('express')
   , passport = require('passport')
   , oxygen = require('./lib/oxygen')
   , user = require('./routes/user')
-  , users = require('./lib/users');
+  , users = require('./lib/users')
+  , error = require('./lib/error')
 
 ////////////////////////
 // DB
@@ -45,7 +46,7 @@ var express = require('express')
 
   var auth_type = "oxygen";
 
-  app.get('/pkgs', passport.authenticate(auth_type, { session: false }), pkg.all );
+  app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
   app.get('/pkg/:id', pkg.by_id );
   app.get('/pkg_engine/:engine', pkg.by_engine );
@@ -56,6 +57,10 @@ var express = require('express')
 
   app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
+
+  app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
+    res.send(error.success("You are logged in."))
+  });
 
   app.get('/user_name/:name', user.by_name );
   app.get('/user/:id', user.by_id );
