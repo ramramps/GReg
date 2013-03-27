@@ -21,16 +21,17 @@ exports.by_id = function(req, res) {
   PackageModel.findById(id, function(err, pkg) {
 
     if ( err || !pkg ) {
+      console.log('Error')
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
-        return console.log('Log error');
+        return console.log('Log error - failed to download a package with id: ' + id);
       }
     }
 
     var data = error.success_with_content('Found package', pkg);
     try {
-      return res.send(result);
+      return res.send(data);
     } catch (exception) {
       return console.log('Log error');
     }

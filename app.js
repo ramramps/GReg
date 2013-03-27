@@ -5,10 +5,11 @@ var express = require('express')
   , routes = require('./routes')
   , pkg = require('./routes/package')
   , passport = require('passport')
-  , oxygen = require('./lib/oxygen')
   , user = require('./routes/user')
   , users = require('./lib/users')
   , error = require('./lib/error')
+  , oxygen_auth = require('./lib/oxygen_auth')
+  , basic_auth = require('./lib/basic_auth');
 
 ////////////////////////
 // DB
@@ -41,10 +42,16 @@ var express = require('express')
   });
 
 ////////////////////////
+// Debug
+////////////////////////
+
+  users.initDebugUser();
+
+////////////////////////
 // Routes
 ////////////////////////
 
-  var auth_type = "oxygen";
+  var auth_type = 'oxygen';
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
@@ -64,12 +71,6 @@ var express = require('express')
 
   app.get('/user_name/:name', user.by_name );
   app.get('/user/:id', user.by_id );
-
-////////////////////////
-// Debug
-////////////////////////
-
-  users.initDebugUser();
 
 ////////////////////////
 // Server

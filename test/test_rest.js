@@ -2,7 +2,7 @@ var request = require('supertest')
   , express = require('express')
   , mocha = require('mocha')
   , should = require('should')
-  , request = request('http://localhost:80');
+  , request = request('http://localhost:8080');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -58,7 +58,7 @@ describe('/pkg', function(){
       , keywords: pkg_keywords
       , version: '0.0.1'
       , group: groups[Math.floor(Math.random() * 4)]
-      , engine: 'designscript'
+      , engine: 'dynamo'
       , engine_version: '0.3.1'
       , license: 'MIT'
       , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
@@ -104,6 +104,7 @@ describe('/pkg', function(){
         .end(function(err, res){
           if (err)  return done(err);
 
+          console.log(res.body.message);
           should.equal(res.body.success, true);
           new_version_correct(pkg_in, done);
 
@@ -141,6 +142,7 @@ function new_version_correct(pkg_data, done) {
     .end(function(err, res){
       if (err) 
         return done(err);
+      console.log(res.body.message);
       should.equal(res.body.success, true);
       pkg_data._id = res.body.contents._id;
       new_version_fail(pkg_data, done);
@@ -159,6 +161,7 @@ function new_version_fail(pkg_data, done) {
     .expect(200)
     .end(function(err, res){
       if (err) return done(err);
+      console.log(res.body.message);
       should.equal(res.body.success, false);
       done();
     });
