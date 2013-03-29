@@ -36,10 +36,10 @@
     <div class="data-container">
 
       <p class="title"><strong>Description: </strong></p>
-      <p class="description searchfield">A <%- description %></p>
+      <p class="description searchfield"><%- description %></p>
       
       <p class="title"><strong>Keywords: </strong> </p>
-      <p class="keywords searchfield"><% _.each(keywords, function(i) { %> <%= i %>,<% }); %> </p>
+      <p class="keywords searchfield"><% _.each(keywords, function(i) { %> <%= i %> <% }); %> </p>
 
       <p class="title"><strong>Engine: </strong> </p>
       <p class="engine searchfield"><%- engine %></p>
@@ -57,7 +57,7 @@
       <p class="maintainers searchfield"><% _.each(maintainers, function(i) { %>  <%= i.username %> <% }); %></p>
 
       <p class="title"><strong>Used by: </strong> </p>
-      <p class="used_by searchfield"><% _.each(used_by, function(i) { %> <%= i.name %>,<% }); %> </p>
+      <p class="used_by searchfield"><% _.each(used_by, function(i) { %><%= i.name %> <% }); %> </p>
       
       <a href="#" class="showdeps">Show dependencies</a>
 
