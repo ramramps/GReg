@@ -72,7 +72,6 @@ exports.dl = function(req, res) {
   PackageModel.findById(id, function(err, pkg) {
 
     if ( err || !pkg ) {
-      console.log('Error')
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
@@ -81,7 +80,16 @@ exports.dl = function(req, res) {
       }
     }
 
-
+    // check the version exists, and return it if possible
+    for (var i = 0; i < pkg.versions.length; i++) {
+      if ( version === pkg.versions[i].version ) {  
+        try {
+          return res.redirect( pkg.versions[i] )
+        } catch (exception) {
+          return res.send(500, { error: 'Failed to redirect' });
+        }
+      }
+    }
 
     try {
       return res.redirect(url)
