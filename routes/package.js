@@ -47,9 +47,6 @@ exports.vote = function(req, res) {
       } catch (exception) {
         return console.log('Log error');
       }
-
-
-
     })
 
 
@@ -57,6 +54,45 @@ exports.vote = function(req, res) {
 
 };
 
+
+/**
+ * Download a package given an id and version
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ *
+ */
+
+exports.dl = function(req, res) {
+
+  var id = req.params.id;
+  var version = req.params.version;
+
+  PackageModel.findById(id, function(err, pkg) {
+
+    if ( err || !pkg ) {
+      console.log('Error')
+      try {
+        return res.send( error.fail("Could not find package") );
+      } catch (exception) {
+        res.send(500, { error: 'Failed to obtain the package' });
+        return console.log('Log error - failed to download a package with id: ' + id);
+      }
+    }
+
+
+
+    try {
+      return res.redirect(url)
+    } catch (exception) {
+      res.send(500, { error: 'Failed to redirect' });
+      return console.log('Log error');
+    }
+
+  });
+
+};
 
 /**
  * Lookup a package by id
@@ -77,6 +113,7 @@ exports.by_id = function(req, res) {
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
+        res.send(500, { error: 'Failed to obtain the package' });
         return console.log('Log error - failed to download a package with id: ' + id);
       }
     }
@@ -85,6 +122,7 @@ exports.by_id = function(req, res) {
     try {
       return res.send(data);
     } catch (exception) {
+      res.send(500, { error: 'Failed to send data' });
       return console.log('Log error');
     }
 
@@ -114,6 +152,7 @@ exports.all = function(req, res) {
       try {
         return res.send( error.fail("There are no packages") );
       } catch (exception) {
+        res.send(500, { error: 'Error obtaining packages' });
         return console.log('Log error');
       }
     }
@@ -122,6 +161,7 @@ exports.all = function(req, res) {
     try {
       return res.send( data );
     } catch (exception) {
+      res.send(500, { error: 'Failed to send data' });
       return console.log('Log error');
     }
 
@@ -145,7 +185,7 @@ exports.by_engine = function(req, res) {
 
     if ( err || !pkgs || pkgs.length === 0 )
     {
-      res.send( error.fail("There are no packages with that engine name") );
+      res.send( 404, error.fail("There are no packages with that engine name") );
       return;
     }
 
@@ -174,8 +214,7 @@ exports.by_engine_and_name = function(req, res) {
 
     if ( err || !pkg )
     {
-      res.send( error.fail("There is no package with that engine and package name") );
-      return;
+      return res.send( 404, error.fail("There is no package with that engine and package name") );
     }
 
     var data = error.success_with_content('Found package', pkg);
@@ -205,12 +244,12 @@ exports.search = function(req, res) {
   search.pkg_search(q, function(err, data) {
 
     if (err) {
-      res.send(error.fail('Something wrong with the pkg_search'));
+      res.send(500, error.fail('Something wrong with the pkg_search'));
       return;
     }
 
     if (data.Body.hits.found === 0) {
-      res.send( error.success_with_content( "Succeeded", [] ) );
+      res.send(error.success_with_content( "Succeeded", [] ) );
       return;
     }
 
@@ -224,7 +263,7 @@ exports.search = function(req, res) {
     packages.get_pkg_list(ids, function(err, pkgs) {
 
       if (err) {
-        return res.send(err);
+        return res.send(500, error.fail('Failed to get packages from db'));
       }
 
       res.send(error.success_with_content('Search succeeded', pkgs));
@@ -251,7 +290,7 @@ exports.add = function(req, res) {
     try {
       return res.send(result);
     } catch (exception) {
-      return console.log('Log error');
+      return res.send(500, error.fail('Failed to save package'));
     }
   });
 
@@ -273,7 +312,7 @@ exports.add_version = function(req, res) {
     try {
       return res.send(result);
     } catch (exception) {
-      return console.log('Log error');
+      return res.send(500, error.fail('Failed to save package version'));
     }
   });
 

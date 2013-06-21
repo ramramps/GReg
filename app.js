@@ -55,6 +55,7 @@ var express = require('express')
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
+  app.get('/pkg_dl/:version', pkg.dl );
   app.get('/pkg/:id', pkg.by_id );
   app.get('/pkg_engine/:engine', pkg.by_engine );
   app.get('/pkg_engine/:engine/:name', pkg.by_engine_and_name );
