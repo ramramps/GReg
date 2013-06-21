@@ -5,6 +5,58 @@ var PackageModel = require('../lib/models').PackageModel
   , search = require('../lib/search')
   , _ = require('underscore');
 
+/**
+ * Vote for a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.vote = function(req, res) {
+
+  var id = req.params.id;
+
+  PackageModel.findById(id, function(err, pkg) {
+
+    if ( err || !pkg ) {
+      console.log('Error')
+      try {
+        return res.send( error.fail("Could not find package") );
+      } catch (exception) {
+        return console.log('Log error - failed to download a package with id: ' + id);
+      }
+    }
+
+    UserModel.find( {"username": req.user.username}, function(err, user){
+
+      if ( err || !user ) {
+        console.log('Error')
+        try {
+          return res.send( error.fail("Not a valid user") );
+        } catch (exception) {
+          return console.log('Log error - failed to download a package with id: ' + id);
+        }
+      }
+
+      // look up user
+      // check if the user has voted for this package
+
+      var data = error.success_with_content('Found package', pkg);
+      try {
+        return res.send(data);
+      } catch (exception) {
+        return console.log('Log error');
+      }
+
+
+
+    })
+
+
+  });
+
+};
+
 
 /**
  * Lookup a package by id

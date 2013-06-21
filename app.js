@@ -64,6 +64,7 @@ var express = require('express')
 
   app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
+  app.put('/pkg-vote/:id', passport.authenticate(auth_type, { session: false }), pkg.vote);
 
   app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
     res.send(error.success("You are logged in."))
