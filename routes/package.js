@@ -36,21 +36,40 @@ exports.vote = function(req, res) {
         }
       }
 
-      // look up user
       // check if the user has voted for this package
+      if ( user.has_voted_for.indexOf(id) != -1){
+        pkg.votes = pkg.votes + 1;
 
-      var data = error.success_with_content('Found package', pkg);
+        pkg.save(function(err){
 
-      
-      try {
-        return res.send(data);
-      } catch (exception) {
-        return console.log('Log error');
+          if (err){
+            try {
+              return res.send(500, error.fail('There was a problem updating the package.  The vote was note saved.'));
+            } catch (exception) {
+              return console.log('Log error');
+            }
+          } 
+
+          try {
+            return res.send(error.succes('Vote registered', { pkg_id: id, votes: pkg.votes }));
+          } catch (exception) {
+            return console.log('Log error');
+          } 
+
+        });
+
+      } else {
+
+        try {
+          return res.send(403, error.fail('You have already voted for this package, I still think you\'re cute though ;)'));
+        } catch (exception) {
+          return console.log('Log error');
+        }
+
       }
-    })
 
-
-  });
+    }); // lookup user
+  }); // lookup pkg
 
 };
 
@@ -79,8 +98,6 @@ exports.download_last_vers = function(req, res) {
         return res.send(500, error.fail("Failed to obtain package"));
       }
     }
-
-    console.error( pkg.versions[pkg.versions.length-1].url )
 
     try {
       return res.redirect( pkg.versions[pkg.versions.length-1].url )
