@@ -116,10 +116,18 @@ describe('/pkg', function(){
           .attach('pkg', 'uploads/pkg_test.zip')
           .end(function(err, res){
             if (err)  return done(err);
-
-            console.log(res.body.message);
             should.equal(res.body.success, true);
             new_version_correct(pkg_in, done);
+
+            // vote once
+            new_vote( pkg_in._id, 200, function(id) {
+
+              // vote again for rejection
+              new_vote(id, 403, function() {
+                done();
+              });
+
+            });
 
           });
 
@@ -199,6 +207,67 @@ function lookup_success( pkg_id, done) {
     });
 
 }
+
+function new_vote(pkg_id, status_code_expected, done){
+  request
+    .post('/pkg-vote/' + pkg_id )
+    .auth('test','e0jlZfJfKS')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(status_expected)
+    .end(function(err, res){
+      if (err) return done(err);
+      should.equal(res.body.success, (status_code_expected === 200) );
+      done(res);
+    });
+}
+
+function new_vote_fail(pkg_id, done){
+  request
+    .post('/pkg-vote/' + pkg_id )
+    .auth('test','e0jlZfJfKS')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function(err, res){
+      if (err) return done(err);
+      should.equal(res.body.success, true);
+      done(res);
+    });
+}
+
+describe('POST /pkg_vote/:id', function(){
+
+  it('should require auth', function(done){
+
+    request
+      .post('/pkg-vote/1441notanid' )
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(401)
+      .end(function(err, res){
+        if (err) return done(err);
+        should.equal(res.body.success, false);
+        done(res);
+      });
+  });
+
+  it('should succeed if given valid id', function(done){
+
+    request
+      .post('/pkg-vote/' + pkg_id )
+      .auth('test','e0jlZfJfKS')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res){
+        if (err) return done(err);
+        should.equal(res.body.success, true);
+        done(res);
+      });
+  });
+
+});
 
 describe('GET /pkg_search/:query', function(){
 
