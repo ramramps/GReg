@@ -13,7 +13,8 @@
     "awssum-amazon-s3": "1.2.4",
     "passport-http": "0.2.2",
     "ejs": "0.8.4",
-    "fmt": "~0.4.0"
+    "fmt": "~0.4.0",
+    "awssum-amazon-cloudsearch": "~1.0.2"
   },
   "devDependencies": {
     "mocha": "1.8.1",

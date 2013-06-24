@@ -2,7 +2,9 @@ var request = require('supertest')
   , express = require('express')
   , mocha = require('mocha')
   , should = require('should')
-  , request = request('http://localhost:8080');
+  , request = request('http://localhost:8080')
+  , crypto = require('crypto')
+  , fs = require('fs');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -93,20 +95,33 @@ describe('/pkg', function(){
 
     it('POST should respond with success json', (function(pkg_in) { return (function(done){
 
-      request
-        .post('/pkg')
-        .auth('test','e0jlZfJfKS')
-        .set('Content-Type', 'application/json')
-        .send(pkg_in)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end(function(err, res){
-          if (err)  return done(err);
+      var shasum = crypto.createHash('sha256');
+      var s = fs.ReadStream( 'uploads/pkg_test.zip' );
 
-          console.log(res.body.message);
-          should.equal(res.body.success, true);
-          new_version_correct(pkg_in, done);
+      s.on('data', function(d) {
+        shasum.update(d);
+      });
+
+      s.on('end', function() {
+
+        pkg_in.file_hash = shasum.digest('base64');
+
+        request
+          .post('/pkg')
+          .auth('test','e0jlZfJfKS')
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .field('pkg_header', JSON.stringify( pkg_in ) )
+          .attach('pkg', 'uploads/pkg_test.zip')
+          .end(function(err, res){
+            if (err)  return done(err);
+
+            console.log(res.body.message);
+            should.equal(res.body.success, true);
+            new_version_correct(pkg_in, done);
+
+          });
 
         });
 
@@ -139,6 +154,7 @@ function new_version_correct(pkg_data, done) {
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
+    .attach('pkg', 'test_rest.js')
     .end(function(err, res){
       if (err) 
         return done(err);
@@ -155,6 +171,7 @@ function new_version_fail(pkg_data, done) {
     .put('/pkg')
     .auth('test','e0jlZfJfKS')
     .set('Content-Type', 'application/json')
+    .attach('pkg', 'test_rest.js')
     .send(pkg_data)
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)

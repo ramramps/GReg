@@ -52,11 +52,12 @@ var express = require('express')
 ////////////////////////
 
   var auth_type =  'basic'; 
-  // var auth_type =  'oxygen'; 
+  //var auth_type =  'oxygen'; 
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
-  app.get('/pkg_dl/:id/:version', pkg.dl );
+  app.get('/pkg_dl/:id/:version', pkg.download_vers );
+  app.get('/pkg_dl/:id', pkg.download_last_vers );
   app.get('/pkg/:id', pkg.by_id );
 
   app.get('/pkg_engine/:engine', pkg.by_engine );

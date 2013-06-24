@@ -19,7 +19,6 @@ exports.vote = function(req, res) {
   PackageModel.findById(id, function(err, pkg) {
 
     if ( err || !pkg ) {
-      console.log('Error')
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
@@ -30,7 +29,6 @@ exports.vote = function(req, res) {
     UserModel.find( {"username": req.user.username}, function(err, user){
 
       if ( err || !user ) {
-        console.log('Error')
         try {
           return res.send( error.fail("Not a valid user") );
         } catch (exception) {
@@ -42,6 +40,8 @@ exports.vote = function(req, res) {
       // check if the user has voted for this package
 
       var data = error.success_with_content('Found package', pkg);
+
+      
       try {
         return res.send(data);
       } catch (exception) {
@@ -49,6 +49,46 @@ exports.vote = function(req, res) {
       }
     })
 
+
+  });
+
+};
+
+/**
+ * Download the most recent version of a package given an id
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ *
+ */
+
+exports.download_last_vers = function(req, res) {
+
+  var id = req.params.id;
+  var version = req.params.version;
+
+  PackageModel.findById(id, function(err, pkg) {
+
+    console.log( pkg )
+
+    if ( err || !pkg ) {
+      try {
+        return res.send( error.fail("Could not find package") );
+      } catch (exception) {
+        return res.send(500, error.fail("Failed to obtain package"));
+      }
+    }
+
+    console.error( pkg.versions[pkg.versions.length-1].url )
+
+    try {
+      return res.redirect( pkg.versions[pkg.versions.length-1].url )
+    } catch (exception) {
+      return res.send(500, error.fail('Failed to obtain package version' ));
+    }
+
+    return res.send(500, error.fail('Something unexpected happened' ));
 
   });
 
@@ -64,7 +104,7 @@ exports.vote = function(req, res) {
  *
  */
 
-exports.dl = function(req, res) {
+exports.download_vers = function(req, res) {
 
   var id = req.params.id;
   var version = req.params.version;
@@ -75,7 +115,7 @@ exports.dl = function(req, res) {
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
-        res.send(500, { error: 'Failed to obtain the package' });
+        res.send(500, error.fail('Failed to obtain the package' ));
         return console.log('Log error - failed to download a package with id: ' + id);
       }
     }
@@ -84,19 +124,15 @@ exports.dl = function(req, res) {
     for (var i = 0; i < pkg.versions.length; i++) {
       if ( version === pkg.versions[i].version ) {  
         try {
-          return res.redirect( pkg.versions[i] )
+          console.log()
+          return res.redirect( pkg.versions[i].url )
         } catch (exception) {
-          return res.send(500, { error: 'Failed to redirect' });
+          return res.send(500, error.fail('Failed to redirect' ));
         }
       }
     }
 
-    try {
-      return res.redirect(url)
-    } catch (exception) {
-      res.send(500, { error: 'Failed to redirect' });
-      return console.log('Log error');
-    }
+    return res.send(404, error.fail('The version you specified does not exist' ));
 
   });
 
@@ -121,7 +157,7 @@ exports.by_id = function(req, res) {
       try {
         return res.send( error.fail("Could not find package") );
       } catch (exception) {
-        res.send(500, { error: 'Failed to obtain the package' });
+        res.send(500, error.fail('Failed to obtain the package' ));
         return console.log('Log error - failed to download a package with id: ' + id);
       }
     }
@@ -130,7 +166,7 @@ exports.by_id = function(req, res) {
     try {
       return res.send(data);
     } catch (exception) {
-      res.send(500, { error: 'Failed to send data' });
+      res.send(500, error.fail('Failed to send data' ));
       return console.log('Log error');
     }
 
@@ -160,7 +196,7 @@ exports.all = function(req, res) {
       try {
         return res.send( error.fail("There are no packages") );
       } catch (exception) {
-        res.send(500, { error: 'Error obtaining packages' });
+        res.send(500, error.fail('Error obtaining packages' ));
         return console.log('Log error');
       }
     }
@@ -169,7 +205,7 @@ exports.all = function(req, res) {
     try {
       return res.send( data );
     } catch (exception) {
-      res.send(500, { error: 'Failed to send data' });
+      res.send(500, error.fail('Failed to send data' ));
       return console.log('Log error');
     }
 
@@ -292,7 +328,15 @@ exports.search = function(req, res) {
 
 exports.add = function(req, res) {
 
-  var pkg = req.body;
+  if (!req.body.pkg_header){
+    return res.send(400, error.fail('You did not provide a pkg_header'));
+  }
+
+  if (!req.files.pkg){
+    return res.send(400, error.fail('You did not provide a pkg file'));
+  }
+
+  var pkg = JSON.parse( req.body.pkg_header );
 
   packages.save_new_pkg(req, pkg, function(result) {
     try {
@@ -314,7 +358,15 @@ exports.add = function(req, res) {
 
 exports.add_version = function(req, res) {
 
-  var pkg = req.body;
+  if (!req.body.pkg_header){
+    return res.send(400, error.fail('You did not provide a pkg_header'));
+  }
+
+  if (!req.files.pkg){
+    return res.send(400, error.fail('You did not provide a pkg file'));
+  }
+
+  var pkg = JSON.parse( req.body.pkg_header );
 
   packages.save_new_pkg_version(req, pkg, function(result) {
     try {
