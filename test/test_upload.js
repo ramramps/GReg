@@ -8,12 +8,19 @@ describe('POST /', function(){
   it('should respond with json', function(done){
 
     request
-      .get('/login')
-      .auth('test','e0jlZfJfKS')
+      .post('/dbg_upload')
       .expect('Content-Type', /json/)
+      .attach('pkg', 'test_rest.js')
       .expect(200, done);
 
-  })
-  
+  });
+
 });
+
+
+
+// todo
+// make link public via awssum options ?
+// insert into existing code
+// get redirect code working
 

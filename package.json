@@ -9,9 +9,11 @@
     "jade": "0.28.1",
     "passport": "0.1.16",
     "async": "0.2.6",
-    "awssum": "1.0.0",
     "superagent": "0.12.4",
-    "awssum-amazon-s3": "1.2.4"
+    "awssum-amazon-s3": "1.2.4",
+    "passport-http": "0.2.2",
+    "ejs": "0.8.4",
+    "fmt": "~0.4.0"
   },
   "devDependencies": {
     "mocha": "1.8.1",
