@@ -51,7 +51,7 @@ exports.vote = function(req, res) {
           } 
 
           try {
-            return res.send(error.succes('Vote registered', { pkg_id: id, votes: pkg.votes }));
+            return res.send(error.success('Vote registered', { pkg_id: id, votes: pkg.votes }));
           } catch (exception) {
             return console.log('Log error');
           } 
@@ -359,7 +359,7 @@ exports.add = function(req, res) {
     try {
       return res.send(result);
     } catch (exception) {
-      return res.send(500, error.fail('Failed to save package'));
+      return console.error('Failed to send result')
     }
   });
 

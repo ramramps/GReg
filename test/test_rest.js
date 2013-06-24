@@ -4,7 +4,8 @@ var request = require('supertest')
   , should = require('should')
   , request = request('http://localhost:8080')
   , crypto = require('crypto')
-  , fs = require('fs');
+  , fs = require('fs')
+  , async = require('async');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -116,21 +117,20 @@ describe('/pkg', function(){
           .attach('pkg', 'uploads/pkg_test.zip')
           .end(function(err, res){
             if (err)  return done(err);
+
+            console.error( 'pkg_add_result', res.body);
             should.equal(res.body.success, true);
-            new_version_correct(pkg_in, done);
-
-            // vote once
-            new_vote( pkg_in._id, 200, function(id) {
-
-              // vote again for rejection
-              new_vote(id, 403, function() {
-                done();
+            
+            new_version_correct(pkg_in, function(error) { 
+              new_version_fail(pkg_in, function(error){
+                new_vote( pkg_in._id, 200, function(error) {
+                  new_vote( pkg_in._id, 403, function(error) {
+                    done(error);
+                  });
+                });
               });
-
             });
-
           });
-
         });
 
     }) })(ds_pkg_datas[i]) );
@@ -154,41 +154,62 @@ function new_version_correct(pkg_data, done) {
 
   pkg_data.version = increment_version( pkg_data.version );
 
-  request
-    .put('/pkg')
-    .auth('test','e0jlZfJfKS')
-    .set('Content-Type', 'application/json')
-    .send(pkg_data)
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .attach('pkg', 'test_rest.js')
-    .end(function(err, res){
-      if (err) 
-        return done(err);
-      console.log(res.body.message);
-      should.equal(res.body.success, true);
-      pkg_data._id = res.body.contents._id;
-      new_version_fail(pkg_data, done);
+  var shasum = crypto.createHash('sha256');
+  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+
+  s.on('data', function(d) {
+    shasum.update(d);
+  });
+
+  s.on('end', function() {
+
+    pkg_data.file_hash = shasum.digest('base64');
+
+    request
+      .post('/pkg')
+      .auth('test','e0jlZfJfKS')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .field('pkg_header', JSON.stringify( pkg_data ) )
+      .attach('pkg', 'uploads/pkg_test.zip')
+      .end(function(err, res){
+        if (err)  return done(err);
+        console.error( 'new_version_fail_result', res.body )
+        done();
+
+      });
     });
+
 }
 
 function new_version_fail(pkg_data, done) {
 
-  request
-    .put('/pkg')
-    .auth('test','e0jlZfJfKS')
-    .set('Content-Type', 'application/json')
-    .attach('pkg', 'test_rest.js')
-    .send(pkg_data)
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .end(function(err, res){
-      if (err) return done(err);
-      console.log(res.body.message);
-      should.equal(res.body.success, false);
-      done();
+  var shasum = crypto.createHash('sha256');
+  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+
+  s.on('data', function(d) {
+    shasum.update(d);
+  });
+
+  s.on('end', function() {
+
+    pkg_data.file_hash = shasum.digest('base64');
+
+    request
+      .post('/pkg')
+      .auth('test','e0jlZfJfKS')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .field('pkg_header', JSON.stringify( pkg_data ) )
+      .attach('pkg', 'uploads/pkg_test.zip')
+      .end(function(err, res){
+        if (err)  return done(err);
+        console.error( 'new_version_fail_result', res.body )
+        done();
+
+      });
     });
 
 }
@@ -202,6 +223,7 @@ function lookup_success( pkg_id, done) {
     .expect(200)
     .end(function(err, res){
       if (err) return done(err);
+      console.error( 'lookup_result', res.body )
       should.equal(res.body.success, true);
       done(res);
     });
@@ -210,59 +232,32 @@ function lookup_success( pkg_id, done) {
 
 function new_vote(pkg_id, status_code_expected, done){
   request
-    .post('/pkg-vote/' + pkg_id )
+    .put('/pkg_vote/' + pkg_id )
     .auth('test','e0jlZfJfKS')
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
-    .expect(status_expected)
+    .expect(status_code_expected)
     .end(function(err, res){
       if (err) return done(err);
+      console.error( 'new_vote_result', res.body )
       should.equal(res.body.success, (status_code_expected === 200) );
       done(res);
     });
 }
 
-function new_vote_fail(pkg_id, done){
-  request
-    .post('/pkg-vote/' + pkg_id )
-    .auth('test','e0jlZfJfKS')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .end(function(err, res){
-      if (err) return done(err);
-      should.equal(res.body.success, true);
-      done(res);
-    });
-}
 
 describe('POST /pkg_vote/:id', function(){
 
   it('should require auth', function(done){
 
     request
-      .post('/pkg-vote/1441notanid' )
+      .put('/pkg_vote/1441notanid' )
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(401)
       .end(function(err, res){
         if (err) return done(err);
         should.equal(res.body.success, false);
-        done(res);
-      });
-  });
-
-  it('should succeed if given valid id', function(done){
-
-    request
-      .post('/pkg-vote/' + pkg_id )
-      .auth('test','e0jlZfJfKS')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res){
-        if (err) return done(err);
-        should.equal(res.body.success, true);
         done(res);
       });
   });
