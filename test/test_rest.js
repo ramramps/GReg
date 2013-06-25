@@ -45,7 +45,7 @@ var ds_pkg_datas = [];
 // when and how you use it.
 describe('/pkg', function(){
 
-  this.timeout(40000);
+  this.timeout(80000);
 
   var j = 0;
 
@@ -113,39 +113,19 @@ describe('/pkg', function(){
           return function() {
             add_pkg( pkg_data, function() {} );
           }
-        })(ds_pkg_datas[i]), 2500 * i );
+        })(ds_pkg_datas[i]), 4000 * i );
       } else {
         setTimeout( ( function(pkg_data) {
           return function() {
             add_pkg( pkg_data, done );
           }
-        })(ds_pkg_datas[i]), 2500 * i );  
+        })(ds_pkg_datas[i]), 4000 * i );  
       }
     }
 
   });
 
 });
-
-function add_pkg_list(pkg_list) {
-
-  it('POST should respond with success json', function(outer_done) {
-
-    add_pkg(pkg_list.shift(), ( function(pkg_list, done) {
-      return function() {
-
-        if (pkg_list.length === 0) {
-          return done();
-        }
-
-        add_pkg(pkg_list, done);
-
-      } })(pkg_list, outer_done)
-    );
-
-  });
-
-}
 
 function add_pkg(pkg_data, done){
 
@@ -220,7 +200,8 @@ function new_version_correct(pkg_data, done) {
     pkg_data.file_hash = shasum.digest('base64');
 
     request
-      .post('/pkg')
+      .put('/pkg')
+
       .auth('test','e0jlZfJfKS')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -229,7 +210,8 @@ function new_version_correct(pkg_data, done) {
       .attach('pkg', 'uploads/pkg_test.zip')
       .end(function(err, res){
         if (err)  return done(err);
-        console.error( 'new_version_fail_result', res.body )
+        should.equal(res.body.success, true);
+        console.error( 'new_version_correct_result', res.body )
         done();
 
       });
@@ -251,7 +233,7 @@ function new_version_fail(pkg_data, done) {
     pkg_data.file_hash = shasum.digest('base64');
 
     request
-      .post('/pkg')
+      .put('/pkg')
       .auth('test','e0jlZfJfKS')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -260,6 +242,7 @@ function new_version_fail(pkg_data, done) {
       .attach('pkg', 'uploads/pkg_test.zip')
       .end(function(err, res){
         if (err)  return done(err);
+        should.equal(res.body.success, false);
         console.error( 'new_version_fail_result', res.body )
         done();
 
@@ -285,7 +268,7 @@ function lookup_success( pkg_id, done) {
 }
 
 function new_vote(pkg_id, status_code_expected, done){
-  
+
   request
     .put('/pkg_upvote/' + pkg_id )
     .auth('test','e0jlZfJfKS')
@@ -298,7 +281,7 @@ function new_vote(pkg_id, status_code_expected, done){
       console.error( 'new_vote_result', res.body )
       should.equal(res.body.success, (status_code_expected === 200) );
 
-      done(res);
+      done();
 
     });
 
