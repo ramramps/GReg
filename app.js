@@ -68,7 +68,8 @@ var express = require('express')
 
   app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
-  app.put('/pkg_vote/:id', passport.authenticate(auth_type, { session: false }), pkg.vote);
+  app.put('/pkg_upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_pkg_by_id);
+  app.put('/pkg_downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_pkg_by_id);
 
   app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
     res.send(error.success("You are logged in."))

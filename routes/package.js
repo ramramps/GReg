@@ -1,4 +1,5 @@
 var PackageModel = require('../lib/models').PackageModel
+  , UserModel = require('../lib/models').UserModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
@@ -12,66 +13,33 @@ var PackageModel = require('../lib/models').PackageModel
  * @param {Object} HTTP response
  * @api public
  */
-exports.vote = function(req, res) {
+exports.upvote_pkg_by_id = function(req, res) {
 
-  var id = req.params.id;
+  var pkd_id = req.params.id
+    , user_id = req.user._id;
 
-  PackageModel.findById(id, function(err, pkg) {
-
-    if ( err || !pkg ) {
-      try {
-        return res.send( error.fail("Could not find package") );
-      } catch (exception) {
-        return console.log('Log error - failed to download a package with id: ' + id);
-      }
-    }
-
-    UserModel.find( {"username": req.user.username}, function(err, user){
-
-      if ( err || !user ) {
-        try {
-          return res.send( error.fail("Not a valid user") );
-        } catch (exception) {
-          return console.log('Log error - failed to download a package with id: ' + id);
-        }
-      }
-
-      // check if the user has voted for this package
-      if ( user.has_voted_for.indexOf(id) != -1){
-        pkg.votes = pkg.votes + 1;
-
-        pkg.save(function(err){
-
-          if (err){
-            try {
-              return res.send(500, error.fail('There was a problem updating the package.  The vote was note saved.'));
-            } catch (exception) {
-              return console.log('Log error');
-            }
-          } 
-
-          try {
-            return res.send(error.success('Vote registered', { pkg_id: id, votes: pkg.votes }));
-          } catch (exception) {
-            return console.log('Log error');
-          } 
-
-        });
-
-      } else {
-
-        try {
-          return res.send(403, error.fail('You have already voted for this package, I still think you\'re cute though ;)'));
-        } catch (exception) {
-          return console.log('Log error');
-        }
-
-      }
-
-    }); // lookup user
-  }); // lookup pkg
+  packages.vote( pkg_id, user_id, -1, res );
 
 };
+
+/**
+ * Vote for a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.downvote_pkg_by_id = function(req, res) {
+
+  var pkd_id = req.params.id
+    , user_id = req.user._id;
+
+  packages.vote( pkg_id, user_id, -1, res );
+
+};
+
+
+
 
 /**
  * Download the most recent version of a package given an id
@@ -327,7 +295,11 @@ exports.search = function(req, res) {
         return res.send(500, error.fail('Failed to get packages from db'));
       }
 
-      res.send(error.success_with_content('Search succeeded', pkgs));
+      try {
+        return res.send(error.success_with_content('Search succeeded', pkgs));
+      } catch (e) {
+        return console.error('There was a problem returning the search results.')
+      }
 
     });
 

@@ -5,7 +5,8 @@ var request = require('supertest')
   , request = request('http://localhost:8080')
   , crypto = require('crypto')
   , fs = require('fs')
-  , async = require('async');
+  , async = require('async')
+  , _ = require('underscore');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -44,7 +45,12 @@ var ds_pkg_datas = [];
 // when and how you use it.
 describe('/pkg', function(){
 
+  this.timeout(40000);
+
   var j = 0;
+
+    
+  var series_funcs = [];
 
   for (var i = 0; i < 5; i++) {
 
@@ -55,7 +61,7 @@ describe('/pkg', function(){
       pkg_keywords.push( keywords[ Math.floor( Math.random() * keywords.length )] );
     }
 
-    ds_pkg_datas.push( {
+    var pkg_data = {
         name: birds[i]
       , description: pkg_keywords.join(' ') + ' ' + 'package'
       , keywords: pkg_keywords
@@ -65,12 +71,15 @@ describe('/pkg', function(){
       , engine_version: '0.3.1'
       , license: 'MIT'
       , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
-    });
+    };
+
+    ds_pkg_datas.push(pkg_data);
 
     // add some dependencies
     var num_deps = 2;
 
     if ( i >= num_deps ) {
+
       var deps = [];
       var deps_map = {};
       var name = "";
@@ -93,51 +102,96 @@ describe('/pkg', function(){
       }
     
     }
+  }
 
-    it('POST should respond with success json', (function(pkg_in) { return (function(done){
+  it('POST should respond with success json', function(done) {
 
-      var shasum = crypto.createHash('sha256');
-      var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+    for (var i = 0; i < 5; i++){
 
-      s.on('data', function(d) {
-        shasum.update(d);
-      });
+      if ( i != 4){
+        setTimeout( ( function(pkg_data) {
+          return function() {
+            add_pkg( pkg_data, function() {} );
+          }
+        })(ds_pkg_datas[i]), 2500 * i );
+      } else {
+        setTimeout( ( function(pkg_data) {
+          return function() {
+            add_pkg( pkg_data, done );
+          }
+        })(ds_pkg_datas[i]), 2500 * i );  
+      }
+    }
 
-      s.on('end', function() {
+  });
 
-        pkg_in.file_hash = shasum.digest('base64');
+});
 
-        request
-          .post('/pkg')
-          .auth('test','e0jlZfJfKS')
-          .set('Accept', 'application/json')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .field('pkg_header', JSON.stringify( pkg_in ) )
-          .attach('pkg', 'uploads/pkg_test.zip')
-          .end(function(err, res){
-            if (err)  return done(err);
+function add_pkg_list(pkg_list) {
 
-            console.error( 'pkg_add_result', res.body);
-            should.equal(res.body.success, true);
-            
-            new_version_correct(pkg_in, function(error) { 
-              new_version_fail(pkg_in, function(error){
-                new_vote( pkg_in._id, 200, function(error) {
-                  new_vote( pkg_in._id, 403, function(error) {
-                    done(error);
-                  });
-                });
+  it('POST should respond with success json', function(outer_done) {
+
+    add_pkg(pkg_list.shift(), ( function(pkg_list, done) {
+      return function() {
+
+        if (pkg_list.length === 0) {
+          return done();
+        }
+
+        add_pkg(pkg_list, done);
+
+      } })(pkg_list, outer_done)
+    );
+
+  });
+
+}
+
+function add_pkg(pkg_data, done){
+
+  var shasum = crypto.createHash('sha256');
+  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+
+  s.on('data', function(d) {
+    shasum.update(d);
+  });
+
+  s.on('end', function() {
+
+    pkg_data.file_hash = shasum.digest('base64');
+
+    request
+      .post('/pkg')
+      .auth('test','e0jlZfJfKS')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .field('pkg_header', JSON.stringify( pkg_data ) )
+      .attach('pkg', 'uploads/pkg_test.zip')
+      .end(function(err, res){
+
+        if (err) {
+          return done(err);
+        }
+
+        console.error( 'pkg_add_result', res.body);
+
+        should.equal(res.body.success, true);
+
+        new_version_correct(pkg_data, function(error) { 
+          new_version_fail(pkg_data, function(error){
+            new_vote( res.body.content._id, 200, function(error) {
+              new_vote( res.body.content._id, 403, function(error) {
+                done(error);
               });
             });
           });
         });
 
-    }) })(ds_pkg_datas[i]) );
+      });
 
-  }
-
-});
+    });
+}
 
 function increment_version(version) {
 
@@ -231,68 +285,73 @@ function lookup_success( pkg_id, done) {
 }
 
 function new_vote(pkg_id, status_code_expected, done){
+  
   request
-    .put('/pkg_vote/' + pkg_id )
+    .put('/pkg_upvote/' + pkg_id )
     .auth('test','e0jlZfJfKS')
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(status_code_expected)
     .end(function(err, res){
+
       if (err) return done(err);
       console.error( 'new_vote_result', res.body )
       should.equal(res.body.success, (status_code_expected === 200) );
+
       done(res);
+
     });
+
 }
 
 
-describe('POST /pkg_vote/:id', function(){
+// describe('POST /pkg_upvote/:id', function(){
 
-  it('should require auth', function(done){
+//   it('should require auth', function(done){
 
-    request
-      .put('/pkg_vote/1441notanid' )
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .end(function(err, res){
-        if (err) return done(err);
-        should.equal(res.body.success, false);
-        done(res);
-      });
-  });
+//     request
+//       .put('/pkg_upvote/1441notanid' )
+//       .set('Accept', 'application/json')
+//       .expect('Content-Type', /json/)
+//       .expect(401)
+//       .end(function(err, res){
+//         if (err) return done(err);
+//         should.equal(res.body.success, false);
+//         done(res);
+//       });
+//   });
 
-});
+// });
 
-describe('GET /pkg_search/:query', function(){
+// describe('GET /pkg_search/:query', function(){
 
-  it('should respond with data as this is a valid query', function(done){
-    request
-      .get('/pkg_search/cool')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res){
-        if (err) return done(err);
-        should.equal(res.body.success, true);
-        done();
-      });
-  });
+//   it('should respond with data as this is a valid query', function(done){
+//     request
+//       .get('/pkg_search/cool')
+//       .set('Accept', 'application/json')
+//       .expect('Content-Type', /json/)
+//       .expect(200)
+//       .end(function(err, res){
+//         if (err) return done(err);
+//         should.equal(res.body.success, true);
+//         done();
+//       });
+//   });
 
-  it('should respond with data as this is a valid query', function(done){
-    request
-      .get('/pkg_search/')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res){
-        if (err) return done(err);
-        should.equal(res.body.success, true);
-        done();
-      });
-  });
+//   it('should respond with data as this is a valid query', function(done){
+//     request
+//       .get('/pkg_search/')
+//       .set('Accept', 'application/json')
+//       .expect('Content-Type', /json/)
+//       .expect(200)
+//       .end(function(err, res){
+//         if (err) return done(err);
+//         should.equal(res.body.success, true);
+//         done();
+//       });
+//   });
 
-});
+// });
 
 // test user_id
 // describe('GET /user/:id', function(){
