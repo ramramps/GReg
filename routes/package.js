@@ -1,5 +1,4 @@
 var PackageModel = require('../lib/models').PackageModel
-  , UserModel = require('../lib/models').UserModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
@@ -13,12 +12,12 @@ var PackageModel = require('../lib/models').PackageModel
  * @param {Object} HTTP response
  * @api public
  */
-exports.upvote_pkg_by_id = function(req, res) {
+exports.upvote_by_id = function(req, res) {
 
-  var pkd_id = req.params.id
+  var pkg_id = req.params.id
     , user_id = req.user._id;
 
-  packages.vote( pkg_id, user_id, -1, res );
+  packages.vote( pkg_id, user_id, 1, res );
 
 };
 
@@ -29,9 +28,9 @@ exports.upvote_pkg_by_id = function(req, res) {
  * @param {Object} HTTP response
  * @api public
  */
-exports.downvote_pkg_by_id = function(req, res) {
+exports.downvote_by_id = function(req, res) {
 
-  var pkd_id = req.params.id
+  var pkg_id = req.params.id
     , user_id = req.user._id;
 
   packages.vote( pkg_id, user_id, -1, res );
