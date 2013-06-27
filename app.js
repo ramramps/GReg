@@ -15,7 +15,7 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  var mongoDbName = process.env.DEBUG ? 'greg-dev' : 'greg-prod';
+  var mongoDbName = process.env.DEV ? 'greg-dev' : 'greg-prod';
   var mongoDbUrl = 'mongodb://localhost/';
   var mongoUri = mongoDbUrl + mongoDbName;
 
