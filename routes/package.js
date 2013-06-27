@@ -37,7 +37,25 @@ exports.downvote_by_id = function(req, res) {
 
 };
 
+/**
+ * Add a comment to a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.comment_by_id = function(req, res) {
 
+  var pkg_id = req.params.id
+    , user_id = req.user._id;
+
+  if (req.body && req.body.comment){
+    packages.comment( pkg_id, user_id, req.body.comment, res );
+  } else {
+    return res.send(403, error.fail("You cannot send an empty comment."));
+  }
+
+};
 
 
 /**
