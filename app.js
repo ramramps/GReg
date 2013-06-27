@@ -6,7 +6,9 @@ var express = require('express')
   , pkg = require('./routes/package')
   , passport = require('passport')
   , user = require('./routes/user')
-  , users = require('./lib/users');
+  , users = require('./lib/users')
+  , oxy_auth = require('./lib/oxygen_auth')
+  , basic_auth = require('./lib/basic_auth');
 
 ////////////////////////
 // DB
