@@ -50,8 +50,7 @@ var express = require('express')
 // Routes
 ////////////////////////
 
-  var auth_type =  'basic'; 
-  //var auth_type =  'oxygen'; 
+  var auth_type =  process.env.GREG_USE_OXYGEN ? 'oxygen' : 'basic'; 
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
