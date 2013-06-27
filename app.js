@@ -52,7 +52,7 @@ var express = require('express')
 ////////////////////////
 
   var auth_type =  'basic'; 
-  // var auth_type =  'oxygen'; 
+  //var auth_type =  'oxygen'; 
 
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
@@ -68,8 +68,10 @@ var express = require('express')
 
   app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
+  
   app.put('/pkg_upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
   app.put('/pkg_downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_by_id);
+  app.get('/pkg_comment/:id', pkg.comment_by_id );
 
   app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
     res.send(error.success("You are logged in."))
