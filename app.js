@@ -15,7 +15,9 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  var mongoUri = 'mongodb://localhost/greg-dev';
+  var mongoDbName = process.env.DEBUG ? 'greg-dev' : 'greg-prod';
+  var mongoDbUrl = 'mongodb://localhost/';
+  var mongoUri = mongoDbUrl + mongoDbName;
 
   mongoose.connect(mongoUri, function(err) {
     if (!err) {
@@ -88,76 +90,3 @@ var express = require('express')
   app.listen(port);
   console.log('Starting server on port: ' + port);
 
-
-
-
-  // app.get('/dbg_pkg_dl/:id/:version', function(req, res){
-  //   res.redirect('http://www.google.com');
-  // });
-
-  // var __dirName = "./";
-
-  // var amazonS3 = require('awssum-amazon-s3'),
-  //   fs = require('fs'),
-  //   fmt = require('fmt');
-
-  // var crypto = require('crypto');
-
-  // var s3 = new amazonS3.S3({
-  //     'accessKeyId'     : "AKIAISKFFMTTM7Q2XYBQ",
-  //     'secretAccessKey' : "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",
-  //     'region'          : amazonS3.US_EAST_1,
-  // });
-
-  // function guid() {
-  //   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-  //       var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-  //       return v.toString(16);
-  //   });
-  // }
-
-  // app.post('/dbg_upload', function(req, res){
-
-  //   var shasum = crypto.createHash('sha256');
-  //   var s = fs.ReadStream( req.files.pkg.path );
-
-  //   s.on('data', function(d) {
-  //     shasum.update(d);
-  //   });
-
-  //   s.on('end', function() {
-
-  //     var d = shasum.digest('base64');
-
-  //     // compare to expected file_hash
-
-  //     var bodyStream = fs.createReadStream( req.files.pkg.path );
-
-  //     var objectName = guid() + req.files.pkg.name;
-
-  //     var options = {
-  //       BucketName    : 'greg-server',
-  //       ObjectName    : objectName,
-  //       ContentLength : req.files.pkg.size,
-  //       Body          : bodyStream
-  //     };
-
-  //     try {
-  //       s3.PutObject(options, function(err, data) {
-  //         fmt.dump(err, 'err');
-  //         fmt.dump(data, 'data');
-
-  //         var url = "https://s3.amazonaws.com/greg-server/" + objectName;
-
-  //         console.log(url)
-          
-
-  //         res.send(200, error.success('cool baby') ); // confirm
-  //       });
-  //     } catch (e) {
-  //       es.send(200, error.success('not cool baby')); // confirm
-  //     }
-
-  //   });
-
-  // });
