@@ -55,6 +55,8 @@ var express = require('express')
 
   var auth_type =  process.env.GREG_USE_OXYGEN ? 'oxygen' : 'basic'; 
 
+  console.log('Using authorization strategy: ' + auth_type);
+
   app.get('/pkgs', pkg.all );
   app.get('/pkg', pkg.all );
   app.get('/pkg_dl/:id/:version', pkg.download_vers );
