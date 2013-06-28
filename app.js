@@ -69,12 +69,13 @@ var express = require('express')
   app.get('/pkg_search/', pkg.all );
   app.get('/pkg_search/:query', pkg.search ); 
 
+  app.post('/package', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
   
   app.put('/pkg_upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
   app.put('/pkg_downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_by_id);
-  app.get('/pkg_comment/:id', pkg.comment_by_id );
+  app.get('/pkg_comment/:id', passport.authenticate(auth_type, { session: false }), pkg.comment_by_id );
 
   app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
     res.send(error.success("You are logged in."))
