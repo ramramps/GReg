@@ -57,25 +57,22 @@ var express = require('express')
 
   console.log('Using authorization strategy: ' + auth_type);
 
-  app.get('/pkgs', pkg.all );
-  app.get('/pkg', pkg.all );
-  app.get('/pkg_dl/:id/:version', pkg.download_vers );
-  app.get('/pkg_dl/:id', pkg.download_last_vers );
-  app.get('/pkg/:id', pkg.by_id );
+  app.get('/packages', pkg.all );
+  app.get('/download/:id/:version', pkg.download_vers );
+  app.get('/download/:id', pkg.download_last_vers );
+  app.get('/package/:id', pkg.by_id );
 
-  app.get('/pkg_engine/:engine', pkg.by_engine );
-  app.get('/pkg_engine/:engine/:name', pkg.by_engine_and_name );
+  app.get('/packages/:engine', pkg.by_engine );
+  app.get('/package/:engine/:name', pkg.by_engine_and_name );
 
-  app.get('/pkg_search/', pkg.all );
-  app.get('/pkg_search/:query', pkg.search ); 
+  app.get('/search/:query', pkg.search ); 
 
   app.post('/package', passport.authenticate(auth_type, { session: false }), pkg.add);
-  app.post('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add);
-  app.put('/pkg', passport.authenticate(auth_type, { session: false }), pkg.add_version);
+  app.put('/package', passport.authenticate(auth_type, { session: false }), pkg.add_version);
   
-  app.put('/pkg_upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
-  app.put('/pkg_downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_by_id);
-  app.get('/pkg_comment/:id', passport.authenticate(auth_type, { session: false }), pkg.comment_by_id );
+  app.put('/upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
+  app.put('/downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_by_id);
+  app.get('/comment/:id', passport.authenticate(auth_type, { session: false }), pkg.comment_by_id );
 
   app.get('/validate', passport.authenticate(auth_type, { session: false }), function(req, res){
     res.send(error.success("You are logged in."))
