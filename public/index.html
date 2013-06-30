@@ -47,11 +47,15 @@
       <p class="title"><strong>Group: </strong> </p>
       <p class="group searchfield"><%- group %></p>
       
+       <p class="title"><strong>Id: </strong> </p>
+      <p class="group searchfield"><%- _id %></p>
+      
+      
       <p class="title"><strong>Votes: </strong> </p>
       <p class="votes searchfield"><%- votes %></p>
 
       <p class="title"><strong>Versions: </strong> </p>
-      <p class="versions searchfield"><% _.each(versions, function(i) { %> <%= i.version %> <% }); %></p>
+       <% _.each(versions, function(i) { %> <p class="versions searchfield"><%= i.version %> <a href = " <%= i.url %> ">Download</a></p><% }); %>
 
       <p class="title"><strong>Maintainers: </strong></p>
       <p class="maintainers searchfield"><% _.each(maintainers, function(i) { %>  <%= i.username %> <% }); %></p>
