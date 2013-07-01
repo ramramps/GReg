@@ -1,35 +1,23 @@
-var search = require('../lib/search')
-	, request = require('supertest')
-  , express = require('express')
-  , mocha = require('mocha')
-  , should = require('should')
-  , request = request('http://localhost:8080')
-  , pkgs = require('../lib/packages');
+var packages = require('../lib/packages')
+	, mocha = require('mocha')
+  , should = require('should');
 
-function get_pkg_search_object() {
+describe('packages.build_suffix_array_string', function(){
 
-	var pkg_search_obj = {};
+	it('should return a long string when given a long word', function(){
 
-	pkg_search_obj.name = "dummy";
-	pkg_search_obj.keywords = "toads frogs";
-	pkg_search_obj.engine ="dynamo";
-	pkg_search_obj.group = "frogs";
+		var string = "these are some things to suffix i like noodles";
+		var suffix_string = packages.build_suffix_array_string(string);
+		should.exist( suffix_string );
 
-	return pkg_search_obj;
+	}); 
 
-}
+	it('should return an empty string when passed an empty string or null', function(){
 
-describe('search.add', function(){
+		var string = null;
+		var suffix_string = packages.build_suffix_array_string(string);
+		should.exist( suffix_string );
 
-  it('should respond not have an error for a well-formed request', function(done){
-
-		search.add( "12939", get_pkg_search_object(), function(err, data){
-
-			should.equal(data.StatusCode, 200);
-			done();
-
-		});
-
-  });
+	});
 
 });
