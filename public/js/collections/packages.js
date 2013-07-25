@@ -8,7 +8,7 @@
   var PackageList = Backbone.Collection.extend({
 
     url: function() {
-      return '/pkgs/';
+      return '/packages/';
     } ,
 
     // Reference to this collection's model.
