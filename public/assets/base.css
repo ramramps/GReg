@@ -33,7 +33,6 @@ body { margin: 0 }
 
 .package {
 	z-index: 0;
-	padding: 0 0 0 10px;
 	font-weight: 100;
 	border-left: solid 4px grey;
 	background: whitesmoke;
@@ -41,19 +40,39 @@ body { margin: 0 }
 }
 
 .title-container {
+	vertical-align:top;
 	display: inline-block;
-	padding: 0 10px 0 0;
+	padding: 8px 0px 4px 10px;
 }
 
 .votes-downloads-container {
-  padding: 10px 0 0 0;
+	padding: 0px 0 5px 10px;
 	display: inline-block;
 }
 
-.description-container {
-	display: 0 10px 0 0;
+.data-container {
+	padding: 15px;	
+	margin: 0;
+	background: #333;
+	color: #BBB;
+}
+
+.group-container {
+	font-size: 12px;
+	text-transform: uppercase;
+	color: #666;
+	vertical-align:top;
+	padding: 15px 0px 0 0;
 	display: inline-block;
-	width: 62%;
+	width: 10%;
+}
+
+.description-container {
+	color: #999;
+	vertical-align:top;
+	padding: 15px 10px 8px 0;
+	display: inline-block;
+	width: 50%;
 }
 
 .package:hover {
@@ -91,7 +110,7 @@ body { margin: 0 }
 
 .page-title {	
 	float: left;
-	padding: 18px 5px 5px 5px;
+	padding: 18px 5px 5px 10px;
 	font-size: 20px;	
 }
 

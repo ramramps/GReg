@@ -126,8 +126,10 @@ exports.download_vers = function(req, res) {
     for (var i = 0; i < pkg.versions.length; i++) {
       if ( version === pkg.versions[i].version ) {  
         try {
-          console.log()
-          return res.redirect( pkg.versions[i].url )
+					res.redirect( pkg.versions[i].url );
+					pkg.downloads = pkg.downloads + 1;
+					pkg.markModified('downloads');
+					return pkg.save();
         } catch (exception) {
           return res.send(500, error.fail('Failed to redirect' ));
         }

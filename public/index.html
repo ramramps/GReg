@@ -13,7 +13,7 @@
    <div id="app">
 
     <div id="search_container" class="row">
-      <div class="page-title">Dynamo Package Manager</div>
+      <div class="page-title"><img src="assets/search.png"/></div>
 			<input class="search" placeholder="Instant search"/>
       <div id="sorting">
         <span style="color: grey"> Sort: </span>
@@ -38,9 +38,13 @@
   		<p class="description searchfield"><%- description %></p>
     </div>
 		
+		<div class="group-container">
+      <p class="group searchfield"><%- group %></p>
+		</div>
+		
 		<div class="votes-downloads-container">  
-		  <p class="title"><strong style="width:80px; display: inline-block;">Downloads </strong> <%- downloads %></p>
-      <p class="title"><strong style="width:80px; display: inline-block;">Votes </strong> <%- votes %></p>
+		  <p class="title"><strong class="downloads" style="width:80px; display: inline-block;">Downloads </strong> <%- downloads %></p>
+      <p class="title"><strong class="votes" style="width:80px; display: inline-block;">Votes </strong> <%- votes %></p>
 	 </div>
 
     <div class="data-container" style="display:none">
@@ -48,11 +52,8 @@
       <p class="title"><strong>Keywords: </strong> </p>
       <p class="keywords searchfield"><% _.each(keywords, function(i) { %> <%= i %> <% }); %> </p>
 
-      <p class="title"><strong>Group: </strong> </p>
-      <p class="group searchfield"><%- group %></p>
-       
       <p class="title"><strong>Versions: </strong> </p>
-       <% _.each(versions, function(i) { %> <p class="versions searchfield"><%= i.version %> <a href = " <%= i.url %> ">Download</a></p><% }); %>
+       <% _.each(versions, function(i) { %> <p class="versions searchfield"><%= i.version %> <a href = "download/<%= _id  %>/<%= i.version %>">Download</a></p><% }); %>
 
       <p class="title"><strong>Maintainers: </strong></p>
       <p class="maintainers searchfield"><% _.each(maintainers, function(i) { %>  <%= i.username %> <% }); %></p>
