@@ -32,11 +32,28 @@ body { margin: 0 }
 }
 
 .package {
+	z-index: 0;
+	padding: 0 0 0 10px;
 	font-weight: 100;
-	padding: 10px;
 	border-left: solid 4px grey;
 	background: whitesmoke;
 	border-bottom: solid 1px #DDD;
+}
+
+.title-container {
+	display: inline-block;
+	padding: 0 10px 0 0;
+}
+
+.votes-downloads-container {
+  padding: 10px 0 0 0;
+	display: inline-block;
+}
+
+.description-container {
+	display: 0 10px 0 0;
+	display: inline-block;
+	width: 62%;
 }
 
 .package:hover {
@@ -44,8 +61,13 @@ body { margin: 0 }
 	border-left: solid 4px yellow;
 }
 
+.package a {
+	z-index: 1;
+	color: gray;
+}
+
 .package span {
-	color: grey;
+	color: gray;
 }
 
 .package p {
@@ -57,7 +79,7 @@ body { margin: 0 }
 }
 
 .package h2 {
-	font-size: 25px;
+	font-size: 20px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
@@ -67,15 +89,30 @@ body { margin: 0 }
 	text-transform: uppercase;
 }
 
+.page-title {	
+	float: left;
+	padding: 18px 5px 5px 5px;
+	font-size: 20px;	
+}
+
+.title-container {
+	display: inline-block;	
+	width: 25%;
+}
+
+.expand {
+	float: right;
+	background: gray;
+}
+
 .search {
-	font-family: 'Titillium Web', sans-serif;
 	color: black;
 	font-weight: 200;
 	float: left;
 	font-size: 20px;
 	padding: 5px;
 	margin: 10px;
- 	width: 50%;
+ 	width: 350px;
  	height: 30px;
 }
 

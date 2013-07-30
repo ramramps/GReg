@@ -152,7 +152,7 @@ exports.by_id = function(req, res) {
 
   var id = req.params.id;
 
-  PackageModel.findById(id, function(err, pkg) {
+  PackageModel.findById(id).populate('maintainers').exec(function(err, pkg) {
 
     if ( err || !pkg ) {
       console.log('Error')
