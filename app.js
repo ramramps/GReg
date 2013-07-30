@@ -15,9 +15,9 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  var mongoDbName = process.env.DEV ? 'ds037698.mongolab.com:37698/greg-dev' : 'ds037468.mongolab.com:37468/greg-prod';
+  var mongoDbName = process.env.DEV ? 'greg-dev' : 'greg-prod';
   //var mongoDbUrl = 'mongodb://localhost/';
-  var mongoDbUrl = 'mongodb://dynamo:witcoheibn@';
+  var mongoDbUrl = 'mongodb://ec2-54-221-39-2.compute-1.amazonaws.com/';
 	var mongoUri = mongoDbUrl + mongoDbName;
 	
 
