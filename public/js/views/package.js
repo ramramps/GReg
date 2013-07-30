@@ -14,16 +14,22 @@
     template: _.template( $('#item-template').html() ),
 
     events: {
-      'click .showdeps': 'toggleDeps', 
+			 'click .showdeps': 'toggleDeps',
+		   'click': 'expand' 
     },
 
     toggleDeps: function(event) {
-
+		console.log('up')	
       this.$('.deps-container').toggle();
       this.$('.full_deps-container').toggle();
       event.preventDefault();
-
+			event.stopPropagation();
     },
+
+    expand: function(event) {
+			console.log('down')
+			this.$('.data-container').toggle();
+		}, 
 
     initialize: function() {
 
