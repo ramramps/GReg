@@ -15,9 +15,11 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  var mongoDbName = process.env.DEV ? 'greg-dev' : 'greg-prod';
-  var mongoDbUrl = 'mongodb://localhost/';
-  var mongoUri = mongoDbUrl + mongoDbName;
+  var mongoDbName = process.env.DEV ? 'ds037698.mongolab.com:37698/greg-dev' : 'ds037468.mongolab.com:37468/greg-prod';
+  //var mongoDbUrl = 'mongodb://localhost/';
+  var mongoDbUrl = 'mongodb://dynamo:witcoheibn@';
+	var mongoUri = mongoDbUrl + mongoDbName;
+	
 
   mongoose.connect(mongoUri, function(err) {
     if (!err) {
