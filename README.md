@@ -1,4 +1,4 @@
-Greg REST API
+GReg REST API
 =========
 
 ##Current state
