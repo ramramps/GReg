@@ -15,15 +15,17 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  var mongoDbName = process.env.DEV ? 'greg-dev' : 'greg-prod';
-  //var mongoDbUrl = 'mongodb://localhost/';
-  var mongoDbUrl = 'mongodb://ec2-54-221-39-2.compute-1.amazonaws.com/';
-	var mongoUri = mongoDbUrl + mongoDbName;
-	
+  if (process.env.DEV){
+     console.log("USING DEBUG CONFIGURATION");
+  }
+
+  var mongoDbName = 'greg-dev';
+  var mongoDbUrl = process.env.DEV ? 'mongodb://ec2-50-16-98-48.compute-1.amazonaws.com/' : 'mongodb://ec2-54-221-39-2.compute-1.amazonaws.com/'
+	var mongoUri = mongoDbUrl + mongoDbName;	
 
   mongoose.connect(mongoUri, function(err) {
     if (!err) {
-        console.log('Connected to MongoDB');
+       console.log('Connected to MongoDB at ' + mongoUri);
       } else {
         throw err;
       }
