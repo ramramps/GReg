@@ -15,12 +15,8 @@ var express = require('express')
 // DB
 ////////////////////////
 
-  if (process.env.DEV){
-     console.log("USING DEBUG CONFIGURATION");
-  }
-
-  var mongoDbName = 'greg-dev';
-  var mongoDbUrl = process.env.DEV ? 'mongodb://ec2-50-16-98-48.compute-1.amazonaws.com/' : 'mongodb://ec2-54-221-39-2.compute-1.amazonaws.com/'
+  var mongoDbName = process.env.GREG_DB_NAME;
+  var mongoDbUrl = process.env.GREG_DB_URL;
 	var mongoUri = mongoDbUrl + mongoDbName;	
 
   mongoose.connect(mongoUri, function(err) {
