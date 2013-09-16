@@ -43,9 +43,9 @@ exports.undeprecate_by_id = function(req, res) {
  */
 exports.deprecate_by_engine_and_name = function(req, res) {
 
-  var engine = req.params.engine;
+  var engine = req.params.engine
     , name = req.params.name;
-
+  
   packages.by_engine_and_name( engine, name, function(err, pkg){
     
     if (err) return res.send(404, error.fail('The package does not exist'));
@@ -64,7 +64,7 @@ exports.deprecate_by_engine_and_name = function(req, res) {
  */
 exports.undeprecate_by_engine_and_name = function(req, res) {
 
-  var engine = req.params.engine;
+  var engine = req.params.engine
     , name = req.params.name;
 
   packages.by_engine_and_name( engine, name, function(err, pkg){
@@ -118,7 +118,7 @@ exports.downvote_by_id = function(req, res) {
  */
 exports.upvote_by_engine_and_name = function(req, res) {
 
-  var engine = req.params.engine;
+  var engine = req.params.engine
     , name = req.params.name
     , user_id = req.user._id;
 
@@ -140,7 +140,7 @@ exports.upvote_by_engine_and_name = function(req, res) {
  */
 exports.downvote_by_engine_and_name = function(req, res) {
 
-  var engine = req.params.engine;
+  var engine = req.params.engine
     , name = req.params.name
     , user_id = req.user._id;
 
@@ -182,7 +182,7 @@ exports.comment_by_id = function(req, res) {
  */
 exports.comment_by_engine_and_name = function(req, res) {
 
-  var engine = req.params.engine;
+  var engine = req.params.engine
     , name = req.params.name
     , user_id = req.user._id;
 
@@ -390,7 +390,6 @@ exports.by_engine_and_name = function(req, res) {
 
   var engine = req.params.engine;
   var name = req.params.name;
-
   packages.by_engine_and_name(engine, name, function(err, pkg) {
 
     if ( err || !pkg )
