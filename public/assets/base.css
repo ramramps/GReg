@@ -9,7 +9,7 @@ body { margin: 0 }
 .scroll-y { overflow-y: auto; }
 
 #app {
-	font-family: Open Sans;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #search_container { 
@@ -62,7 +62,7 @@ body { margin: 0 }
 	text-transform: uppercase;
 	color: #666;
 	vertical-align:top;
-	padding: 15px 0px 0 0;
+	padding: 15px 5px 0 0;
 	display: inline-block;
 	width: 10%;
 }
@@ -85,12 +85,17 @@ body { margin: 0 }
 	color: gray;
 }
 
+.title {
+	padding: 10px 0px 0 0;
+}
+
 .package span {
 	color: gray;
 }
 
 .package p {
-	margin: 0;
+	font-size: 13px;
+  margin: 0;
 }
 
 .package ul {
@@ -98,13 +103,13 @@ body { margin: 0 }
 }
 
 .package h2 {
-	font-size: 20px;
+	font-size: 18px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
-.package .deprecated {
-	background: #333;
+.deprecated {
+	background: #DEDEDE;
 	color: #555;
 }
 

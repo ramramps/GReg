@@ -34,14 +34,13 @@
     },
 
     render: function() {
-
-      this.$el.html( this.template( this.model.toJSON() ) );
-
-      if (this.model.deprecated){
-        console.log("this is deprecated")
+      
+			this.$el.html( this.template( this.model.toJSON() ) );
+      
+      if (this.model.get('deprecated')){
         this.$el.addClass('deprecated');
       }
-
+			console.log('render')
       return this;
       
     }
