@@ -28,7 +28,7 @@
 
       this.$list.empty();
       var that = this;
-console.log('packages')
+
       app.Packages.forEach(function(pkg) {
 
         var pkg_view = new app.PackageView({ model: pkg });
