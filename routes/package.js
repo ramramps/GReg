@@ -35,6 +35,48 @@ exports.undeprecate_by_id = function(req, res) {
 };
 
 /**
+ * Deprecate a package by engine and name
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.deprecate_by_engine_and_name = function(req, res) {
+
+  var engine = req.params.engine;
+    , name = req.params.name;
+
+  packages.by_engine_and_name( engine, name, function(err, pkg){
+    
+    if (err) return res.send(404, error.fail('The package does not exist'));
+    packages.set_pkg_deprecation( req, true, pkg._id, res );
+  
+  });
+
+};
+
+/**
+ * "Undeprecate" a package by engine and name
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.undeprecate_by_engine_and_name = function(req, res) {
+
+  var engine = req.params.engine;
+    , name = req.params.name;
+
+  packages.by_engine_and_name( engine, name, function(err, pkg){
+    
+    if (err) return res.send(404, error.fail('The package does not exist'));
+    packages.set_pkg_deprecation( req, false, pkg._id, res );
+  
+  });
+
+};
+
+/**
  * Vote for a package
  *
  * @param {Object} HTTP request 
@@ -68,6 +110,50 @@ exports.downvote_by_id = function(req, res) {
 };
 
 /**
+ * Deprecate a package by engine and name
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.upvote_by_engine_and_name = function(req, res) {
+
+  var engine = req.params.engine;
+    , name = req.params.name
+    , user_id = req.user._id;
+
+  packages.by_engine_and_name( engine, name, function(err, pkg){
+    
+    if (err) return res.send(404, error.fail('The package does not exist'));
+    packages.vote( pkg._id, user_id, 1, res );
+  
+  });
+
+};
+
+/**
+ * "Undeprecate" a package by engine and name
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.downvote_by_engine_and_name = function(req, res) {
+
+  var engine = req.params.engine;
+    , name = req.params.name
+    , user_id = req.user._id;
+
+  packages.by_engine_and_name( engine, name, function(err, pkg){
+    
+    if (err) return res.send(404, error.fail('The package does not exist'));
+    packages.vote( pkg._id, user_id, -1, res );
+  
+  });
+
+};
+
+/**
  * Add a comment to a package
  *
  * @param {Object} HTTP request 
@@ -87,6 +173,32 @@ exports.comment_by_id = function(req, res) {
 
 };
 
+/**
+ * Add a comment to a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.comment_by_engine_and_name = function(req, res) {
+
+  var engine = req.params.engine;
+    , name = req.params.name
+    , user_id = req.user._id;
+
+  packages.by_engine_and_name( engine, name, function(err, pkg){
+    
+    if (err) return res.send(404, error.fail('The package does not exist'));
+    if (req.body && req.body.comment){
+      packages.comment( pkg._id, user_id, req.body.comment, res );
+    } else {
+      return res.send(403, error.fail("You cannot send an empty comment."));
+    }
+  
+  });
+
+};
+
 
 /**
  * Download the most recent version of a package given an id
@@ -102,9 +214,7 @@ exports.download_last_vers = function(req, res) {
   var id = req.params.id;
   var version = req.params.version;
 
-  PackageModel.findById(id, function(err, pkg) {
-
-    console.log( pkg )
+  packages.by_id(id, function(err, pkg) {
 
     if ( err || !pkg ) {
       try {
@@ -141,7 +251,7 @@ exports.download_vers = function(req, res) {
   var id = req.params.id;
   var version = req.params.version;
 
-  PackageModel.findById(id, function(err, pkg) {
+  packages.by_id(id, function(err, pkg) {
 
     if ( err || !pkg ) {
       try {
@@ -184,12 +294,7 @@ exports.by_id = function(req, res) {
 
   var id = req.params.id;
 
-  PackageModel.findById(id)
-		.populate('maintainers', 'username')
-  	.populate('versions.direct_dependency_ids', 'name')
-  	.populate('versions.full_dependency_ids', 'name')
-  	.populate('used_by', 'name')
-		.exec(function(err, pkg) {
+  packages.by_id(id, function(err, pkg) {
 
     if ( err || !pkg ) {
       console.log('Error')
@@ -223,13 +328,7 @@ exports.by_id = function(req, res) {
 
 exports.all = function(req, res) {
 
-  PackageModel
-  .find({})
-  .populate('maintainers', 'username')
-  .populate('versions.direct_dependency_ids', 'name')
-  .populate('versions.full_dependency_ids', 'name')
-  .populate('used_by', 'name')
-  .exec(function (err, pkgs) {
+  packages.all(function (err, pkgs) {
 
     if ( err || !pkgs ) {
       try {
@@ -264,13 +363,7 @@ exports.by_engine = function(req, res) {
 
   var engine = req.params.engine;
 
-  PackageModel
-  .find( {engine: engine})
-  .populate('maintainers', 'username')
-  .populate('versions.direct_dependency_ids', 'name')
-  .populate('versions.full_dependency_ids', 'name')
-  .populate('used_by', 'name')
-  .exec(function(err, pkgs) {
+  packages.by_engine(engine, function(err, pkgs) {
 
     if ( err || !pkgs || pkgs.length === 0 )
     {
@@ -285,7 +378,6 @@ exports.by_engine = function(req, res) {
 
 };
 
-
 /**
  * Lookup a package by engine and name.  Returns only a single package.
  *
@@ -299,13 +391,7 @@ exports.by_engine_and_name = function(req, res) {
   var engine = req.params.engine;
   var name = req.params.name;
 
-  PackageModel
-	.findOne( {engine: engine, name: name} )
-	.populate('maintainers', 'username')
-  .populate('versions.direct_dependency_ids', 'name')
-  .populate('versions.full_dependency_ids', 'name')
-  .populate('used_by', 'name')
-	.exec(function(err, pkg) {
+  packages.by_engine_and_name(engine, name, function(err, pkg) {
 
     if ( err || !pkg )
     {
@@ -355,7 +441,7 @@ exports.search = function(req, res) {
 
     });
 
-    packages.get_pkg_list(ids, function(err, pkgs) {
+    packages.by_ids(ids, function(err, pkgs) {
 
       if (err) {
         return res.send(500, error.fail('Failed to get packages from db'));
