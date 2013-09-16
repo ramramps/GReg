@@ -70,6 +70,8 @@ var express = require('express')
   app.post('/package', passport.authenticate(auth_type, { session: false }), pkg.add);
   app.put('/package', passport.authenticate(auth_type, { session: false }), pkg.add_version);
   
+  app.put('/deprecate/:id', passport.authenticate(auth_type, { session: false }), pkg.deprecate_by_id);
+  app.put('/undeprecate/:id', passport.authenticate(auth_type, { session: false }), pkg.undeprecate_by_id);
   app.put('/upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
   app.put('/downvote/:id', passport.authenticate(auth_type, { session: false }), pkg.downvote_by_id);
   app.get('/comment/:id', passport.authenticate(auth_type, { session: false }), pkg.comment_by_id );

@@ -5,6 +5,35 @@ var PackageModel = require('../lib/models').PackageModel
   , search = require('../lib/search')
   , _ = require('underscore');
 
+
+/**
+ * Deprecate a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.deprecate_by_id = function(req, res) {
+
+  var pkg_id = req.params.id;
+  packages.set_pkg_deprecation( req, true, pkg_id, res );
+
+};
+
+/**
+ * "Undeprecate" a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.undeprecate_by_id = function(req, res) {
+
+  var pkg_id = req.params.id;
+  packages.set_pkg_deprecation( req, false, pkg_id, res );
+
+};
+
 /**
  * Vote for a package
  *
@@ -20,6 +49,7 @@ exports.upvote_by_id = function(req, res) {
   packages.vote( pkg_id, user_id, 1, res );
 
 };
+
 
 /**
  * Vote for a package
