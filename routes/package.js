@@ -154,7 +154,12 @@ exports.by_id = function(req, res) {
 
   var id = req.params.id;
 
-  PackageModel.findById(id).populate('maintainers').exec(function(err, pkg) {
+  PackageModel.findById(id)
+		.populate('maintainers', 'username')
+  	.populate('versions.direct_dependency_ids', 'name')
+  	.populate('versions.full_dependency_ids', 'name')
+  	.populate('used_by', 'name')
+		.exec(function(err, pkg) {
 
     if ( err || !pkg ) {
       console.log('Error')
@@ -229,7 +234,13 @@ exports.by_engine = function(req, res) {
 
   var engine = req.params.engine;
 
-  PackageModel.find( {engine: engine} , function(err, pkgs) {
+  PackageModel
+  .find( {engine: engine})
+  .populate('maintainers', 'username')
+  .populate('versions.direct_dependency_ids', 'name')
+  .populate('versions.full_dependency_ids', 'name')
+  .populate('used_by', 'name')
+  .exec(function(err, pkgs) {
 
     if ( err || !pkgs || pkgs.length === 0 )
     {
@@ -258,7 +269,13 @@ exports.by_engine_and_name = function(req, res) {
   var engine = req.params.engine;
   var name = req.params.name;
 
-  PackageModel.findOne( {engine: engine, name: name} , function(err, pkg) {
+  PackageModel
+	.findOne( {engine: engine, name: name} )
+	.populate('maintainers', 'username')
+  .populate('versions.direct_dependency_ids', 'name')
+  .populate('versions.full_dependency_ids', 'name')
+  .populate('used_by', 'name')
+	.exec(function(err, pkg) {
 
     if ( err || !pkg )
     {
