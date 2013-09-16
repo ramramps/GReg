@@ -36,6 +36,12 @@
     render: function() {
 
       this.$el.html( this.template( this.model.toJSON() ) );
+
+      if (this.model.deprecated){
+        console.log("this is deprecated")
+        this.$el.addClass('deprecated');
+      }
+
       return this;
       
     }
