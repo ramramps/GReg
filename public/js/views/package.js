@@ -19,7 +19,6 @@
     },
 
     toggleDeps: function(event) {
-		console.log('up')	
       this.$('.deps-container').toggle();
       this.$('.full_deps-container').toggle();
       event.preventDefault();
@@ -27,14 +26,11 @@
     },
 
     expand: function(event) {
-			console.log('down')
 			this.$('.data-container').toggle();
 		}, 
 
     initialize: function() {
-
       this.listenTo(this.model, 'change', this.render);
-
     },
 
     render: function() {

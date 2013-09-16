@@ -9,7 +9,7 @@ body { margin: 0 }
 .scroll-y { overflow-y: auto; }
 
 #app {
-	font-family: 'Titillium Web', sans-serif;
+	font-family: Open Sans;
 }
 
 #search_container { 
@@ -101,6 +101,11 @@ body { margin: 0 }
 	font-size: 20px;
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+.package .deprecated {
+	background: #333;
+	color: #555;
 }
 
 .package strong {

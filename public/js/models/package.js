@@ -13,6 +13,7 @@ var app = app || {};
       engine: 'dynamo',
       keywords: [],
       description: "description",
+      deprecated: false,
       group: "group",
       votes: 0,
       maintainers: [],
@@ -25,7 +26,7 @@ var app = app || {};
     urlRoot: '/pkg/',
 
     parse: function(stuff) {
-      console.log(stuff)
+
       stuff.version_deps = [];
       stuff.full_dl_deps = [];
 
