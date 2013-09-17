@@ -4,18 +4,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Dynamo Packages</title>
-  <link rel="stylesheet" href="assets/base.css">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
   <link rel="icon" type="image/ico" href="favicon.ico"/>
 </head>
 
 <body>
 
    <div id="app">
-
+    
+    <div id="loading_container" class="row col"> Loading... </div> 
+   
     <div id="search_container" class="row">
-      <div class="page-title"><img src="assets/search.png"/></div>
-			<input class="search" placeholder="Instant search"/>
+			<input class="search" placeholder="Search Dynamo packages..."/>
       <div id="sorting">
         <span style="color: grey"> Sort: </span>
         <span class="sort" data-sort="name">Name</span>
@@ -31,6 +33,7 @@
 
   <script type="text/template" id="item-template">
 
+
     <div class="title-container" >
       <h2 class="name searchfield"><%- name %><% if(deprecated){ %><span style="text-transform: uppercase; font-size: 12px; padding-left: 10px;"> (Deprecated) </> <% } %> </h2>
     </div>
@@ -44,27 +47,29 @@
 		</div>
 		
 		<div class="votes-downloads-container">  
-		  <p class="title"><i class="icon-download-alt" style="display: inline-block;">Downloads </strong> <%- downloads %></p>
-      <p class="title"><i class="icon-chevron-up" style="display: inline-block;">Votes </strong> <%- votes %></p>
+		  <div title="Number of downloads"><i class="icon-download-alt" style="display:inline-block" /><span class="downloads"> <%- downloads %></span> </div>
+      <div title="Votes"><i class="icon-chevron-up" style="display:inline-block" /><span class="votes"> <%- votes %> </span> </div>
 	 </div>
-
     <div class="data-container" style="display:none">
  
       <p class="title"><strong>Keywords: </strong> </p>
       <p class="keywords searchfield"><% _.each(keywords, function(i) { %> <%= i %> <% }); %> </p>
 
       <p class="title"><strong>Versions: </strong> </p>
-       <% _.each(versions, function(i) { %> <p class="versions searchfield"><%= i.version %> <a href = "download/<%= _id  %>/<%= i.version %>">Download</a></p><% }); %>
+       <% _.each(versions, function(i) { %> <a href = "download/<%= _id  %>/<%= i.version %>"><p class="versions searchfield"><%= i.version %> <i style="margin-left: 5px;" class="icon-download-alt icon-white" /></a></p><% }); %>
 
       <p class="title"><strong>Maintainers: </strong></p>
       <p class="maintainers searchfield"><% _.each(maintainers, function(i) { %>  <%= i.username %> <% }); %></p>
+     
+      <p class="title"><strong>Group: </strong></p>
+      <p class="group searchfield"><%- group %></p>
      
       <% if(used_by && used_by.length > 0){ %>
       <p class="title"><strong>Used by: </strong> </p>
       <p class="used_by searchfield"><% _.each(used_by, function(i) { %><%= i.name %> <% }); %> </p>
       <% } %>
 
-      <a href="#" class="showdeps">Show dependencies</a>
+      <a href="#" style="display: inline-block; margin-top: 15px" class="showdeps">view Dependencies <i class="icon-arrow-down icon-white" /></a>
 
       <div class="deps-container" style="display:none">
         <strong>Directly Uses: </strong>

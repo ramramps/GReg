@@ -13,7 +13,7 @@ body { margin: 0 }
 }
 
 #search_container { 
-	color: white;
+	color: #ccc;
 	top: 0;
 	height: 65px;
 	background: black;
@@ -21,8 +21,9 @@ body { margin: 0 }
 }
 
 #sorting {
-	padding-left: 20px;
-	padding-top: 20px;
+	font-size: 15px;
+  padding-left: 20px;
+	padding-top: 25px;
 }
 
 #search_container span { 
@@ -32,52 +33,69 @@ body { margin: 0 }
 }
 
 .package {
-	z-index: 0;
-	font-weight: 100;
-	border-left: solid 4px grey;
+	padding-top: 15px;
+  padding-bottom:8px;
+  z-index: 0;
 	background: whitesmoke;
 	border-bottom: solid 1px #DDD;
 }
 
 .title-container {
-	vertical-align:top;
+  vertical-align:top;
 	display: inline-block;
-	padding: 8px 0px 4px 10px;
+  width: 20%;
+  text-overflow: clip;
 }
 
 .votes-downloads-container {
-	padding: 0px 0 5px 10px;
+	vertical-align: top;
+  width: 18%;
+  opacity: 0.65;
+  font-size: 11px;
 	display: inline-block;
+  text-align: right;
+}
+
+.votes-downloads-container div {
+  display: inline-block;
+  width: 100px;
+  padding-right: 10px;
+  text-align: left;
+}
+
+.votes-downloads-container i {
+  margin: 0px 20px; 
 }
 
 .data-container {
 	padding: 15px;	
-	margin: 0;
+	margin: 10px 0 0 0;
 	background: #333;
 	color: #BBB;
 }
 
+textarea, input { outline: none; }
+
+.data-container i {
+	opacity: 0.3;
+}
+
 .group-container {
-	font-size: 12px;
-	text-transform: uppercase;
+	font-size: 11px;
 	color: #666;
 	vertical-align:top;
-	padding: 15px 5px 0 0;
-	display: inline-block;
-	width: 10%;
+	display: none;
 }
 
 .description-container {
-	color: #999;
+  color: #999;
 	vertical-align:top;
-	padding: 15px 10px 8px 0;
 	display: inline-block;
-	width: 50%;
+	width: 55%;
 }
 
 .package:hover {
 	background: white;
-	border-left: solid 4px yellow;
 }
 
 .package a {
@@ -85,12 +103,21 @@ body { margin: 0 }
 	color: gray;
 }
 
+.showdeps {
+	font-size: 11px;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
 .title {
-	padding: 10px 0px 0 0;
+	padding: 10px 0px 8px 0;
 }
 
 .package span {
 	color: gray;
+}
+.package a {
+	text-decoration:none;
 }
 
 .package p {
@@ -103,9 +130,8 @@ body { margin: 0 }
 }
 
 .package h2 {
-	font-size: 18px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin: 0 0 0 20px;
+  font-size: 16px;
 }
 
 .deprecated {
@@ -116,6 +142,15 @@ body { margin: 0 }
 .package strong {
 	font-size: 8px;
 	text-transform: uppercase;
+}
+
+#loading_container {
+  font-size: 30px;
+  
+  line-height: 300px;
+  text-align: center;
+  vertical-align: middle;
+   z-index: 100;
 }
 
 .page-title {	
@@ -134,15 +169,20 @@ body { margin: 0 }
 	background: gray;
 }
 
+input:focus, textarea:focus {
+	outline: none !important;
+  background: #2c2c2c;
+}
+
 .search {
-	color: black;
-	font-weight: 200;
+	color:white;
+  background: #222;
 	float: left;
-	font-size: 20px;
-	padding: 5px;
-	margin: 10px;
+  border: 0;
+	font-size: 18px;
+	padding: 5px 0 0 20px;
  	width: 350px;
- 	height: 30px;
+ 	height: 65px;
 }
 
 .list {

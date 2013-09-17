@@ -20,17 +20,19 @@
 
       this.$input = this.$('.search');
       this.$list = this.$('.list')
+      this.$loading = this.$('#loading-container');
       this.listenTo(app.Packages, 'sync', this.render );
 
     },
 
     render: function(arg) {
+      this.$loading.hide();
 
       this.$list.empty();
       var that = this;
 
       app.Packages.forEach(function(pkg) {
-
+        if (pkg.get('deprecated')) return;
         var pkg_view = new app.PackageView({ model: pkg });
         pkg_view.render();
         that.$list.append( pkg_view.$el );
@@ -38,7 +40,7 @@
       });
 
       var options = {
-          valueNames: [ 'engine', 'votes', 'name', 'keywords', 'group', 'description', 'maintainers' ]
+          valueNames: [ 'engine', 'votes','downloads', 'name', 'keywords', 'group', 'description', 'maintainers' ]
       };
 
       this.list = new List('app', options);
