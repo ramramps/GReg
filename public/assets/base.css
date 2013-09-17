@@ -178,13 +178,14 @@ input:focus, textarea:focus {
 }
 
 .search {
+  font-family: 'Open Sans', sans-serif;
   font-weight: 100;
 	color:white;
   background: #222;
 	float: left;
   border: 0;
 	font-size: 18px;
-	padding: 5px 0 0 20px;
+	padding: 0px 0 0 20px;
  	width: 350px;
  	height: 65px;
 }
