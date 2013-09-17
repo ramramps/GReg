@@ -145,9 +145,9 @@ textarea, input { outline: none; }
 }
 
 #loading_container {
+  opacity: 0.8;
   font-size: 30px;
-  
-  line-height: 300px;
+  line-height: 500px;
   text-align: center;
   vertical-align: middle;
    z-index: 100;

@@ -20,7 +20,7 @@
 
       this.$input = this.$('.search');
       this.$list = this.$('.list')
-      this.$loading = this.$('#loading-container');
+      this.$loading = this.$('#loading_container');
       this.listenTo(app.Packages, 'sync', this.render );
 
     },
