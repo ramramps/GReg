@@ -8,6 +8,7 @@ var express = require('express')
   , user = require('./routes/user')
   , users = require('./lib/users')
   , oxy_auth = require('./lib/oxygen_auth')
+	, stats = require('./routes/stats')
   , basic_auth = require('./lib/basic_auth')
   , error = require('./lib/error');
 
@@ -74,7 +75,7 @@ var express = require('express')
 
 // stats
 
-  app.get('/stats/:engine/:query-type', stats.by_engine_and_query );
+  app.get('/stats/:engine/:query_type', stats.by_engine_and_query );
 
 // search
 
