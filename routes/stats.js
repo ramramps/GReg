@@ -2,7 +2,7 @@ var error = require('../lib/error')
   , mongoose = require('mongoose')
   , stats = require('../lib/stats')
 
-exports.DEFAULT_LIMIT = 10;
+exports.DEFAULT_LIMIT = 7;
 
 exports.by_engine_and_query = function(req, res) {
 
@@ -42,3 +42,25 @@ exports.by_engine = function(req, res) {
   });
 
 }
+
+exports.user_stats = function(req, res) {
+
+  var query_type = req.params.query_type
+    , limit = req.query.limit || exports.DEFAULT_LIMIT;
+ 
+  if ( !stats[query_type] ){
+    return res.send(404, error.fail("No such statistic"));
+  }
+ 
+  stats[query_type]( limit, function(err, users){
+
+    if ( err || !users || users.length === 0 ){
+      return res.send( 404, error.fail("No results") );
+    }
+
+    return res.send( error.success_with_content('Found stats', users) );
+
+  });
+
+}
+
