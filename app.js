@@ -72,6 +72,10 @@ var express = require('express')
   app.get('/packages', pkg.all );
   app.get('/packages/:engine', pkg.by_engine );
 
+// stats
+
+  app.get('/stats/:engine/:query-type', stats.by_engine_and_query );
+
 // search
 
   app.get('/search/:query', pkg.search ); 
