@@ -76,6 +76,7 @@ var express = require('express')
 // stats
 
   app.get('/stats/:engine/:query_type', stats.by_engine_and_query );
+  app.get('/stats/:engine', stats.by_engine );
 
 // search
 
