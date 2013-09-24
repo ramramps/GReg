@@ -75,10 +75,10 @@ var express = require('express')
 
 // stats
 
-  // app.get('/pkg_stats/:engine/:query_type', stats.by_engine_and_query );
+  app.get('/stats', stats.all_stats );
+  app.get('/user_stats', stats.all_user_stats );
+  app.get('/pkg_stats', stats.by_engine );
   app.get('/pkg_stats/:engine', stats.by_engine );
-  // app.get('/user_stats', stats.user_stats );
-  app.get('/user_stats/:query_type', stats.user_stats );
 
 // search
 

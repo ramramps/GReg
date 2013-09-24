@@ -26,7 +26,7 @@ exports.by_engine_and_query = function(req, res) {
 
 }
 
-exports.by_engine = function(req, res) {
+exports.all_engine_stats = function(req, res) {
 
   var engine = req.params.engine
     , limit = req.query.limit || exports.DEFAULT_LIMIT;
@@ -59,7 +59,7 @@ exports.all_stats = function(req, res) {
 
 }
 
-exports.user_stats = function(req, res) {
+exports.all_user_stats = function(req, res) {
 
   var limit = req.query.limit || exports.DEFAULT_LIMIT;
 
