@@ -1,48 +1,44 @@
  // js/view/packages.js
 
-  var app = app || {};
+var app = app || {};
 
-  // Package Item View
-  // --------------
+app.PackageView = Backbone.View.extend({
 
-  app.PackageView = Backbone.View.extend({
+  tagName: 'div',
 
-    tagName: 'div',
+  className: 'package',
 
-    className: 'package',
+  template: _.template( $('#item-template').html() ),
 
-    template: _.template( $('#item-template').html() ),
+  events: {
+		 'click .showdeps': 'toggleDeps',
+	   'click': 'expand' 
+  },
 
-    events: {
-			 'click .showdeps': 'toggleDeps',
-		   'click': 'expand' 
-    },
+  toggleDeps: function(event) {
+    this.$('.deps-container').toggle();
+    this.$('.full_deps-container').toggle();
+    event.preventDefault();
+		event.stopPropagation();
+  },
 
-    toggleDeps: function(event) {
-      this.$('.deps-container').toggle();
-      this.$('.full_deps-container').toggle();
-      event.preventDefault();
-			event.stopPropagation();
-    },
+  expand: function(event) {
+		this.$('.data-container').toggle();
+	}, 
 
-    expand: function(event) {
-			this.$('.data-container').toggle();
-		}, 
+  initialize: function() {
+    this.listenTo(this.model, 'change', this.render);
+  },
 
-    initialize: function() {
-      this.listenTo(this.model, 'change', this.render);
-    },
-
-    render: function() {
-      
-			this.$el.html( this.template( this.model.toJSON() ) );
-      
-      if (this.model.get('deprecated')){
-        this.$el.addClass('deprecated');
-      }
-			console.log('render')
-      return this;
-      
+  render: function() {
+    
+		this.$el.html( this.template( this.model.toJSON() ) );
+    
+    if (this.model.get('deprecated')){
+      this.$el.addClass('deprecated');
     }
+    return this;
+    
+  }
 
-  });
+});

@@ -12,6 +12,15 @@ body { margin: 0 }
 	font-family: 'Open Sans', sans-serif;
 }
 
+#stats-container { 
+	padding-right: 150px;
+	padding-left: 150px;
+}
+
+.stat { 
+	width: 120px;
+}
+
 #search_container { 
 	color: #ccc;
 	top: 0;
