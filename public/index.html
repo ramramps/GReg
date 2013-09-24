@@ -27,6 +27,8 @@
       </div>
     </div>
 
+    <div class ="stats row scroll-y"></div>
+
     <div class ="list row scroll-y"></div>
 
   </div>
@@ -103,6 +105,34 @@
 
   </script>
 
+  <script type="text/template" id="package-stat-template">
+
+    <p class="stats-title"><strong><%type> </strong> </p>
+
+    <ul> 
+      <% _.each(list, function(i) { %> 
+      <li> 
+        <%= i.name %> 
+      </li>
+      <% }); %>
+    </ul>
+
+  </script>
+
+  <script type="text/template" id="author-stat-template">
+
+    <p class="stats-title"><strong><%type> </strong> </p>
+
+    <ul> 
+      <% _.each(list, function(i) { %> 
+      <li> 
+        <%= i.name %> 
+      </li>
+      <% }); %>
+    </ul>
+
+  </script>
+
 
   <script type="text/template" id="stats-template">
     <span id="package-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>
@@ -114,10 +144,18 @@
   <script src="js/lib/underscore-min.js"></script>
   <script src="js/lib/backbone-min.js"></script>
   <script src="js/lib/backbone.localStorage.js"></script>
+
   <script src="js/models/package.js"></script>
+  <script src="js/models/stat.js"></script>
+
   <script src="js/collections/packages.js"></script>
+  <script src="js/collections/stats.js"></script>
+
   <script src="js/views/package.js"></script>
-  <script src="js/views/packages.js"></script>
+  <script src="js/views/AuthorStat.js"></script>
+  <script src="js/views/PackageStat.js"></script>
+  <script src="js/views/App.js"></script>
+
   <script src="js/routers/router.js"></script>
   <script src="js/app.js"></script>
 </body>
