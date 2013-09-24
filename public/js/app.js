@@ -8,5 +8,6 @@
 
   	new app.AppView();
     app.Packages.fetch();
+		app.Stats.fetch();
 
   });

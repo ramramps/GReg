@@ -7,8 +7,8 @@ var app = app || {};
 
     defaults: {
       variety: 'package'
-      type: 'most_installed_package',
-      list: ''
+      , type: 'most_installed_package'
+      , list: ''
     }
 
   });

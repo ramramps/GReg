@@ -9,6 +9,7 @@ var StatsList = Backbone.Collection.extend({
   model: app.Stat,
 
   parse : function(resp) {
+    console.log(resp.content);
     return resp.content;
   }
 

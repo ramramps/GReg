@@ -12,13 +12,22 @@ body { margin: 0 }
 	font-family: 'Open Sans', sans-serif;
 }
 
-#stats-container { 
-	padding-right: 150px;
-	padding-left: 150px;
+#stats_container { 
+  top:65px;
+	z-index: 3;
+	background: white;
+	left: 0;
+	right: 0;
+	padding-left: 30px;
+	padding-right: 30px;
 }
 
 .stat { 
-	width: 120px;
+  font-size: 10px;
+  background: green;
+	display: inline-block;
+	padding: 5px;
+  margin: 4px;
 }
 
 #search_container { 

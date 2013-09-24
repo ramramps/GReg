@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class ="stats row scroll-y"></div>
+    <div id="stats_container" class="row scroll-y"></div>
 
     <div class ="list row scroll-y"></div>
 
@@ -107,7 +107,7 @@
 
   <script type="text/template" id="package-stat-template">
 
-    <p class="stats-title"><strong><%type> </strong> </p>
+    <p class="stats-title"><strong><%= type %> </strong> </p>
 
     <ul> 
       <% _.each(list, function(i) { %> 
@@ -121,12 +121,12 @@
 
   <script type="text/template" id="author-stat-template">
 
-    <p class="stats-title"><strong><%type> </strong> </p>
+    <p class="stats-title"><strong><%= type %> </strong> </p>
 
     <ul> 
       <% _.each(list, function(i) { %> 
       <li> 
-        <%= i.name %> 
+        <%= i.username %> 
       </li>
       <% }); %>
     </ul>
