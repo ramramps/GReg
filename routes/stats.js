@@ -31,7 +31,7 @@ exports.by_engine = function(req, res) {
   var engine = req.params.engine
     , limit = req.query.limit || exports.DEFAULT_LIMIT;
  
-  stats.by_engine( engine, limit, function(err, engine_stats){
+  stats.all_engine_stats( engine, limit, function(err, engine_stats){
 
     if ( err || !engine_stats ){
       return res.send( 404, error.fail("No results") );
@@ -44,6 +44,26 @@ exports.by_engine = function(req, res) {
 }
 
 exports.user_stats = function(req, res) {
+
+  var limit = req.query.limit || exports.DEFAULT_LIMIT;
+ 
+  if ( !stats[query_type] ){
+    return res.send(404, error.fail("No such statistic"));
+  }
+ 
+  stats.all_user_stats( limit, function(err, users){
+
+    if ( err || !users || users.length === 0 ){
+      return res.send( 404, error.fail("No results") );
+    }
+
+    return res.send( error.success_with_content('Found stats', users) );
+
+  });
+
+}
+
+exports.user_stats_by_query = function(req, res) {
 
   var query_type = req.params.query_type
     , limit = req.query.limit || exports.DEFAULT_LIMIT;
