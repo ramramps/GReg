@@ -2,7 +2,7 @@ var error = require('../lib/error')
   , mongoose = require('mongoose')
   , stats = require('../lib/stats')
 
-exports.DEFAULT_LIMIT = 7;
+exports.DEFAULT_LIMIT = 5;
 
 exports.by_engine_and_query = function(req, res) {
 
