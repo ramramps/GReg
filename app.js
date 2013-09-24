@@ -77,8 +77,8 @@ var express = require('express')
 
   app.get('/stats', stats.all_stats );
   app.get('/user_stats', stats.all_user_stats );
-  app.get('/pkg_stats', stats.by_engine );
-  app.get('/pkg_stats/:engine', stats.by_engine );
+  app.get('/pkg_stats', stats.all_engine_stats );
+  app.get('/pkg_stats/:engine', stats.all_engine_stats );
 
 // search
 
