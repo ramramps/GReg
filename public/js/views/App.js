@@ -12,7 +12,7 @@ app.AppView = Backbone.View.extend({
   initialize: function() { 
     this.$input = this.$('.search');
     this.$list = this.$('.list')
-    this.$stats = this.$('.stats')
+    this.$stats = this.$('#stats_container')
     this.$loading = this.$('#loading_container');
     this.listenTo(app.Packages, 'sync', this.render );
     this.listenTo(app.Stats, 'sync', this.render );
@@ -42,7 +42,7 @@ app.AppView = Backbone.View.extend({
     // render stats
     app.Stats.forEach(function(stat) {
 
-      if (stat.get('type') === "author"){
+      if (stat.get('variety') === "author"){
         var view = new app.AuthorStatView({ model: stat });
       } else {
         var view = new app.PackageStatView({ model: stat });
