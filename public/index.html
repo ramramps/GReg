@@ -112,7 +112,7 @@
     <ul> 
       <% _.each(list, function(i) { %> 
       <li> 
-        <%= i.name %> 
+        <%= i.name %> <% if (i.metric){ %> <%= i.metric %> <% } %>
       </li>
       <% }); %>
     </ul>
@@ -126,7 +126,7 @@
     <ul> 
       <% _.each(list, function(i) { %> 
       <li> 
-        <%= i.name %> 
+        <%= i.name %> <% if (i.metric){ %> <%= i.metric %> <% } %>
       </li>
       <% }); %>
     </ul>
