@@ -43,21 +43,33 @@ exports.by_engine = function(req, res) {
 
 }
 
-exports.user_stats = function(req, res) {
+exports.all_stats = function(req, res) {
 
   var limit = req.query.limit || exports.DEFAULT_LIMIT;
  
-  if ( !stats[query_type] ){
-    return res.send(404, error.fail("No such statistic"));
-  }
- 
-  stats.all_user_stats( limit, function(err, users){
+  stats.all_stats( limit, function(err, stats){
 
-    if ( err || !users || users.length === 0 ){
+    if ( err || !stats ){
       return res.send( 404, error.fail("No results") );
     }
 
-    return res.send( error.success_with_content('Found stats', users) );
+    return res.send( error.success_with_content('Found stats', stats) );
+
+  });
+
+}
+
+exports.user_stats = function(req, res) {
+
+  var limit = req.query.limit || exports.DEFAULT_LIMIT;
+
+  stats.all_user_stats( limit, function(err, stats){
+
+    if ( err || !stats ){
+      return res.send( 404, error.fail("No results") );
+    }
+
+    return res.send( error.success_with_content('Found stats', stats) );
 
   });
 
