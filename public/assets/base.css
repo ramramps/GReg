@@ -133,6 +133,10 @@ body { margin: 0; }
 	margin-left: 20px;
 }
 
+h4 a {
+	color: white;
+}
+
 .package {
 	padding-top: 15px;
   padding-bottom:8px;
@@ -251,7 +255,7 @@ textarea, input { outline: none; }
 .loading_container {
   opacity: 0.8;
   font-size: 30px;
-  line-height: 500px;
+  line-height: 700px;
   text-align: center;
   vertical-align: middle;
    z-index: 100;
