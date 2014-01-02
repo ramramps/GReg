@@ -15,18 +15,31 @@
    <div id="app">
      
     <div id="nav_container" class="row">
-			<a class="nav" href ="#" data-target="home">Home</a>
 			<a class="nav" href ="#" data-target="browse">Browse</a>
 			<a class="nav" href ="#" data-target="search">Search</a>
 		</div>
    
     <div id="home_container" class="content row col">
-			<h2>Dynamo Package Manager</h2>	
+			<div id="home_inner_container" class="row col">
+				<h1>Dynamo Package Manager</h1>
+			</div>	
 		</div>
  
     <div id= "browse_container" class = "content row scroll-y">
-    		<div class="loading_container row col"><img src="assets/476.gif" /> </div>	
-   			<div id="package_stats" class="stats_container"><h2>Browse</h2><h3>Packages</h3> </div>
+    		
+				<div class="loading_container row col"><img src="assets/476.gif" /> </div>	
+   			
+				<div style="width: 100%;background-image: url('assets/worn_dots.png')">
+					<div class="stats_container" style="padding-top: 30px; margin-top: 0">
+						<h2 style="margin-top: 0; padding-top: 0;">Dynamo Package Manager</h2>
+						<h4 style="padding-bottom: 30px; color: #666">Share and discover workflows for the <a href="http://autodeskvasari.com/dynamo">Dynamo visual programming environment</a>
+						</h4>
+					</div>
+				</div>
+
+				<div id="package_stats"  class="stats_container">
+					<h3>Packages</h3> 
+				</div>
    			<div id="author_stats" class="stats_container"><h3>Authors</h3></div>
     </div>
 

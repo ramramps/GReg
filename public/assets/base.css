@@ -1,7 +1,7 @@
 .highlight { background-color: yellow }
 
 /* http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/ */
-body { margin: 0 }
+body { margin: 0; } 
 .row, .col { overflow: hidden; position: absolute; }
 .row { left: 0; right: 0; }
 .col { top: 0; bottom: 0; }
@@ -13,9 +13,17 @@ body { margin: 0 }
 }
 
 #browse_container {
-	display: none;
 	top: 60px;
 	bottom: 0;
+}
+
+#browse_container a {
+	text-decoration: none;
+	color: #222;
+}
+
+#browse_container a:hover {
+	text-decoration: underline;
 }
 
 #search_container {
@@ -25,12 +33,25 @@ body { margin: 0 }
 }
 
 #home_container {
-	margin-left:auto;
-	margin-right:auto;
-	width:1000px;
+	display: none;
 	bottom: 0;
 	top: 60px;
 	z-index: 5;
+}
+
+#home_inner_container {
+	text-align: center;
+	margin-left:auto;
+	margin-right:auto;
+	width:1000px;
+	margin-top: auto;
+	margin-bottom: auto;
+	height: 300px;
+	z-index: 5;
+}
+
+#home_inner_container h1 {
+	font-size: 30px;
 }
 
 .stats_container { 
@@ -262,7 +283,7 @@ textarea, input { outline: none; }
 
 #nav_container a {
 	text-decoration: none;
-	padding-left: 20px;
+	padding-left: 40px;
 	line-height: 60px;
 	font-size: 18px;
 	color: #CCC;
