@@ -63,6 +63,7 @@ body { margin: 0; }
 .stats_container h3 {
 	color: #222;
 	margin: 0;
+	font-size: 25px;
 	margin-top: 10px;
 }
 
@@ -287,10 +288,14 @@ textarea, input { outline: none; }
 
 #nav_container a {
 	text-decoration: none;
-	padding-left: 40px;
+	padding-right: 40px;
 	line-height: 60px;
 	font-size: 18px;
-	color: #CCC;
+	color: #BBB;	
+}
+
+#nav_container a:hover {
+	color: white;
 }
 
 input:focus, textarea:focus {

@@ -10,7 +10,8 @@ var express = require('express')
   , oxy_auth = require('./lib/oxygen_auth')
 	, stats = require('./routes/stats')
   , basic_auth = require('./lib/basic_auth')
-  , error = require('./lib/error');
+  , error = require('./lib/error')
+	, stats_update = require('./lib/stats_update');
 
 ////////////////////////
 // DB
@@ -119,9 +120,20 @@ var express = require('express')
     res.send(error.success("You are logged in."))
   });
 
-// statistics update
 
-	
+////////////////////////
+// Statistics update
+///////////////////////	
+
+	// provisional stats update until we do this on all routes 
+	setInterval(function(){
+		stats_update.synchronize_package_stats(function(){ console.log('synchronized package stats'); });
+	}, 1000 * 60 * 20 ); // every 20 minutes 
+
+	setInterval(function(){
+		stats_update.synchronize_user_stats(function(){ console.log('synchronize user stats'); });
+	}, 1000 * 60 * 20 + 2000 ); // every 20 minutes 
+
 
 
 ////////////////////////
