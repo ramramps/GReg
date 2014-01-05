@@ -24,7 +24,7 @@
 				<h1>Dynamo Package Manager</h1>
 			</div>	
 		</div>
- 
+ 		
     <div id= "browse_container" class = "content row scroll-y">
     		
 				<div class="loading_container row col"><img src="assets/476.gif" /> </div>	
@@ -43,7 +43,13 @@
 					<h3>Packages</h3> 
 				</div>
    			<div id="author_stats" class="stats_container"><h3>Authors</h3></div>
+		
     </div>
+
+		<div id="data_container" class="row scroll-y">
+			 <i style="margin-left: 5px;" class="exit-data icon-remove" />	
+			<div id="data"></div>			
+		</div>
 
     <div id="search_container" class="content row">
 	    <div id="inner_search_container" class="row">
@@ -138,6 +144,100 @@
 
   </script>
 
+  
+  <script type="text/template" id="author-data-template">
+ 		<h2><%= username %></h2> 
+		
+    <p class="title">Number of downloads for packages:  <%= num_downloads_for_maintained_packages  %></p>
+    <p class="title">Number of votes for packages:  <%= num_votes_for_maintained_packages  %></p>
+	 
+    <div class="maintains_container" >
+        <strong>Maintains </strong>
+        <ul> 
+          <% _.each(maintains, function(i) { %> 
+          <li> <%= i %> 
+          </li>
+          <% }); %>
+        </ul>
+    </div>
+
+
+	</script>
+
+
+
+  <script type="text/template" id="package-data-template">
+
+
+    <div class="title-container" >
+      <h2 class="name searchfield"><%- name %><% if(deprecated){ %><span style="text-transform: uppercase; font-size: 12px; padding-left: 10px;"> (Deprecated) </> <% } %> </h2>
+    </div>
+	
+    <div class="description-container" >
+  		<p class="description searchfield"><%- description %></p>
+    </div>
+		
+		<div class="group-container">
+      <p class="group searchfield"><%- group %></p>
+		</div>
+		
+		<div class="votes-downloads-container">  
+		  <div title="Number of downloads"><i class="icon-download-alt" style="display:inline-block" /><span class="downloads"> <%- downloads %></span> </div>
+      <div title="Votes"><i class="icon-chevron-up" style="display:inline-block" /><span class="votes"> <%- votes %> </span> </div>
+	 </div>
+    <div class="data-container" style="display:none">
+ 
+      <p class="title"><strong>Keywords: </strong> </p>
+      <p class="keywords searchfield"><% _.each(keywords, function(i) { %> <%= i %> <% }); %> </p>
+
+      <p class="title"><strong>Versions: </strong> </p>
+       <% _.each(versions, function(i) { %> <a href = "download/<%= _id  %>/<%= i.version %>"><p class="versions searchfield"><%= i.version %> <i style="margin-left: 5px;" class="icon-download-alt icon-white" /></a></p><% }); %>
+
+      <p class="title"><strong>Maintainers: </strong></p>
+      <p class="maintainers searchfield"><% _.each(maintainers, function(i) { %>  <%= i.username %> <% }); %></p>
+     
+      <p class="title"><strong>Group: </strong></p>
+      <p class="group searchfield"><%- group %></p>
+     
+      <% if(used_by && used_by.length > 0){ %>
+      <p class="title"><strong>Used by: </strong> </p>
+      <p class="used_by searchfield"><% _.each(used_by, function(i) { %><%= i.name %> <% }); %> </p>
+      <% } %>
+
+      <a href="#" style="display: inline-block; margin-top: 15px" class="showdeps">view Dependencies <i class="icon-arrow-down icon-white" /></a>
+
+      <div class="deps-container" style="display:none">
+        <strong>Directly Uses: </strong>
+        <ul> 
+          <% _.each(version_deps, function(i) { %> 
+            <li> <%= i.version %> 
+              <ul> <% _.each(i.deps, function(j) { %>  
+                <li> <%= j.name %> <%= j.version %> </li> 
+                <% }); %>
+              </ul> 
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+
+      <div class="full_deps-container" style="display:none">
+        <strong>Full Download Dependencies: </strong>
+        <ul> 
+          <% _.each(full_dl_deps, function(i) { %> 
+          <li> <%= i.version %> 
+            <ul> 
+              <% _.each(i.deps, function(j) { %>  
+              <li> <%= j.name %> <%= j.version %> </li> 
+              <% }); %>
+            </ul> 
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+
+  </script>
+
   <script type="text/template" id="package-stat-template">
 
     <p class="stats-title"><strong><%= type %> </strong> </p>
@@ -145,7 +245,7 @@
     <ul> 
       <% _.each(list, function(i) { %> 
       <li> 
-        <span class="stat-name"> <%= i.name %></span>  <span class="stat-metric"> <%= i.metric %> </span>
+        <span class="stat-name" data-stat-type="package" data-packagename="<%= i.name %>"><%= i.name %></span>  <span class="stat-metric"> <%= i.metric %> </span>
       </li>
       <% }); %>
     </ul>
@@ -159,13 +259,12 @@
     <ul> 
       <% _.each(list, function(i) { %> 
       <li> 
-        <span class="stat-name"> <%= i.username %></span> <span class="stat-metric"> <%= i.metric %> </span>
+        <span class="stat-name" data-stat-type="author" data-username="<%= i.username %>"> <%= i.username %></span> <span class="stat-metric"> <%= i.metric %> </span>
       </li>
       <% }); %>
     </ul>
 
   </script>
-
 
   <script type="text/template" id="stats-template">
     <span id="package-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>
@@ -180,8 +279,10 @@
 
   <script src="js/models/package.js"></script>
   <script src="js/models/stat.js"></script>
-
-  <script src="js/collections/packages.js"></script>
+	<script src="js/models/Data.js"></script>
+	<script src="js/models/Author.js"></script>
+	
+	<script src="js/collections/packages.js"></script>
   <script src="js/collections/stats.js"></script>
 
   <script src="js/views/package.js"></script>
@@ -190,8 +291,12 @@
   <script src="js/views/Packages.js"></script>
   <script src="js/views/Stats.js"></script> 
   <script src="js/views/Nav.js"></script>
-
   <script src="js/routers/router.js"></script>
-  <script src="js/app.js"></script>
+	<script src="js/views/Data.js"></script>
+	<script src="js/views/AuthorData.js"></script>
+	<script src="js/views/PackageData.js"></script>
+  
+	<script src="js/app.js"></script>
+
 </body>
 </html>

@@ -9,7 +9,6 @@ function prettyDate(time){
 	if ( isNaN(day_diff) || day_diff < 0 )
 		return;
 			
-  console.log('prettyDate');		
 	if (month_diff > 0){
 	  return month_diff + ( month_diff > 1 ?  " months ago" : " month ago");
 	}

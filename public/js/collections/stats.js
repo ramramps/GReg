@@ -5,14 +5,12 @@ var app = app || {};
 var StatsList = Backbone.Collection.extend({
 
   url: function() {
-    return '/stats';
+    return '/stats?limit=8';
   } ,
 
   model: app.Stat,
 
-  parse : function(resp) {
-   
-		console.log(resp.content);
+  parse : function(resp) { 
     return resp.content;
   }
 
