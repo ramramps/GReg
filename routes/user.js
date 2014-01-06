@@ -16,8 +16,8 @@ exports.by_name = function(req, res){
   
 	UserModel
 	.findOne( {username: name} )
-	.populate('maintains', 'name latest_version_update')
-	.populate('last_updated_package', 'name latest_version_update')
+	.populate('maintains', 'name latest_version_update deprecated')
+	.populate('last_updated_package', 'name latest_version_update deprecated')
 	.exec(function(err, user) {
 
     if ( err || !user )
@@ -47,8 +47,8 @@ exports.by_id = function(req, res){
   var id = req.params.id;
   UserModel
 	.findById( id )
-	.populate('maintains', 'name')
-	.populate('last_updated_package', 'name latest_version_update')
+	.populate('maintains', 'name latest_version_update deprecated')
+	.populate('last_updated_package', 'name latest_version_update deprecated')
 	.exec( function(err, user) {
 
     if ( err || !user )
