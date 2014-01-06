@@ -17,6 +17,18 @@ app.StatsView = Backbone.View.extend({
 
   render: function(arg) {
 
+	  this.model = app.Stats;
+	
+		this.template = _.template( $('#overall-stats-template').html() );
+	  
+		var overallStats = {
+			num_packages: this.model.where({ type: 'num packages' })[0].get('data'),
+			num_downloads: this.model.where({ type: 'num downloads' })[0].get('data'),
+			num_authors: this.model.where({ type: 'num authors' })[0].get('data')
+		};
+
+		$('#overall-stats-container').html( this.template( overallStats ) );
+
 		$('.loading_container').hide();
 	
     var that = this;
@@ -33,7 +45,9 @@ app.StatsView = Backbone.View.extend({
 
     // render stats
     app.Stats.forEach(function(stat) {
-
+				
+			if ( !(stat.get('data') instanceof Array) ) return;
+			
       if (stat.get('variety') === "author"){
     		
         var view = new app.AuthorStatView({ model: stat });

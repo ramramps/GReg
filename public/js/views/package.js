@@ -11,7 +11,6 @@ app.PackageView = Backbone.View.extend({
   template: _.template( $('#item-template').html() ),
 
   events: {
-		 'click .showdeps': 'toggleDeps',
 	   'click': 'expand' 
   },
 
@@ -23,7 +22,8 @@ app.PackageView = Backbone.View.extend({
   },
 
   expand: function(event) {
-		this.$('.data-container').toggle();
+		app.currentData.getPackage( this.model.id );
+		//this.$('.data-container').toggle();
 	}, 
 
   initialize: function() {

@@ -13,7 +13,12 @@ var UserModel = require('../lib/models').UserModel
 exports.by_name = function(req, res){
 
   var name = req.params.name;
-  UserModel.findOne( {username: name} , function(err, user) {
+  
+	UserModel
+	.findOne( {username: name} )
+	.populate('maintains', 'name latest_version_update')
+	.populate('last_updated_package', 'name latest_version_update')
+	.exec(function(err, user) {
 
     if ( err || !user )
     {
@@ -40,7 +45,11 @@ exports.by_name = function(req, res){
 exports.by_id = function(req, res){
 
   var id = req.params.id;
-  UserModel.findById( id, function(err, user) {
+  UserModel
+	.findById( id )
+	.populate('maintains', 'name')
+	.populate('last_updated_package', 'name latest_version_update')
+	.exec( function(err, user) {
 
     if ( err || !user )
     {

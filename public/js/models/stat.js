@@ -31,7 +31,7 @@ app.Stat = Backbone.Model.extend({
   defaults: {
     variety: 'package',
     type: 'most_installed_package',
-    list: '',
+    data: '',
     metric: ''
   },
 
@@ -51,8 +51,8 @@ app.Stat = Backbone.Model.extend({
 
   	if (this.stat_map[stuff.type]){
 			var that = this;
-		  _.each( stuff.list, function(ele){ ele.metric = that.stat_map[stuff.type](ele); });
-  		_.each( stuff.list, function(ele){ if (ele.username) ele.username = ele.username.replace(/\w{1,5}@\w{1,5}/,' ... '); });
+		  _.each( stuff.data, function(ele){ ele.metric = that.stat_map[stuff.type](ele); });
+  		_.each( stuff.data, function(ele){ if (ele.username) ele.username = ele.username.replace(/\w{1,5}@\w{1,5}/,' ... '); });
 		} 
 
     stuff.type = stuff.type.split('_').join(' ');

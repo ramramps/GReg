@@ -14,24 +14,19 @@ app.DataView = Backbone.View.extend({
  		this.model = new app.Data();
 		app.currentData = this.model;
     this.listenTo(this.model, 'change', this.render );		
-			
-		// for debugging
-		this.model.getAuthor('51f8232fe2f476ca05000003');
 	},
 
 	exit: function(){
 		this.$el.hide();
-		
-		// set the bottom property of the browse container
-		$('#browse_container').css('bottom', 0);
-	
-   },
+  },
 
   render: function() {
-	
+
 		if ( !this.model.get('current_model') ) return;
 			
-		if (this.model.get('current_type') === "package"){
+		this.$el.show();
+		
+		if ( this.model.get('current_model').get('name') ){
 			var view = new app.PackageDataView( { model: this.model.get('current_model') } );
 			view.render();
 		} else {

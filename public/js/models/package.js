@@ -23,9 +23,13 @@ var app = app || {};
       used_by: []
     },
 
-    urlRoot: '/pkg/',
+    urlRoot: '/package/',
 
     parse: function(stuff) {
+
+			if (stuff.content) {
+				stuff = stuff.content;
+			}
 
       stuff.version_deps = [];
       stuff.full_dl_deps = [];
@@ -37,7 +41,8 @@ var app = app || {};
         stuff.version_deps[i].deps = [];
 
         for (var j = 0; j < stuff.versions[i].direct_dependency_ids.length; j++){
-          stuff.version_deps[i].deps.push({ name: stuff.versions[i].direct_dependency_ids[j].name, 
+          stuff.version_deps[i].deps.push({ name: stuff.versions[i].direct_dependency_ids[j].name,
+																						_id: stuff.versions[i].direct_dependency_ids[j]._id,
                                             version: stuff.versions[i].direct_dependency_versions[j] })
         }
 
@@ -47,7 +52,8 @@ var app = app || {};
 
         for (var j = 0; j < stuff.versions[i].full_dependency_ids.length; j++){
           stuff.full_dl_deps[i].deps.push({ name: stuff.versions[i].full_dependency_ids[j].name, 
-                                            version: stuff.versions[i].full_dependency_versions[j] })
+                                            _id: stuff.versions[i].full_dependency_ids[j]._id,
+																							version: stuff.versions[i].full_dependency_versions[j] })
         }
 
 

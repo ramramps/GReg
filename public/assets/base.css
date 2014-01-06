@@ -12,14 +12,116 @@ body { margin: 0; }
 	font-family: 'Open Sans', sans-serif;
 }
 
+.overall-stat-container {
+	width: 150px;
+	display: inline-block;
+}
+
+.overall-stat-metric {
+	font-weight: bold;
+	
+	padding-top: 10px;
+	padding-bottom: 5px;
+	margin: 0;
+	font-size: 40px;
+}
+
+.overall-stat-title {
+	font-color: grey;
+	line-height: 10px;
+	font-size: 13px;
+	padding: 0;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+#overall-stats-container {
+	padding-top:0;
+	padding-bottom: 0;
+	text-align: center;
+}
+
+.user-data-inline {
+	padding-bottom: 10px;	
+	padding-right: 10px;
+	display: inline-block;
+	min-width: 100px;
+}
+
+.corner-data {
+ display:block;
+ float:right;
+ padding-left: 10px;
+}
+
+.user-data-inline i {
+	margin-left: 4px;
+}
+
+#data i {
+	opacity: 0.5;
+}
+
+#data {
+	background: #222;
+	padding: 40px;
+}
+
+#data_container h2 {
+	padding-bottom: 20px;
+	font-size: 30px;
+}
+
+.exit-data {
+	opacity: 0.5;
+}
+
+.exit-data:hover {
+	opacity: 1;
+}
+
+#data ul {
+	padding: 0;
+	padding-left: 5px;
+	list-style-type: none;
+}
+
+.user-data {
+	font-weight: normal;
+}
+
+.user-data span {
+	display: block;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	font-size: 10px;
+	text-transform: uppercase;
+}
+
+#data_container a  {
+	color: white;
+	text-decoration: none;
+}
+
+#data_container a:hover {
+	text-decoration: underline;
+}
+
 #data_container {
 	display: none;
+	z-index: 5;
+	color: #CCC;
+	padding: 100px;
 	bottom: 0;
-	height: 100px;
+	right: 0;
+	left: 0;
+	background: rgba(50,50,50,0.8);
+	top: 0px;
 }
 
 #browse_container {
 	top: 60px;
+	right: 0px;
 	bottom: 0px;
 }
 
@@ -63,7 +165,8 @@ body { margin: 0; }
 .stats_container { 
 	margin-left:auto;
 	margin-right:auto;
-	width:1000px;
+	padding: 20px;
+	max-width:1000px;
 }
 
 .stats_container h3 {
@@ -306,14 +409,11 @@ textarea, input { outline: none; }
 }
 
 input:focus, textarea:focus {
-  width: 350px;
 	outline: none !important;
   background: #222;
 }
 
 .search {
-  transition: width 0.5s;
-	-webkit-transition: width 0.5s; /* Safari */
   font-family: 'Open Sans', sans-serif;
   font-weight: 100;
 	color:white;

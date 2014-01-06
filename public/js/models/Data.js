@@ -3,7 +3,6 @@ var app = app || {};
 app.Data = Backbone.Model.extend({
 
   defaults: {
-    current_type: 'author',
     current_model: undefined,
 		downloading: false
   },
@@ -15,11 +14,8 @@ app.Data = Backbone.Model.extend({
 			model.urlRoot = '/user/' + id;
 			var that = this;
 			model.fetch({success: function(){
-			
-				that.set('current_type', 'author');
-				that.set('current_model', model);
 				that.set('downloading', false);	
-	
+				that.set('current_model', model);
 			}});
 	},
 
@@ -30,11 +26,8 @@ app.Data = Backbone.Model.extend({
 			model.urlRoot = '/package/' + id;
 			var that = this;
 			model.fetch({success: function(){
-				
-				that.set('current_type', 'package');
-				that.set('current_model', model);
 				that.set('downloading', false);	
-	
+				that.set('current_model', model);
 			}});
 	}
 

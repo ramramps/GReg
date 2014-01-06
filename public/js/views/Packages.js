@@ -35,6 +35,7 @@ app.PackagesView = Backbone.View.extend({
     };
 
     this.list = new List('app', options);
+		this.list.sort('downloads', { asc:false });
 
   },
 

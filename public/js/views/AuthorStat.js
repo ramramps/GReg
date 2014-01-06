@@ -9,8 +9,20 @@ app.AuthorStatView = Backbone.View.extend({
 
   template: _.template( $('#author-stat-template').html() ),
 
-  events: {
-  },
+	events: {
+		'click .package-link' : 'packageClick',
+		'click .author-link': 'authorClick'
+	},
+		
+	packageClick: function(e){
+		var id = $(e.target).attr('pkg-data-id');
+		app.currentData.getPackage(id); 		
+	},
+
+	authorClick: function(e){
+		var id = $(e.target).attr('author-data-id');
+		app.currentData.getAuthor(id); 		
+	},
 
   initialize: function() {
     this.listenTo(this.model, 'change', this.render);
