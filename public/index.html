@@ -114,7 +114,7 @@
    		 <h2><%= username %></h2> 
     </div>
 
-		<div class="user-data"><span>Last update </span>  <a class="package-link" pkg-data-id="<$= last_updated_package._id %>" href="#"><%= last_updated_package.name %> </a> on <%= last_updated_package.latest_version_update  %></div>
+		<div class="user-data"><span>Last update </span>  <a class="package-link" pkg-data-id="<%= last_updated_package._id %>" href="#"><%= last_updated_package.name %> </a> on <%= last_updated_package.latest_version_update  %></div>
   
 		<div class="user-data" >
         <span>Maintains </span>
@@ -125,7 +125,6 @@
           <% }); %>
         </ul>
     </div>
-
 
 	</script>
 
