@@ -18,6 +18,7 @@ var app = app || {};
     urlRoot: '/user_name/peetle',
 
     parse: function(stuff) {
+			stuff.content.last_updated_package.latest_version_update = prettyDate(stuff.content.last_updated_package.latest_version_update); 
     	return stuff.content;
     }
 
