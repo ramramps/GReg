@@ -1,5 +1,8 @@
 var express = require('express')
   , app = express()
+	, http = require('http')
+	, https = require('https')
+	, fs = require('fs')
   , path = require('path')
   , mongoose = require('mongoose')
   , routes = require('./routes')
@@ -141,6 +144,23 @@ var express = require('express')
 ////////////////////////
 
   var port = process.env.PORT || 8080;
-  app.listen(port);
-  console.log('Starting server on port: ' + port);
+	var keyfn = 'ssl/server.key';
+	var crtfn = 'ssl/server.crt';
+
+	if ( fs.existsSync( keyfn ) || fs.existsSync( crtfn ) ){
+
+	  var key = fs.readFileSync(keyfn, 'utf8');
+	  var crt = fs.readFileSync(crtfn, 'utf8');
+	  var cred = { key: key, cert: crt };
+
+	  https.createServer(cred, app).listen(443, function() {
+	    console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
+	  });
+
+	}
+
+	app.listen( port, function() {
+	  console.log("✔ Express server listening on port %d in %s mode", port, app.get('env'));
+	});
+
 
