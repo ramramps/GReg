@@ -54,10 +54,6 @@ body { margin: 0; }
  padding-left: 10px;
 }
 
-.user-data-inline i {
-	margin-left: 4px;
-}
-
 #data i {
 	opacity: 0.5;
 }
