@@ -157,6 +157,10 @@ var express = require('express')
 	    console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
 	  });
 
+	} else {
+
+		console.log('Could not find SSL certificates');
+
 	}
 
 	app.listen( port, function() {
