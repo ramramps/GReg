@@ -38,6 +38,7 @@ var express = require('express')
 
   app.configure(function() {
     app.use(express.logger());
+		app.use(express.compress());
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade')
     app.engine('html', require('ejs').renderFile);
