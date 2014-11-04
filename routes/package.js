@@ -5,6 +5,16 @@ var PackageModel = require('../lib/models').PackageModel
   , search = require('../lib/search')
   , _ = require('underscore');
 
+var cache = {};
+
+/** 
+ * Invoked for any POST or PUT request
+ *
+ */
+exports.postPut = function(req, res, next){
+	if (req.method != "GET") cache = {};
+	next();
+};
 
 /**
  * Deprecate a package
@@ -326,7 +336,12 @@ exports.by_id = function(req, res) {
  * @api public
  */
 
+
 exports.all = function(req, res) {
+
+	if ( cache.all ){
+		return res.send( cache.all );
+	}
 
   packages.all(function (err, pkgs) {
 
@@ -340,7 +355,9 @@ exports.all = function(req, res) {
     }
 
     var data = error.success_with_content('Found packages', pkgs);
-    try {
+	  cache.all = data;
+	
+		try {
       return res.send( data );
     } catch (exception) {
       res.send(500, error.fail('Failed to send data' ));
@@ -363,6 +380,10 @@ exports.by_engine = function(req, res) {
 
   var engine = req.params.engine;
 
+	if (cache.by_engine && cache.by_engine[engine]){
+		return res.send( cache.by_engine[engine] );
+	}
+
   packages.by_engine(engine, function(err, pkgs) {
 
     if ( err || !pkgs || pkgs.length === 0 )
@@ -372,7 +393,11 @@ exports.by_engine = function(req, res) {
     }
 
     var data = error.success_with_content('Found packages', pkgs);
-    return res.send( data );
+    
+		if (!cache.by_engine) cache.by_engine = {};
+		cache.by_engine[engine] = data;
+		
+		return res.send( data );
 
   });
 

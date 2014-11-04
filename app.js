@@ -44,7 +44,8 @@ var express = require('express')
     app.engine('html', require('ejs').renderFile);
     app.use(express.cookieParser());
     app.use(express.bodyParser());
-    app.use(passport.initialize());
+    app.use(pkg.postPut);
+		app.use(passport.initialize());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
   });
