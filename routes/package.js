@@ -340,6 +340,7 @@ exports.by_id = function(req, res) {
 exports.all = function(req, res) {
 
 	if ( cache.all ){
+		res.setHeader('Content-Type', 'application/json');
 		return res.send( cache.all );
 	}
 
@@ -355,7 +356,7 @@ exports.all = function(req, res) {
     }
 
     var data = error.success_with_content('Found packages', pkgs);
-	  cache.all = data;
+	  cache.all = JSON.stringify(data);
 	
 		try {
       return res.send( data );
@@ -381,6 +382,7 @@ exports.by_engine = function(req, res) {
   var engine = req.params.engine;
 
 	if (cache.by_engine && cache.by_engine[engine]){
+		res.setHeader('Content-Type', 'application/json');	
 		return res.send( cache.by_engine[engine] );
 	}
 
@@ -395,9 +397,9 @@ exports.by_engine = function(req, res) {
     var data = error.success_with_content('Found packages', pkgs);
     
 		if (!cache.by_engine) cache.by_engine = {};
-		cache.by_engine[engine] = data;
 		
-		return res.send( data );
+		res.send( data );
+		cache.by_engine[engine] = JSON.stringify(data);		
 
   });
 
