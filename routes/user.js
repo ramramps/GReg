@@ -76,10 +76,7 @@ exports.by_id = function(req, res){
 exports.accepted_terms_of_use = function(req, res){
 
   var id = req.user._id;
-  UserModel
-    .findById( id )
-    .populate('accepted_terms_of_use')
-    .exec( function(err, user) {
+  UserModel.findById( id, function(err, user) {
 
     if ( err || !user )
     {
@@ -87,8 +84,8 @@ exports.accepted_terms_of_use = function(req, res){
       return;
     }
 
-    var data = error.success_with_content('Found user', user);
-    return res.send( data );
+    var data = { user_id: user._id, accepted: user.accepted_terms_of_use };
+    return res.send( error.success('Found user', data) );
 
   });
 
