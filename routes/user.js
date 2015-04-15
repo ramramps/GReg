@@ -78,14 +78,20 @@ exports.accepted_terms_of_use = function(req, res){
   var id = req.user._id;
   UserModel.findById( id, function(err, user) {
 
-    if ( err || !user )
+    if ( err )
     {
       res.send( error.fail("User could not be found") );
       return;
     }
+    
+    var acceptance = false;
+    if ( user ) // If user is found.
+    {
+        acceptance = user.accepted_terms_of_use;
+    }
 
-    var data = { user_id: user._id, accepted: user.accepted_terms_of_use };
-    return res.send( error.success('Found user', data) );
+    var data = { user_id: user._id, accepted: acceptance };
+    return res.send( error.success('Terms of use acceptance', data) );
 
   });
 
