@@ -95,6 +95,11 @@ var express = require('express')
   app.get('/user_name/:name', user.by_name );
   app.get('/user/:id', user.by_id );
 
+// terms of use
+
+  app.get('/tou', user.accepted_terms_of_use );
+  app.put('/tou', user.accept_terms_of_use );
+
 // submit pkg
 
   app.post('/package', passport.authenticate(auth_type, { session: false }), pkg.add);
