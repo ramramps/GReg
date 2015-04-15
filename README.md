@@ -17,6 +17,11 @@ All requests from the database are returned in JSON format with the following fo
 
 ##GET
 
+###User
+####/toc/
+
+This returns the *terms of use* acceptance status for the current authenticated user.
+
 ###Package
 ####/pkg/
 
@@ -53,6 +58,11 @@ Posts a new package.  Requires an oauth authorization header validated from Oxyg
 
 ##PUT
 
+###User
+####/toc/
+Updates the *terms of use* acceptance status for the current authenticated user.
+
+###Package
 ####/pkg/
 Posts a new package version.  Requires an oauth authorization header validated from Oxygen.
 
