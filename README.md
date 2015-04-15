@@ -20,7 +20,12 @@ All requests from the database are returned in JSON format with the following fo
 ###User
 ####/toc/
 
-This returns the *terms of use* acceptance status for the current authenticated user.
+This returns the *terms of use* acceptance status for the current authenticated user. If the user is not found, this API returns `false` for `accepted` field:
+
+    {
+        user_id: String,
+        accepted: Boolean
+    }
 
 ###Package
 ####/pkg/
@@ -60,7 +65,12 @@ Posts a new package.  Requires an oauth authorization header validated from Oxyg
 
 ###User
 ####/toc/
-Updates the *terms of use* acceptance status for the current authenticated user.
+Updates the *terms of use* acceptance status for the current authenticated user to `true`. If the call is successful, the following data is returned:
+
+    {
+        user_id: String,
+        accepted: Boolean
+    }
 
 ###Package
 ####/pkg/
