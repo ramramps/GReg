@@ -63,3 +63,64 @@ exports.by_id = function(req, res){
   });
 
 };
+
+
+/**
+ * Determine if a user by id, has accepted the terms of use
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.accepted_terms_of_use = function(req, res){
+
+  var id = req.user._id;
+  UserModel
+    .findById( id )
+    .populate('accepted_terms_of_use')
+    .exec( function(err, user) {
+
+    if ( err || !user )
+    {
+      res.send( error.fail("User could not be found") );
+      return;
+    }
+
+    var data = error.success_with_content('Found user', user);
+    return res.send( data );
+
+  });
+
+};
+
+
+/**
+ * Update acceptance of terms of use for a given user by id
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.accept_terms_of_use = function(req, res){
+
+  var id = req.user._id;
+  UserModel.findById( id, function(err, user) {
+
+    if ( err || !user )
+    {
+      res.send( error.fail("User could not be found") );
+      return;
+    }
+
+    try {
+        user.accepted_terms_of_use = true;
+        return res.send(error.success('Terms of use accepted', { user_id: user._id, accepted: true }));
+    } catch (exception) {
+        return console.log('Log error - could not alter acceptance');
+    }
+
+  });
+
+};
