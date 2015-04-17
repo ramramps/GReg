@@ -63,3 +63,54 @@ exports.by_id = function(req, res){
   });
 
 };
+
+
+/**
+ * Determine if the currently authenticated user has accepted the terms of use
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.accepted_terms_of_use = function(req, res){
+
+    try {
+        var data = { user_id: user._id, accepted: acceptance };
+        return res.send( error.success('Terms of use acceptance', data) );
+    } catch (exception) {
+        return console.log('Log error - could not get terms of use acceptance');
+    }
+
+};
+
+
+/**
+ * Update acceptance of terms of use for the currently authenticated user
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.accept_terms_of_use = function(req, res){
+
+    try {
+
+        var user = req.user;
+        user.accepted_terms_of_use = true;
+        user.markModified('accepted_terms_of_use');
+        user.save( function(err) {
+            if (err) {
+                res.send( error.fail('Terms of use acceptance could not be updated') );
+            } else {
+                var data = { user_id: user._id, accepted: true };
+                return res.send(error.success('Terms of use accepted', data));
+            }
+        });
+        
+    } catch (exception) {
+        return console.log('Log error - could not alter acceptance');
+    }
+
+};
