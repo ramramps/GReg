@@ -77,7 +77,7 @@ exports.accepted_terms_of_use = function(req, res){
 
     try {
         var data = { user_id: user._id, accepted: user.accepted_terms_of_use };
-        return res.send( error.success('Terms of use acceptance', data) );
+        return res.send( error.success_with_content('Terms of use acceptance', data) );
     } catch (exception) {
         return console.log('Log error - could not get terms of use acceptance');
     }
@@ -105,7 +105,7 @@ exports.accept_terms_of_use = function(req, res){
                 res.send( error.fail('Terms of use acceptance could not be updated') );
             } else {
                 var data = { user_id: user._id, accepted: true };
-                return res.send(error.success('Terms of use accepted', data));
+                return res.send(error.success_with_content('Terms of use accepted', data));
             }
         });
         
