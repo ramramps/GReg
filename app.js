@@ -97,8 +97,8 @@ var express = require('express')
 
 // terms of use
 
-  app.get('/tou', user.accepted_terms_of_use );
-  app.put('/tou', user.accept_terms_of_use );
+  app.get('/tou', passport.authenticate(auth_type, { session: false }), user.accepted_terms_of_use );
+  app.put('/tou', passport.authenticate(auth_type, { session: false }), user.accept_terms_of_use );
 
 // submit pkg
 

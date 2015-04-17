@@ -66,7 +66,7 @@ exports.by_id = function(req, res){
 
 
 /**
- * Determine if a user by id, has accepted the terms of use
+ * Determine if the currently authenticated user has accepted the terms of use
  *
  * @param {Object} HTTP request 
  * @param {Object} HTTP response
@@ -75,31 +75,18 @@ exports.by_id = function(req, res){
 
 exports.accepted_terms_of_use = function(req, res){
 
-  var id = req.user._id;
-  UserModel.findById( id, function(err, user) {
-
-    if ( err )
-    {
-      res.send( error.fail("User could not be found") );
-      return;
+    try {
+        var data = { user_id: user._id, accepted: acceptance };
+        return res.send( error.success('Terms of use acceptance', data) );
+    } catch (exception) {
+        return console.log('Log error - could not get terms of use acceptance');
     }
-    
-    var acceptance = false;
-    if ( user ) // If user is found.
-    {
-        acceptance = user.accepted_terms_of_use;
-    }
-
-    var data = { user_id: user._id, accepted: acceptance };
-    return res.send( error.success('Terms of use acceptance', data) );
-
-  });
 
 };
 
 
 /**
- * Update acceptance of terms of use for a given user by id
+ * Update acceptance of terms of use for the currently authenticated user
  *
  * @param {Object} HTTP request 
  * @param {Object} HTTP response
@@ -108,22 +95,22 @@ exports.accepted_terms_of_use = function(req, res){
 
 exports.accept_terms_of_use = function(req, res){
 
-  var id = req.user._id;
-  UserModel.findById( id, function(err, user) {
-
-    if ( err || !user )
-    {
-      res.send( error.fail("User could not be found") );
-      return;
-    }
-
     try {
+
+        var user = req.user;
         user.accepted_terms_of_use = true;
-        return res.send(error.success('Terms of use accepted', { user_id: user._id, accepted: true }));
+        user.markModified('accepted_terms_of_use');
+        user.save( function(err) {
+            if (err) {
+                res.send( error.fail('Terms of use acceptance could not be updated') );
+            } else {
+                var data = { user_id: user._id, accepted: true };
+                return res.send(error.success('Terms of use accepted', data));
+            }
+        });
+        
     } catch (exception) {
         return console.log('Log error - could not alter acceptance');
     }
-
-  });
 
 };
