@@ -76,6 +76,7 @@ exports.by_id = function(req, res){
 exports.accepted_terms_of_use = function(req, res){
 
     try {
+    	var user = req.user;
         var data = { user_id: user._id, accepted: user.accepted_terms_of_use };
         return res.send( error.success_with_content('Terms of use acceptance', data) );
     } catch (exception) {
