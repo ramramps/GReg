@@ -45,6 +45,34 @@ exports.undeprecate_by_id = function(req, res) {
 };
 
 /**
+ * Ban a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.ban_by_id = function(req, res) {
+
+  var pkg_id = req.params.id;
+  packages.set_pkg_banned( req, true, pkg_id, res );
+
+};
+
+/**
+ * Unban a package
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.unban_by_id = function(req, res) {
+
+  var pkg_id = req.params.id;
+  packages.set_pkg_banned( req, false, pkg_id, res );
+
+};
+
+/**
  * Deprecate a package by engine and name
  *
  * @param {Object} HTTP request 
