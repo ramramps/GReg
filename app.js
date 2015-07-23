@@ -112,6 +112,11 @@ var express = require('express')
   app.put('/deprecate/:engine/:name', passport.authenticate(auth_type, { session: false }), pkg.deprecate_by_engine_and_name);
   app.put('/undeprecate/:engine/:name', passport.authenticate(auth_type, { session: false }), pkg.undeprecate_by_engine_and_name);
 
+// banning
+
+  app.put('/ban/:id', passport.authenticate(auth_type, { session: false }), pkg.ban_by_id);
+  app.put('/unban/:id', passport.authenticate(auth_type, { session: false }), pkg.unban_by_id);
+
 // voting
 
   app.put('/upvote/:id', passport.authenticate(auth_type, { session: false }), pkg.upvote_by_id);
