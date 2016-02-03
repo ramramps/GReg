@@ -88,7 +88,7 @@ var express = require('express')
 
 // search
 
-  app.get('/search/:query', pkg.search ); 
+  //app.get('/search/:query', pkg.search ); 
 
 // users
 
@@ -135,6 +135,10 @@ var express = require('express')
     res.send(error.success("You are logged in."))
   });
 
+// white listing
+  app.put('/whitelist/:id', passport.authenticate(auth_type, { session: false }), pkg.whitelist_by_id);
+  app.put('/unwhitelist/:id', passport.authenticate(auth_type, { session: false }), pkg.unwhitelist_by_id);
+  app.get('/whitelist', passport.authenticate(auth_type, {session: false}), pkg.all_whitelist);
 
 ////////////////////////
 // Statistics update

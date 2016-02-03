@@ -585,3 +585,84 @@ exports.remove = function(req, res) {
   var id = req.params.id;
   res.send({thing: 'hi'});
 }
+
+/**
+ * Add a package to the white list.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+*/
+exports.whitelist_by_id = function(req, res){
+  
+  if(!req.user.super_user){
+      res.send(403, error.fail('Adding packages to the white list is only allowed for super users.'));
+  }
+
+  var id = req.params.id;
+  packages.whitelist_by_id(user, id, function(err, pkg) {
+
+    if ( err || !pkg ) {
+      if(err){
+        return res.send(500, error);
+      } else {
+        res.send(500, error.fail('Failed to obtain the package'));
+      }
+      return console.log('Log error - failed to white-list a package with id: ' + id);
+    }
+    
+    return res.send(error.success);
+
+  });
+};
+
+/**
+ * Remove a package from the whitelist.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+*/
+exports.unwhitelist_by_id = function(req, res){
+
+    var id = req.params.id;
+
+    if(!req.user.super_user){
+      res.send(403, error.fail('Removing packages from the white list is only allowed for super users.'));
+    }
+
+    packages.unwhitelist_by_id(user, id, function(err, pkg) {
+
+    if ( err || !pkg ) {
+      if(err){
+        res.send(500, err)
+      }else{
+        res.send(500, error.fail('Failed to obtain the package' ));
+      }
+      return console.log('Log error - failed to remove a package with id: ' + id + 'from the white list.');
+    }
+
+    return res.send(error.success);
+
+  });
+};
+
+/**
+ * Get all white-listed packages.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+*/
+exports.all_whitelist = function(req, res){
+
+  packages.all_whitelist(function(err, pkgs){
+    if(err || !pkgs){
+      if(err){
+        return res.send(500, err)
+      }else{
+        return res.send(err.fail('Could not get white listed packages'));
+      }
+      return console.log('There was an error getting the white listed packages.');
+    }
+  });
+
+};
+
