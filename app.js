@@ -22,7 +22,7 @@ var express = require('express')
 
   var mongoDbName = process.env.GREG_DB_NAME;
   var mongoDbUrl = process.env.GREG_DB_URL;
-	var mongoUri = mongoDbUrl + mongoDbName;	
+	var mongoUri = mongoDbUrl + '/' + mongoDbName;	
 
   mongoose.connect(mongoUri, function(err) {
     if (!err) {
