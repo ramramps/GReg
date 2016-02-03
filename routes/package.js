@@ -2,7 +2,7 @@ var PackageModel = require('../lib/models').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
-  , search = require('../lib/search')
+  //, search = require('../lib/search')
   , _ = require('underscore');
 
 var cache = {};
@@ -466,7 +466,7 @@ exports.by_engine_and_name = function(req, res) {
  * @param {Object} HTTP response
  * @api public
  */
-
+/*
 exports.search = function(req, res) {
 
   var q = req.params.query;
@@ -511,7 +511,7 @@ exports.search = function(req, res) {
 
   });
 
-}
+}*/
 
 /**
  * Add a new package
