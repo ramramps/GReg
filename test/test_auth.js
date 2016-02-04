@@ -1,7 +1,7 @@
 var request = require('supertest')
-  , express = require('express')
+  , app = require('../app.js')
   , mocha = require('mocha')
-  , request = request('http://localhost:8080');
+  , request = request(app);
 
 describe('POST /', function(){
 

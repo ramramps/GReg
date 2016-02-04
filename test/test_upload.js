@@ -1,7 +1,7 @@
 var request = require('supertest')
-  , express = require('express')
+  , app = require('../app.js')
   , mocha = require('mocha')
-  , request = request('http://localhost:8080');
+  , request = request(app);
 
 describe('POST /', function(){
 
@@ -10,7 +10,7 @@ describe('POST /', function(){
     request
       .post('/dbg_upload')
       .expect('Content-Type', /json/)
-      .attach('pkg', 'test_rest.js')
+      .attach('pkg', 'test/test_rest.js')
       .expect(200, done);
 
   });

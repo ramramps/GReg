@@ -77,10 +77,10 @@ describe('packages.validate_base_pkg_data', function(){
 		var pkg_data1 = { license: "GPL" };
 		var pkg_data2 = { license: "WTFPL" };
 		var pkg_data3 = { license: "CreativeCommons" };
-		should.equal( false, packages.validate_base_pkg_data( pkg_data ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data1 ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data2 ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data3 ).success );
+		should.equal( true, packages.validate_base_pkg_data( pkg_data ));
+		should.equal( true, packages.validate_base_pkg_data( pkg_data1 ));
+		should.equal( true, packages.validate_base_pkg_data( pkg_data2 ));
+		should.equal( true, packages.validate_base_pkg_data( pkg_data3 ));
 
 	});
 

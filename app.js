@@ -60,7 +60,7 @@ var express = require('express')
 // Routes
 ////////////////////////
 
-  var auth_type =  process.env.GREG_USE_OXYGEN ? 'oxygen' : 'basic'; 
+  var auth_type =  process.env.GREG_USE_OXYGEN === 'true' ? 'oxygen' : 'basic'; 
 
   console.log('Using authorization strategy: ' + auth_type);
 
@@ -159,6 +159,8 @@ var express = require('express')
 // Server
 ////////////////////////
 
+var server;
+
   var port = process.env.PORT || 8080;
 	var keyfn = 'ssl/server.key';
 	var crtfn = 'ssl/server.crt';
@@ -169,7 +171,7 @@ var express = require('express')
 	  var crt = fs.readFileSync(crtfn, 'utf8');
 	  var cred = { key: key, cert: crt };
 
-	  https.createServer(cred, app).listen(443, function() {
+	  server = https.createServer(cred, app).listen(443, function() {
 	    console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
 	  });
 
@@ -179,8 +181,8 @@ var express = require('express')
 
 	}
 
-	app.listen( port, function() {
+    server = app.listen( port, function() {
 	  console.log("✔ Express server listening on port %d in %s mode", port, app.get('env'));
 	});
 
-
+module.exports = server;

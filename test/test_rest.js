@@ -1,8 +1,8 @@
 var request = require('supertest')
-  , express = require('express')
   , mocha = require('mocha')
   , should = require('should')
-  , request = request('http://localhost:80')
+  , app = require('../app.js')
+  , request = request(app)
   , crypto = require('crypto')
   , fs = require('fs')
   , async = require('async')
@@ -130,7 +130,7 @@ describe('/pkg', function(){
 function add_pkg(pkg_data, done){
 
   var shasum = crypto.createHash('sha256');
-  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+  var s = fs.ReadStream( 'test/uploads/pkg_test.zip' );
 
   s.on('data', function(d) {
     shasum.update(d);
@@ -141,13 +141,13 @@ function add_pkg(pkg_data, done){
     pkg_data.file_hash = shasum.digest('base64');
 
     request
-      .post('/pkg')
+      .post('/package')
       .auth('test','e0jlZfJfKS')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .field('pkg_header', JSON.stringify( pkg_data ) )
-      .attach('pkg', 'uploads/pkg_test.zip')
+      .attach('pkg', 'test/uploads/pkg_test.zip')
       .end(function(err, res){
 
         if (err) {
@@ -167,9 +167,7 @@ function add_pkg(pkg_data, done){
             });
           });
         });
-
       });
-
     });
 }
 
@@ -189,7 +187,7 @@ function new_version_correct(pkg_data, done) {
   pkg_data.version = increment_version( pkg_data.version );
 
   var shasum = crypto.createHash('sha256');
-  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+  var s = fs.ReadStream( 'test/uploads/pkg_test.zip' );
 
   s.on('data', function(d) {
     shasum.update(d);
@@ -200,14 +198,13 @@ function new_version_correct(pkg_data, done) {
     pkg_data.file_hash = shasum.digest('base64');
 
     request
-      .put('/pkg')
-
+      .put('/package')
       .auth('test','e0jlZfJfKS')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .field('pkg_header', JSON.stringify( pkg_data ) )
-      .attach('pkg', 'uploads/pkg_test.zip')
+      .attach('pkg', 'test/uploads/pkg_test.zip')
       .end(function(err, res){
         if (err)  return done(err);
         should.equal(res.body.success, true);
@@ -222,7 +219,7 @@ function new_version_correct(pkg_data, done) {
 function new_version_fail(pkg_data, done) {
 
   var shasum = crypto.createHash('sha256');
-  var s = fs.ReadStream( 'uploads/pkg_test.zip' );
+  var s = fs.ReadStream( 'test/uploads/pkg_test.zip' );
 
   s.on('data', function(d) {
     shasum.update(d);
@@ -233,13 +230,13 @@ function new_version_fail(pkg_data, done) {
     pkg_data.file_hash = shasum.digest('base64');
 
     request
-      .put('/pkg')
+      .put('/package')
       .auth('test','e0jlZfJfKS')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
       .field('pkg_header', JSON.stringify( pkg_data ) )
-      .attach('pkg', 'uploads/pkg_test.zip')
+      .attach('pkg', 'test/uploads/pkg_test.zip')
       .end(function(err, res){
         if (err)  return done(err);
         should.equal(res.body.success, false);
@@ -254,7 +251,7 @@ function new_version_fail(pkg_data, done) {
 function lookup_success( pkg_id, done) {
 
   request
-    .get('/pkg/' + pkg_id )
+    .get('/package/' + pkg_id )
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
@@ -270,7 +267,7 @@ function lookup_success( pkg_id, done) {
 function new_vote(pkg_id, status_code_expected, done){
 
   request
-    .put('/pkg_upvote/' + pkg_id )
+    .put('/upvote/' + pkg_id )
     .auth('test','e0jlZfJfKS')
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
