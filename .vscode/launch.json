@@ -25,6 +25,16 @@
 			"type": "node",
 			"request": "attach",
 			"port": 5858
-		}
+		},
+        {
+            "name": "Run mocha",
+            "type": "node",
+            "program": "./node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": ".",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "development"}
+        }
 	]
 }
