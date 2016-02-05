@@ -146,26 +146,32 @@ describe('/whitelist', function(){
         
        // Cleanup any packages we made for white list testing. 
        
+       done();
     });
 
     it('PUT should white list a package with a true parameter.', function(done){
         
+        done();
     });
     
     it('PUT should remove a package from the white list with a false parameter.', function(done){
         
+        done();
     });
     
     it('PUT should return 500 without a boolean parameter', function(done){
         
+        done();
     });
 
     it('PUT should return 404 with bad package id.', function(done){
         
+        done();
     });
     
     it('GET should return all white listed packages.', function(done){
         
+        done();
     });
     
 });
