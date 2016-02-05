@@ -3,7 +3,7 @@ var request = require('supertest')
   , mocha = require('mocha')
   , request = request(app);
 
-describe('POST /', function(){
+describe('POST /validate', function(){
 
   it('should respond with json', function(done){
 
