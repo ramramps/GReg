@@ -1,8 +1,7 @@
-var PackageModel = require('../lib/models').PackageModel
+var PackageModel = require('../models/package').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
-  //, search = require('../lib/search')
   , _ = require('underscore');
 
 var cache = {};
@@ -597,9 +596,15 @@ exports.whitelist_by_id = function(req, res){
   if(!req.user.super_user){
       res.send(403, error.fail('Adding packages to the white list is only allowed for super users.'));
   }
+  
+  if(!req.params.add){
+      res.send(500, error.fail('You must specify the add parameter.'));
+  }
 
   var id = req.params.id;
-  packages.whitelist_by_id(user, id, function(err, pkg) {
+  var add = req.params.add;
+  
+  packages.whitelist_by_id(user, id, add, function(err, pkg) {
 
     if ( err || !pkg ) {
       if(err){
@@ -607,39 +612,9 @@ exports.whitelist_by_id = function(req, res){
       } else {
         res.send(500, error.fail('Failed to obtain the package'));
       }
-      return console.log('Log error - failed to white-list a package with id: ' + id);
+      return console.log('Log error - failed to set the white list value for package: ' + id);
     }
     
-    return res.send(error.success);
-
-  });
-};
-
-/**
- * Remove a package from the whitelist.
- * @param {Object} HTTP request
- * @param {Object} HTTP response
- * @api public
-*/
-exports.unwhitelist_by_id = function(req, res){
-
-    var id = req.params.id;
-
-    if(!req.user.super_user){
-      res.send(403, error.fail('Removing packages from the white list is only allowed for super users.'));
-    }
-
-    packages.unwhitelist_by_id(user, id, function(err, pkg) {
-
-    if ( err || !pkg ) {
-      if(err){
-        res.send(500, err)
-      }else{
-        res.send(500, error.fail('Failed to obtain the package' ));
-      }
-      return console.log('Log error - failed to remove a package with id: ' + id + 'from the white list.');
-    }
-
     return res.send(error.success);
 
   });

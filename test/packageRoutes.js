@@ -41,6 +41,7 @@ var pkg_datas = [];
 var ds_pkg_datas = [];
 
 
+
 // This code attempts to insert a large number of elements into the package manager database.
 // It has the side effect of actually populating the database with these elements, so be wary of
 // when and how you use it.
@@ -126,6 +127,47 @@ describe('/pkg', function(){
 
   });
 
+});
+
+describe('/whitelist', function(){
+   
+    before(function(done){
+        
+        // Create one package for white list testing.
+        
+        // Ensure that there are packages. If not, create some for testing.
+        PackageModel.find( {}, function(err, pkgs) {
+            
+        });
+        
+    });
+    
+    after(function(done){
+        
+       // Cleanup any packages we made for white list testing. 
+       
+    });
+
+    it('PUT should white list a package with a true parameter.', function(done){
+        
+    });
+    
+    it('PUT should remove a package from the white list with a false parameter.', function(done){
+        
+    });
+    
+    it('PUT should return 500 without a boolean parameter', function(done){
+        
+    });
+
+    it('PUT should return 404 with bad package id.', function(done){
+        
+    });
+    
+    it('GET should return all white listed packages.', function(done){
+        
+    });
+    
 });
 
 function add_pkg(pkg_data, done){
