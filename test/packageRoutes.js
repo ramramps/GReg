@@ -6,7 +6,8 @@ var request = require('supertest')
   , crypto = require('crypto')
   , fs = require('fs')
   , async = require('async')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , user = require('../lib/users.js');
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -40,141 +41,156 @@ var groups = ['global', 'the cool group', 'cool kidz', 'adsk'];
 var pkg_datas = [];
 var ds_pkg_datas = [];
 
-
-
-// This code attempts to insert a large number of elements into the package manager database.
-// It has the side effect of actually populating the database with these elements, so be wary of
-// when and how you use it.
-describe('/pkg', function(){
-
-  this.timeout(80000);
-
-  var j = 0;
-
+describe('Package route tests.', function(){
     
-  var series_funcs = [];
-
-  for (var i = 0; i < 5; i++) {
-
-    var pkg_keywords = [];
-    var num_keywords = Math.floor( Math.random() * 6 );
-
-    for (j = 0; j < num_keywords; j++) {
-      pkg_keywords.push( keywords[ Math.floor( Math.random() * keywords.length )] );
-    }
-
-    var pkg_data = {
-        name: birds[i]
-      , description: pkg_keywords.join(' ') + ' ' + 'package'
-      , keywords: pkg_keywords
-      , version: '0.0.1'
-      , group: groups[Math.floor(Math.random() * 4)]
-      , engine: 'dynamo'
-      , engine_version: '0.3.1'
-      , license: 'MIT'
-      , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
-    };
-
-    ds_pkg_datas.push(pkg_data);
-
-    // add some dependencies
-    var num_deps = 2;
-
-    if ( i >= num_deps ) {
-
-      var deps = [];
-      var deps_map = {};
-      var name = "";
-      
-      // search for few dependencies, making sure there are no dups
-      while( deps.length < num_deps ) {
-        name = ds_pkg_datas[ Math.floor( Math.random() * i ) ].name;
-
-        if ( deps_map[name] === undefined ){
-          deps.push(name);
-          deps_map[name] = 1;
-        }
-      }
-      
-      // define the dependencies array
-      ds_pkg_datas[i].dependencies = [];
-
-      for (var k = 0; k < num_deps; k++) {
-        ds_pkg_datas[i].dependencies.push( { name: deps[k], version: "0.0.1", engine: "dynamo" } )
-      }
-    
-    }
-  }
-
-  it('POST should respond with success json', function(done) {
-
-    for (var i = 0; i < 5; i++){
-
-      if ( i != 4){
-        setTimeout( ( function(pkg_data) {
-          return function() {
-            add_pkg( pkg_data, function() {} );
-          }
-        })(ds_pkg_datas[i]), 4000 * i );
-      } else {
-        setTimeout( ( function(pkg_data) {
-          return function() {
-            add_pkg( pkg_data, done );
-          }
-        })(ds_pkg_datas[i]), 4000 * i );  
-      }
-    }
-
-  });
-
-});
-
-describe('/whitelist', function(){
-   
     before(function(done){
-        
-        // Create one package for white list testing.
-        
-        // Ensure that there are packages. If not, create some for testing.
-        PackageModel.find( {}, function(err, pkgs) {
+        user.initDebugUser();
+        done();
+    })
+    
+    after(function(done){
+        user.cleanupDebugUser();
+        done();
+    })
+    
+    // This code attempts to insert a large number of elements into the package manager database.
+    // It has the side effect of actually populating the database with these elements, so be wary of
+    // when and how you use it.
+    describe('/pkg', function(){
+
+        this.timeout(80000);
+
+        var j = 0;
+
+            
+        var series_funcs = [];
+
+        for (var i = 0; i < 5; i++) {
+
+            var pkg_keywords = [];
+            var num_keywords = Math.floor( Math.random() * 6 );
+
+            for (j = 0; j < num_keywords; j++) {
+            pkg_keywords.push( keywords[ Math.floor( Math.random() * keywords.length )] );
+            }
+
+            var pkg_data = {
+                name: birds[i]
+            , description: pkg_keywords.join(' ') + ' ' + 'package'
+            , keywords: pkg_keywords
+            , version: '0.0.1'
+            , group: groups[Math.floor(Math.random() * 4)]
+            , engine: 'dynamo'
+            , engine_version: '0.3.1'
+            , license: 'MIT'
+            , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
+            };
+
+            ds_pkg_datas.push(pkg_data);
+
+            // add some dependencies
+            var num_deps = 2;
+
+            if ( i >= num_deps ) {
+
+            var deps = [];
+            var deps_map = {};
+            var name = "";
+            
+            // search for few dependencies, making sure there are no dups
+            while( deps.length < num_deps ) {
+                name = ds_pkg_datas[ Math.floor( Math.random() * i ) ].name;
+
+                if ( deps_map[name] === undefined ){
+                deps.push(name);
+                deps_map[name] = 1;
+                }
+            }
+            
+            // define the dependencies array
+            ds_pkg_datas[i].dependencies = [];
+
+            for (var k = 0; k < num_deps; k++) {
+                ds_pkg_datas[i].dependencies.push( { name: deps[k], version: "0.0.1", engine: "dynamo" } )
+            }
+            
+            }
+        }
+
+        it('POST should respond with success json', function(done) {
+
+            for (var i = 0; i < 5; i++){
+
+            if ( i != 4){
+                setTimeout( ( function(pkg_data) {
+                return function() {
+                    add_pkg( pkg_data, function() {} );
+                }
+                })(ds_pkg_datas[i]), 4000 * i );
+            } else {
+                setTimeout( ( function(pkg_data) {
+                return function() {
+                    add_pkg( pkg_data, done );
+                }
+                })(ds_pkg_datas[i]), 4000 * i );  
+            }
+            }
+
+        });
+
+    });
+
+    describe('/whitelist', function(){
+    
+        before(function(done){
+            
+            // Create one package for white list testing.
+            
+            // Ensure that there are packages. If not, create some for testing.
+            //PackageModel.find( {}, function(err, pkgs) {
+                
+            //});
+            
+            done();
             
         });
         
-    });
-    
-    after(function(done){
+        after(function(done){
+            
+            // Cleanup any packages we made for white list testing. 
         
-       // Cleanup any packages we made for white list testing. 
-       
-       done();
-    });
+            done();
+        });
 
-    it('PUT should white list a package with a true parameter.', function(done){
+        it('PUT should white list a package with a true parameter.', function(done){
+            
+            done();
+        });
         
-        done();
-    });
-    
-    it('PUT should remove a package from the white list with a false parameter.', function(done){
+        it('PUT should remove a package from the white list with a false parameter.', function(done){
+            
+            done();
+        });
         
-        done();
-    });
-    
-    it('PUT should return 500 without a boolean parameter', function(done){
-        
-        done();
-    });
+        it('PUT should return 500 without a boolean parameter', function(done){
+            
+            done();
+        });
 
-    it('PUT should return 404 with bad package id.', function(done){
+        it('PUT should return 404 with bad package id.', function(done){
+            
+            done();
+        });
         
-        done();
-    });
-    
-    it('GET should return all white listed packages.', function(done){
+        it('GET should return all white listed packages.', function(done){
+            
+            done();
+        });
         
-        done();
     });
-    
 });
+
+
 
 function add_pkg(pkg_data, done){
 
