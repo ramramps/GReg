@@ -3,17 +3,17 @@ var express = require('express')
 	, http = require('http')
 	, https = require('https')
 	, fs = require('fs')
-  , path = require('path')
-  , mongoose = require('mongoose')
-  , routes = require('./routes')
-  , pkg = require('./routes/package')
-  , passport = require('passport')
-  , user = require('./routes/user')
-  , users = require('./lib/users')
-  , oxy_auth = require('./lib/oxygen_auth')
-	, stats = require('./routes/stats')
-  , basic_auth = require('./lib/basic_auth')
-  , error = require('./lib/error')
+    , path = require('path')
+    , mongoose = require('mongoose')
+    , routes = require('./routes')
+    , pkg = require('./routes/package')
+    , passport = require('passport')
+    , user = require('./routes/user')
+    , users = require('./lib/users')
+    , oxy_auth = require('./lib/oxygen_auth')
+    , stats = require('./routes/stats')
+    , basic_auth = require('./lib/basic_auth')
+    , error = require('./lib/error')
 	, stats_update = require('./lib/stats_update');
 
 ////////////////////////
@@ -86,10 +86,6 @@ var express = require('express')
   app.get('/pkg_stats', stats.all_engine_stats );
   app.get('/pkg_stats/:engine', stats.all_engine_stats );
 
-// search
-
-  //app.get('/search/:query', pkg.search ); 
-
 // users
 
   app.get('/user_name/:name', user.by_name );
@@ -152,7 +148,6 @@ var express = require('express')
 	setInterval(function(){
 		stats_update.synchronize_user_stats(function(){ console.log('synchronize user stats'); });
 	}, 1000 * 60 * 20 + 2000 ); // every 20 minutes 
-
 
 
 ////////////////////////

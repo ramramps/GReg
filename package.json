@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "async": "0.2.6",
-    "awssum-amazon-cloudsearch": "1.0.2",
     "awssum-amazon-s3": "1.2.4",
     "ejs": "0.8.4",
     "express": "3.1.0",
