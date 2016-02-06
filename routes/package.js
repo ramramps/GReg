@@ -459,60 +459,6 @@ exports.by_engine_and_name = function(req, res) {
 };
 
 /**
- * Search for a package
- *
- * @param {Object} HTTP request 
- * @param {Object} HTTP response
- * @api public
- */
-/*
-exports.search = function(req, res) {
-
-  var q = req.params.query;
-
-  if (!q) {
-    exports.all(req, res);
-    return;
-  }
-
-  search.pkg_search(q, function(err, data) {
-
-    if (err) {
-      res.send(500, error.fail('Something wrong with the pkg_search'));
-      return;
-    }
-
-    if (data.Body.hits.found === 0) {
-      res.send(error.success_with_content( "Succeeded", [] ) );
-      return;
-    }
-
-    var ids = [];
-    _.each( data.Body.hits.hit, function(id){
-
-      ids.push(id.id);
-
-    });
-
-    packages.by_ids(ids, function(err, pkgs) {
-
-      if (err) {
-        return res.send(500, error.fail('Failed to get packages from db'));
-      }
-
-      try {
-        return res.send(error.success_with_content('Search succeeded', pkgs));
-      } catch (e) {
-        return console.error('There was a problem returning the search results.')
-      }
-
-    });
-
-  });
-
-}*/
-
-/**
  * Add a new package
  *
  * @param {Object} HTTP request 
