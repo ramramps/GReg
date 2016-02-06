@@ -175,7 +175,6 @@ describe('Package route tests.', function(){
                request
                 .put('/whitelist/' + pkg_id)
                 .auth('test','e0jlZfJfKS')
-                .send({'add':true})
                 .expect(403)
                 .end(function(err,res){
                     
@@ -192,12 +191,11 @@ describe('Package route tests.', function(){
            });
         });
         
-        it('PUT should white list a package with a true parameter.', function(done){
+        it('PUT should white list a package.', function(done){
             
             request
                 .put('/whitelist/' + pkg_id)
                 .auth('test','e0jlZfJfKS')
-                .send({'add':true})
                 .expect(201)
                 .end(function(err,res){
                     if(err) {
@@ -226,11 +224,10 @@ describe('Package route tests.', function(){
                 });
         });
         
-        it('PUT should remove a package from the white list with a false parameter.', function(done){
+        it('PUT should remove a package from the white list with.', function(done){
             
             request
-                .put('/whitelist/' + pkg_id)
-                .send({'add':false})
+                .put('/unwhitelist/' + pkg_id)
                 .auth('test','e0jlZfJfKS')
                 .expect(201)
                 .end(function(err,res){
@@ -242,25 +239,11 @@ describe('Package route tests.', function(){
                     });
                 });
         });
-        
-        it('PUT should return 500 if the add property is undefined', function(done){
-            request
-                .put('/whitelist/' + pkg_id)
-                .auth('test','e0jlZfJfKS')
-                .expect(500)
-                .end(function(err,res){
-                    if(err) {
-                        return done(err);
-                    }
-                    done();
-                });
-        });
 
         it('PUT should return 404 with bad package id.', function(done){
             
             request
                 .put('/whitelist/56b5263b71a1a8687e000008') // a non-existent id
-                .send({'add':false})
                 .auth('test','e0jlZfJfKS')
                 .expect(404)
                 .end(function(err,res){

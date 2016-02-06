@@ -597,14 +597,9 @@ exports.whitelist_by_id = function(req, res){
       return res.send(403, error.fail('Adding packages to the white list is only allowed for super users.'));
   };
 
-  if(!req.body.hasOwnProperty('add')){
-      return res.send(500, error.fail('You must supply the add property in the body of the request.'));
-  }
-  
   var id = req.params.id;
-  var add = req.body.add;
-
-  packages.whitelist_by_id(id, add, function(err, num) {
+  
+  packages.whitelist_by_id(id, function(err, num) {
 
     if ( err ) {
       return res.send(500, error.fail(err));
@@ -618,6 +613,35 @@ exports.whitelist_by_id = function(req, res){
 
   });
 };
+
+/**
+ * Remove a package from the white list.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.unwhitelist_by_id = function(req,res){
+    
+    if(!req.user.super_user){
+      return res.send(403, error.fail('Removing packages from the white list is only allowed for super users.'));
+    };
+
+    var id = req.params.id;
+    
+    packages.unwhitelist_by_id(id, function(err, num) {
+
+        if ( err ) {
+        return res.send(500, error.fail(err));
+        }
+        
+        if(num === 0){
+            return res.send(404, error.fail("No packages were updated."));
+        }
+        
+        return res.send(201, error.success(num + " packages updated successfully."));
+
+    });
+}
 
 /**
  * Get all white-listed packages.
