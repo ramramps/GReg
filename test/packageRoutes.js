@@ -8,8 +8,8 @@ var request = require('supertest')
   , async = require('async')
   , _ = require('underscore')
   , user = require('../lib/users.js')
-  , PackageModel = require('../lib/models/package.js').PackageModel
-  , UserModel = require('../lib/models/user.js').UserModel;
+  , PackageModel = require('../models/package.js').PackageModel
+  , UserModel = require('../models/user.js').UserModel;
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",

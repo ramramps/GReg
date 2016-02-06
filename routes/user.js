@@ -1,6 +1,6 @@
 var UserModel = require('../models/user').UserModel
-  , error = require('../error')
-  , packages = require('../packages')
+  , error = require('../lib/error')
+  , packages = require('../lib/packages')
 
 /**
  * Lookup a user by name

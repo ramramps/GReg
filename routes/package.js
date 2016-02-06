@@ -1,6 +1,6 @@
 var PackageModel = require('../models/package').PackageModel
-  , error = require('../error')
-  , packages = require('../packages')
+  , error = require('../lib/error')
+  , packages = require('../lib/packages')
   , mongoose = require('mongoose')
   , _ = require('underscore');
 

@@ -1,6 +1,6 @@
-var error = require('../error')
+var error = require('../lib/error')
   , mongoose = require('mongoose')
-  , stats = require('../stats')
+  , stats = require('../lib/stats')
 
 exports.DEFAULT_LIMIT = 6;
 
