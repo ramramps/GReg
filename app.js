@@ -126,8 +126,8 @@ var express = require('express')
   });
 
 // white listing
-  app.put('/whitelist/:id', passport.authenticate(auth_type, { session: false }), pkg.whitelist_by_id);
-  app.put('/unwhitelist/:id', passport.authenticate(auth_type, { session: false }), pkg.unwhitelist_by_id);
+  app.put('/whitelist/:pkg_id', passport.authenticate(auth_type, { session: false }), pkg.whitelist_by_id);
+  app.put('/unwhitelist/:pkg_id', passport.authenticate(auth_type, { session: false }), pkg.unwhitelist_by_id);
   app.get('/whitelist', passport.authenticate(auth_type, {session: false}), pkg.all_whitelist);
 
 ////////////////////////
