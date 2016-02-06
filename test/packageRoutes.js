@@ -7,7 +7,9 @@ var request = require('supertest')
   , fs = require('fs')
   , async = require('async')
   , _ = require('underscore')
-  , user = require('../lib/users.js');
+  , user = require('../lib/users.js')
+  , PackageModel = require('../lib/models/package.js').PackageModel
+  , UserModel = require('../lib/models/user.js').UserModel;
 
 
 var reptiles = ["Alligator", "Snapping turtle","Box turtle","Eastern box turtle","Aquatic box turtle",
@@ -49,7 +51,6 @@ describe('Package route tests.', function(){
     })
     
     after(function(done){
-        user.cleanupDebugUser();
         done();
     })
     
@@ -62,7 +63,6 @@ describe('Package route tests.', function(){
 
         var j = 0;
 
-            
         var series_funcs = [];
 
         for (var i = 0; i < 5; i++) {
@@ -76,14 +76,14 @@ describe('Package route tests.', function(){
 
             var pkg_data = {
                 name: birds[i]
-            , description: pkg_keywords.join(' ') + ' ' + 'package'
-            , keywords: pkg_keywords
-            , version: '0.0.1'
-            , group: groups[Math.floor(Math.random() * 4)]
-            , engine: 'dynamo'
-            , engine_version: '0.3.1'
-            , license: 'MIT'
-            , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
+                , description: pkg_keywords.join(' ') + ' ' + 'package'
+                , keywords: pkg_keywords
+                , version: '0.0.1'
+                , group: groups[Math.floor(Math.random() * 4)]
+                , engine: 'dynamo'
+                , engine_version: '0.3.1'
+                , license: 'MIT'
+                , contents: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
             };
 
             ds_pkg_datas.push(pkg_data);
@@ -93,104 +93,195 @@ describe('Package route tests.', function(){
 
             if ( i >= num_deps ) {
 
-            var deps = [];
-            var deps_map = {};
-            var name = "";
-            
-            // search for few dependencies, making sure there are no dups
-            while( deps.length < num_deps ) {
-                name = ds_pkg_datas[ Math.floor( Math.random() * i ) ].name;
+                var deps = [];
+                var deps_map = {};
+                var name = "";
+                
+                // search for few dependencies, making sure there are no dups
+                while( deps.length < num_deps ) {
+                    name = ds_pkg_datas[ Math.floor( Math.random() * i ) ].name;
 
-                if ( deps_map[name] === undefined ){
-                deps.push(name);
-                deps_map[name] = 1;
+                    if ( deps_map[name] === undefined ){
+                    deps.push(name);
+                    deps_map[name] = 1;
+                    }
                 }
-            }
-            
-            // define the dependencies array
-            ds_pkg_datas[i].dependencies = [];
+                
+                // define the dependencies array
+                ds_pkg_datas[i].dependencies = [];
 
-            for (var k = 0; k < num_deps; k++) {
-                ds_pkg_datas[i].dependencies.push( { name: deps[k], version: "0.0.1", engine: "dynamo" } )
-            }
-            
+                for (var k = 0; k < num_deps; k++) {
+                    ds_pkg_datas[i].dependencies.push( { name: deps[k], version: "0.0.1", engine: "dynamo" } )
+                }
             }
         }
 
         it('POST should respond with success json', function(done) {
 
             for (var i = 0; i < 5; i++){
-
-            if ( i != 4){
-                setTimeout( ( function(pkg_data) {
-                return function() {
-                    add_pkg( pkg_data, function() {} );
+                if ( i != 4){
+                    setTimeout( ( function(pkg_data) {
+                    return function() {
+                        add_pkg( pkg_data, function() {} );
+                    }
+                    })(ds_pkg_datas[i]), 4000 * i );
+                } else {
+                    setTimeout( ( function(pkg_data) {
+                    return function() {
+                        add_pkg( pkg_data, done );
+                    }
+                    })(ds_pkg_datas[i]), 4000 * i );  
                 }
-                })(ds_pkg_datas[i]), 4000 * i );
-            } else {
-                setTimeout( ( function(pkg_data) {
-                return function() {
-                    add_pkg( pkg_data, done );
-                }
-                })(ds_pkg_datas[i]), 4000 * i );  
             }
-            }
-
         });
-
+        
     });
-
+    
     describe('/whitelist', function(){
     
+        var pkg_id;
+        
         before(function(done){
             
-            // Create one package for white list testing.
-            
-            // Ensure that there are packages. If not, create some for testing.
-            //PackageModel.find( {}, function(err, pkgs) {
+            remove_all_from_white_list(function(err){
+                if(err){
+                    done(err);
+                }
+         
+                PackageModel.find({}, function(err,pkgs){
+                    if(err || !pkgs) return done(err);
+                    pkg_id = pkgs[0].id;
+                    done();
+                });
                 
-            //});
-            
-            done();
-            
+            });
         });
         
         after(function(done){
-            
-            // Cleanup any packages we made for white list testing. 
-        
-            done();
-        });
+            remove_all_from_white_list(function(err){
+                if(err){
+                    done(err);
+                }
+                done();
+            });
 
+        });
+        
+        it('PUT should not white list a package if the request is not from a super user.', function(done){
+           
+           // demote our test user
+           UserModel.update({username:'test'},{super_user:false}, function(err, num){
+               console.log(num);
+               request
+                .put('/whitelist/' + pkg_id)
+                .auth('test','e0jlZfJfKS')
+                .send({'add':true})
+                .expect(403)
+                .end(function(err,res){
+                    
+                    if(err) {
+                        return done(err);
+                    }
+
+                    // promote our user back to his super status
+                    UserModel.update({username:'test'},{super_user:true}, function(err, num){
+                        if(err) done(err);
+                        done();
+                    });
+                }); 
+           });
+        });
+        
         it('PUT should white list a package with a true parameter.', function(done){
             
-            done();
-        });
-        
-        it('PUT should remove a package from the white list with a false parameter.', function(done){
-            
-            done();
-        });
-        
-        it('PUT should return 500 without a boolean parameter', function(done){
-            
-            done();
-        });
-
-        it('PUT should return 404 with bad package id.', function(done){
-            
-            done();
+            request
+                .put('/whitelist/' + pkg_id)
+                .auth('test','e0jlZfJfKS')
+                .send({'add':true})
+                .expect(201)
+                .end(function(err,res){
+                    if(err) {
+                        return done(err);
+                    }
+                    PackageModel.findOne({_id:pkg_id}, function(err,pkg){
+                        if(err || !pkg) return done(err);
+                        (pkg.white_list).should.be.true;
+                        done();
+                    });
+                });
         });
         
         it('GET should return all white listed packages.', function(done){
             
-            done();
+            request
+                .get('/whitelist')
+                .auth('test','e0jlZfJfKS')
+                .expect(200)
+                .end(function(err,res){
+                    if(err) {
+                        return done(err);
+                    }
+                    res.body.length.should.equal(1);
+                    done();
+                });
         });
         
+        it('PUT should remove a package from the white list with a false parameter.', function(done){
+            
+            request
+                .put('/whitelist/' + pkg_id)
+                .send({'add':false})
+                .auth('test','e0jlZfJfKS')
+                .expect(201)
+                .end(function(err,res){
+                    if(err) return done(err);
+                    PackageModel.findOne({_id:pkg_id}, function(err,pkg){
+                        if(err || !pkg) return done(err);
+                        (pkg.white_list).should.be.false;
+                        done();
+                    });
+                });
+        });
+        
+        it('PUT should return 500 if the add property is undefined', function(done){
+            request
+                .put('/whitelist/' + pkg_id)
+                .auth('test','e0jlZfJfKS')
+                .expect(500)
+                .end(function(err,res){
+                    if(err) {
+                        return done(err);
+                    }
+                    done();
+                });
+        });
+
+        it('PUT should return 404 with bad package id.', function(done){
+            
+            request
+                .put('/whitelist/56b5263b71a1a8687e000008') // a non-existent id
+                .send({'add':false})
+                .auth('test','e0jlZfJfKS')
+                .expect(404)
+                .end(function(err,res){
+                    if(err) {
+                        return done(err);
+                    }
+                    done();
+                });
+        });
     });
 });
 
-
+function remove_all_from_white_list(callback){
+    PackageModel.update({white_list:true}, {white_list:false}, function(err, num){
+        if(err) {
+            console.log("There was an error removing packages from the white list.");
+            callback(err);
+        }
+        callback(null, num);
+    });
+}
 
 function add_pkg(pkg_data, done){
 
