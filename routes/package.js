@@ -599,9 +599,9 @@ exports.all_whitelist = function(req, res){
 
     packages.all_whitelist(function(err, pkgs){
         if(err || !pkgs){
-            return res.send(500, err.fail('Could not get white listed packages'));
+            return res.send(500, error.fail('Could not get white listed packages'));
         }
-        return res.send(200,pkgs);
+        return res.send(200,error.success_with_content("Succesfully retrieved white listed packages.", pkgs));
     });
 };
 
