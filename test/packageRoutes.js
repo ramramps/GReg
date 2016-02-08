@@ -191,6 +191,24 @@ describe('Package route tests.', function(){
            });
         });
         
+        it('GET should return an empty list if there are no white listed pacakges.', function(done){
+            request
+                .put('/whitelist/' + pkg_id)
+                .auth('test','e0jlZfJfKS')
+                .expect(201)
+                .end(function(err,res){
+                    if(err) {
+                        return done(err);
+                    }
+                    
+                    PackageModel.find({whitelist:true}, function(err, pkgs){
+                        if(err) done(err);
+                        (pkgs).should.be.empty;
+                        done();
+                    });
+                });
+        })
+        
         it('PUT should white list a package.', function(done){
             
             request
