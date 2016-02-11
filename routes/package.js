@@ -2,7 +2,8 @@ var PackageModel = require('../models/package').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , path = require('path');
 
 var cache = {};
 
@@ -262,7 +263,14 @@ exports.download_last_vers = function(req, res) {
     }
 
     try {
-      return res.redirect( pkg.versions[pkg.versions.length-1].url )
+        if(process.env.NODE_ENV != "production"){
+            // For testing, we send the local file.
+            var pkgUrl = pkg.versions[pkg.versions.length-1].url;
+            var pathParse = path.parse(pkgUrl);
+            return res.sendfile( pathParse.base, {root: path.resolve('test/mock_bucket/') } );
+        }else{
+            return res.redirect( pkg.versions[pkg.versions.length-1].url )
+        }
     } catch (exception) {
       return res.send(500, error.fail('Failed to obtain package version' ));
     }
@@ -303,10 +311,18 @@ exports.download_vers = function(req, res) {
     for (var i = 0; i < pkg.versions.length; i++) {
       if ( version === pkg.versions[i].version ) {  
         try {
-					res.redirect( pkg.versions[i].url );
-					pkg.downloads = pkg.downloads + 1;
-					pkg.markModified('downloads');
-					return pkg.save();
+            if(process.env.NODE_ENV != "production"){
+                    // For testing, we send the local file.
+                    var pkgUrl = pkg.versions[i].url;
+                    var pathParse = path.parse(pkgUrl);
+                    return res.sendfile( pathParse.base, {root: path.resolve('test/mock_bucket/') } );
+                }else{
+                    return res.redirect( pkg.versions[i].url )
+                }
+                
+                pkg.downloads = pkg.downloads + 1;
+                pkg.markModified('downloads');
+                return pkg.save();
         } catch (exception) {
           return res.send(500, error.fail('Failed to redirect' ));
         }
