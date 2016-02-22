@@ -3,18 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "underscore": "1.4.4",
-    "express": "3.1.0",
-    "mongoose": "3.5.7",
-    "jade": "0.28.1",
-    "passport": "0.1.16",
     "async": "0.2.6",
-    "superagent": "0.12.4",
     "awssum-amazon-s3": "1.2.4",
-    "passport-http": "0.2.2",
     "ejs": "0.8.4",
+    "express": "3.1.0",
     "fmt": "~0.4.0",
-    "awssum-amazon-cloudsearch": "1.0.2"
+    "fs.extra": "^1.3.2",
+    "jade": "0.28.1",
+    "mongoose": "3.5.7",
+    "passport": "0.1.16",
+    "passport-http": "0.2.2",
+    "superagent": "0.12.4",
+    "underscore": "1.4.4"
   },
   "devDependencies": {
     "mocha": "1.8.1",

@@ -1,9 +1,9 @@
-var PackageModel = require('../lib/models').PackageModel
+var PackageModel = require('../models/package').PackageModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
   , mongoose = require('mongoose')
-  , search = require('../lib/search')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , path = require('path');
 
 var cache = {};
 
@@ -263,7 +263,14 @@ exports.download_last_vers = function(req, res) {
     }
 
     try {
-      return res.redirect( pkg.versions[pkg.versions.length-1].url )
+        if(process.env.NODE_ENV != "production"){
+            // For testing, we send the local file.
+            var pkgUrl = pkg.versions[pkg.versions.length-1].url;
+            var pathParse = path.parse(pkgUrl);
+            return res.sendfile( pathParse.base, {root: path.resolve('test/mock_bucket/') } );
+        }else{
+            return res.redirect( pkg.versions[pkg.versions.length-1].url )
+        }
     } catch (exception) {
       return res.send(500, error.fail('Failed to obtain package version' ));
     }
@@ -304,10 +311,18 @@ exports.download_vers = function(req, res) {
     for (var i = 0; i < pkg.versions.length; i++) {
       if ( version === pkg.versions[i].version ) {  
         try {
-					res.redirect( pkg.versions[i].url );
-					pkg.downloads = pkg.downloads + 1;
-					pkg.markModified('downloads');
-					return pkg.save();
+            if(process.env.NODE_ENV != "production"){
+                    // For testing, we send the local file.
+                    var pkgUrl = pkg.versions[i].url;
+                    var pathParse = path.parse(pkgUrl);
+                    return res.sendfile( pathParse.base, {root: path.resolve('test/mock_bucket/') } );
+                }else{
+                    return res.redirect( pkg.versions[i].url )
+                }
+                
+                pkg.downloads = pkg.downloads + 1;
+                pkg.markModified('downloads');
+                return pkg.save();
         } catch (exception) {
           return res.send(500, error.fail('Failed to redirect' ));
         }
@@ -460,60 +475,6 @@ exports.by_engine_and_name = function(req, res) {
 };
 
 /**
- * Search for a package
- *
- * @param {Object} HTTP request 
- * @param {Object} HTTP response
- * @api public
- */
-
-exports.search = function(req, res) {
-
-  var q = req.params.query;
-
-  if (!q) {
-    exports.all(req, res);
-    return;
-  }
-
-  search.pkg_search(q, function(err, data) {
-
-    if (err) {
-      res.send(500, error.fail('Something wrong with the pkg_search'));
-      return;
-    }
-
-    if (data.Body.hits.found === 0) {
-      res.send(error.success_with_content( "Succeeded", [] ) );
-      return;
-    }
-
-    var ids = [];
-    _.each( data.Body.hits.hit, function(id){
-
-      ids.push(id.id);
-
-    });
-
-    packages.by_ids(ids, function(err, pkgs) {
-
-      if (err) {
-        return res.send(500, error.fail('Failed to get packages from db'));
-      }
-
-      try {
-        return res.send(error.success_with_content('Search succeeded', pkgs));
-      } catch (e) {
-        return console.error('There was a problem returning the search results.')
-      }
-
-    });
-
-  });
-
-}
-
-/**
  * Add a new package
  *
  * @param {Object} HTTP request 
@@ -585,3 +546,78 @@ exports.remove = function(req, res) {
   var id = req.params.id;
   res.send({thing: 'hi'});
 }
+
+/**
+ * Add a package to the white list.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+*/
+exports.whitelist_by_id = function(req, res){
+
+  if(!req.user.super_user){
+      return res.send(403, error.fail('Adding packages to the white list is only allowed for super users.'));
+  };
+
+  var id = req.params.pkg_id;
+  
+  packages.whitelist_by_id(id, function(err, num) {
+
+    if ( err ) {
+      return res.send(500, error.fail(err));
+    }
+    
+    if(num === 0){
+        return res.send(404, error.fail("No packages were updated."));
+    }
+    
+    return res.send(201, error.success(num + " packages updated successfully."));
+
+  });
+};
+
+/**
+ * Remove a package from the white list.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+ */
+exports.unwhitelist_by_id = function(req,res){
+    
+    if(!req.user.super_user){
+      return res.send(403, error.fail('Removing packages from the white list is only allowed for super users.'));
+    };
+
+    var id = req.params.pkg_id;
+    
+    packages.unwhitelist_by_id(id, function(err, num) {
+
+        if ( err ) {
+        return res.send(500, error.fail(err));
+        }
+        
+        if(num === 0){
+            return res.send(404, error.fail("No packages were updated."));
+        }
+        
+        return res.send(201, error.success(num + " packages updated successfully."));
+
+    });
+}
+
+/**
+ * Get all white-listed packages.
+ * @param {Object} HTTP request
+ * @param {Object} HTTP response
+ * @api public
+*/
+exports.all_whitelist = function(req, res){
+
+    packages.all_whitelist(function(err, pkgs){
+        if(err || !pkgs){
+            return res.send(500, error.fail('Could not get white listed packages'));
+        }
+        return res.send(200,error.success_with_content("Succesfully retrieved white listed packages.", pkgs));
+    });
+};
+

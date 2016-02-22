@@ -1,9 +1,9 @@
 var request = require('supertest')
-  , express = require('express')
+  , app = require('../app.js')
   , mocha = require('mocha')
-  , request = request('http://localhost:8080');
+  , request = request(app);
 
-describe('POST /', function(){
+describe('POST /validate', function(){
 
   it('should respond with json', function(done){
 

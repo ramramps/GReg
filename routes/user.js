@@ -1,4 +1,4 @@
-var UserModel = require('../lib/models').UserModel
+var UserModel = require('../models/user').UserModel
   , error = require('../lib/error')
   , packages = require('../lib/packages')
 

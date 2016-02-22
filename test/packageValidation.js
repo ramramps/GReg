@@ -71,19 +71,6 @@ describe('packages.validate_base_pkg_data', function(){
 
 	});
 
-	it('should return error object when the license is not supported', function(){
-
-		var pkg_data = { license: "MITc" };
-		var pkg_data1 = { license: "GPL" };
-		var pkg_data2 = { license: "WTFPL" };
-		var pkg_data3 = { license: "CreativeCommons" };
-		should.equal( false, packages.validate_base_pkg_data( pkg_data ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data1 ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data2 ).success );
-		should.equal( false, packages.validate_base_pkg_data( pkg_data3 ).success );
-
-	});
-
 });
 
 describe('packages.validate_version_string', function(){

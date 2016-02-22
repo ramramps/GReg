@@ -3,17 +3,17 @@ var express = require('express')
 	, http = require('http')
 	, https = require('https')
 	, fs = require('fs')
-  , path = require('path')
-  , mongoose = require('mongoose')
-  , routes = require('./routes')
-  , pkg = require('./routes/package')
-  , passport = require('passport')
-  , user = require('./routes/user')
-  , users = require('./lib/users')
-  , oxy_auth = require('./lib/oxygen_auth')
-	, stats = require('./routes/stats')
-  , basic_auth = require('./lib/basic_auth')
-  , error = require('./lib/error')
+    , path = require('path')
+    , mongoose = require('mongoose')
+    , routes = require('./routes')
+    , pkg = require('./routes/package')
+    , passport = require('passport')
+    , user = require('./routes/user')
+    , users = require('./lib/users')
+    , oxy_auth = require('./lib/oxygen_auth')
+    , stats = require('./routes/stats')
+    , basic_auth = require('./lib/basic_auth')
+    , error = require('./lib/error')
 	, stats_update = require('./lib/stats_update');
 
 ////////////////////////
@@ -22,7 +22,7 @@ var express = require('express')
 
   var mongoDbName = process.env.GREG_DB_NAME;
   var mongoDbUrl = process.env.GREG_DB_URL;
-	var mongoUri = mongoDbUrl + mongoDbName;	
+	var mongoUri = mongoDbUrl + '/' + mongoDbName;	
 
   mongoose.connect(mongoUri, function(err) {
     if (!err) {
@@ -51,16 +51,10 @@ var express = require('express')
   });
 
 ////////////////////////
-// Debug
-////////////////////////
-
-  users.initDebugUser();
-
-////////////////////////
 // Routes
 ////////////////////////
 
-  var auth_type =  process.env.GREG_USE_OXYGEN ? 'oxygen' : 'basic'; 
+  var auth_type =  process.env.GREG_USE_OXYGEN === 'true' ? 'oxygen' : 'basic'; 
 
   console.log('Using authorization strategy: ' + auth_type);
 
@@ -85,10 +79,6 @@ var express = require('express')
   app.get('/user_stats', stats.all_user_stats );
   app.get('/pkg_stats', stats.all_engine_stats );
   app.get('/pkg_stats/:engine', stats.all_engine_stats );
-
-// search
-
-  app.get('/search/:query', pkg.search ); 
 
 // users
 
@@ -135,6 +125,10 @@ var express = require('express')
     res.send(error.success("You are logged in."))
   });
 
+// white listing
+  app.put('/whitelist/:pkg_id', passport.authenticate(auth_type, { session: false }), pkg.whitelist_by_id);
+  app.put('/unwhitelist/:pkg_id', passport.authenticate(auth_type, { session: false }), pkg.unwhitelist_by_id);
+  app.get('/whitelist', pkg.all_whitelist);
 
 ////////////////////////
 // Statistics update
@@ -150,10 +144,11 @@ var express = require('express')
 	}, 1000 * 60 * 20 + 2000 ); // every 20 minutes 
 
 
-
 ////////////////////////
 // Server
 ////////////////////////
+
+var server;
 
   var port = process.env.PORT || 8080;
 	var keyfn = 'ssl/server.key';
@@ -165,7 +160,7 @@ var express = require('express')
 	  var crt = fs.readFileSync(crtfn, 'utf8');
 	  var cred = { key: key, cert: crt };
 
-	  https.createServer(cred, app).listen(443, function() {
+	  server = https.createServer(cred, app).listen(443, function() {
 	    console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
 	  });
 
@@ -175,8 +170,8 @@ var express = require('express')
 
 	}
 
-	app.listen( port, function() {
+    server = app.listen( port, function() {
 	  console.log("✔ Express server listening on port %d in %s mode", port, app.get('env'));
 	});
 
-
+module.exports = server;
