@@ -263,7 +263,7 @@ exports.download_last_vers = function(req, res) {
     }
 
     try {
-        if(process.env.NODE_ENV != "production"){
+        if(process.env.NODE_ENV == "test"){
             // For testing, we send the local file.
             var pkgUrl = pkg.versions[pkg.versions.length-1].url;
             var pathParse = path.parse(pkgUrl);
@@ -311,7 +311,7 @@ exports.download_vers = function(req, res) {
     for (var i = 0; i < pkg.versions.length; i++) {
       if ( version === pkg.versions[i].version ) {  
         try {
-            if(process.env.NODE_ENV != "production"){
+            if(process.env.NODE_ENV == "test"){
                     // For testing, we send the local file.
                     var pkgUrl = pkg.versions[i].url;
                     var pathParse = path.parse(pkgUrl);
