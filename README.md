@@ -79,6 +79,16 @@ Posts a new package version.  Requires an oauth authorization header validated f
 ####/pkg-vote/[id]
 Votes for a package.  Only increments if the user is authorized and never voted for the package before.
 
+###Whitelist
+White-listing is used primarily in the context of Reach. When a package is white-listed, it will be downloaded and made available to Reach instances.
 
+####/whitelist/:pkg_id
+Add a package to the white list.
+
+####/unwhitelist/:pkg_id
+Remove a package from the white list.
+
+####/whitelist
+Get all packages on the white list.
 
     
