@@ -91,4 +91,9 @@ Remove a package from the white list.
 ####/whitelist
 Get all packages on the white list.
 
-    
+## Starting and Stopping the Server
+- To start the server `./start-server`
+- To stop the server `./stop-server`
+
+## Log Files
+The package manager `./start-server` script uses [foreverjs](https://github.com/foreverjs/forever). It is configured to write three log files to `/logs`, `ERR`,`OUT`, and `LOG`. These log files are rotated weekly using [logrotate](http://www.linuxcommand.org/man_pages/logrotate8.html). The logrotate configuration file can be found in `/logrotate`.
