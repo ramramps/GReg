@@ -317,12 +317,11 @@ exports.download_vers = function(req, res) {
                     var pathParse = path.parse(pkgUrl);
                     return res.sendfile( pathParse.base, {root: path.resolve('test/mock_bucket/') } );
                 }else{
+                    pkg.downloads = pkg.downloads + 1;
+                    pkg.markModified('downloads');
+                    pkg.save();
                     return res.redirect( pkg.versions[i].url )
                 }
-                
-                pkg.downloads = pkg.downloads + 1;
-                pkg.markModified('downloads');
-                return pkg.save();
         } catch (exception) {
           return res.send(500, error.fail('Failed to redirect' ));
         }
