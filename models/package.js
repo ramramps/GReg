@@ -56,6 +56,8 @@ var Package = new Schema({
     , contents: {type: String, default:''}
     , url: {type: String, default: 'none'}
     , url_with_deps: {type: String, default: ''} 
+    , node_libraries: [{type: String, default:''}]
+    , contains_binaries: {type: Boolean, default: false}
   }]
 
   // white listing

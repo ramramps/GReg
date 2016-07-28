@@ -79,6 +79,21 @@ Posts a new package version.  Requires an oauth authorization header validated f
 ####/pkg-vote/[id]
 Votes for a package.  Only increments if the user is authorized and never voted for the package before.
 
+###Whitelist
+White-listing is used primarily in the context of Reach. When a package is white-listed, it will be downloaded and made available to Reach instances.
 
+####/whitelist/:pkg_id
+Add a package to the white list.
 
-    
+####/unwhitelist/:pkg_id
+Remove a package from the white list.
+
+####/whitelist
+Get all packages on the white list.
+
+## Starting and Stopping the Server
+- To start the server `./start-server`
+- To stop the server `./stop-server`
+
+## Log Files
+The package manager `./start-server` script uses [foreverjs](https://github.com/foreverjs/forever). It is configured to write three log files to `/logs`, `ERR`,`OUT`, and `LOG`. These log files are rotated weekly using [logrotate](http://www.linuxcommand.org/man_pages/logrotate8.html). The logrotate configuration file, and a cron job for running logrotate can be found in `/logrotate`.
