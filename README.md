@@ -1,4 +1,4 @@
-GReg REST API
+#GReg REST API
 =========
 
 ##Current state
@@ -91,9 +91,12 @@ Remove a package from the white list.
 ####/whitelist
 Get all packages on the white list.
 
-## Starting and Stopping the Server
+# Starting and Stopping the Server
 - To start the server `./start-server`
 - To stop the server `./stop-server`
 
-## Log Files
+# Log Files
 The package manager `./start-server` script uses [foreverjs](https://github.com/foreverjs/forever). It is configured to write three log files to `/logs`, `ERR`,`OUT`, and `LOG`. These log files are rotated weekly using [logrotate](http://www.linuxcommand.org/man_pages/logrotate8.html). The logrotate configuration file, and a cron job for running logrotate can be found in `/logrotate`.
+
+# Current Node Version
+V4.4.7 LTS (Recommended for most users at https://nodejs.org/en/)
