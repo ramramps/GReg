@@ -1,10 +1,10 @@
-#GReg REST API
+# Graph Registry (GReg)
 =========
 
-##Current state
-> Unstable
+## Current state
+> Stable
 
-##Response Format
+## Response Format
 All requests from the database are returned in JSON format with the following format:
 
     {
@@ -15,10 +15,10 @@ All requests from the database are returned in JSON format with the following fo
                   }
     }
 
-##GET
+## GET 
 
-###User
-####/toc/
+### User
+#### /toc/
 
 This returns the *terms of use* acceptance status for the current authenticated user. If the user is not found, this API returns `false` for `accepted` field:
 
@@ -27,44 +27,44 @@ This returns the *terms of use* acceptance status for the current authenticated 
         accepted: Boolean
     }
 
-###Package
-####/pkg/
+### Package
+#### /pkg/
 
 This returns all of the package headers in the database.
 
-####/pkgs/
+#### /pkgs/
 
 This also returns all of the package headers in the database.
 
-####/pkg/[id]
+#### /pkg/[id]
 
 This returns the unique package header associated with that [id].
 
-####/pkg_engine/[engine]
+#### /pkg_engine/[engine]
 Returns all the packages with the given engine name. (e.g. "dynamo" or "designscript")
 
-####/pkg_engine/[engine]/[name]
+#### /pkg_engine/[engine]/[name]
 
 Returns the single package with the given engine name ([engine]) and package name ([name]).  This is guaranteed to be a single unique package.
 
-###Package search
+### Package search
 
-####/pkg_search/[query]
+#### /pkg_search/[query]
 
 Returns the list of packages returned by keyword search ([query]) over the packages
 
 ####/pkg_search/[query]
 Returns the of packages returned by keyword search ([query]) over the packages
 
-##POST
+## POST
 
-####/pkg/
+#### /pkg/
 Posts a new package.  Requires an oauth authorization header validated from Oxygen.
 
-##PUT
+## PUT
 
-###User
-####/toc/
+### User
+#### /toc/
 Updates the *terms of use* acceptance status for the current authenticated user to `true`. If the call is successful, the following data is returned:
 
     {
@@ -72,23 +72,23 @@ Updates the *terms of use* acceptance status for the current authenticated user 
         accepted: Boolean
     }
 
-###Package
-####/pkg/
+### Package
+#### /pkg/
 Posts a new package version.  Requires an oauth authorization header validated from Oxygen.
 
-####/pkg-vote/[id]
+#### /pkg-vote/[id]
 Votes for a package.  Only increments if the user is authorized and never voted for the package before.
 
-###Whitelist
+### Whitelist
 White-listing is used primarily in the context of Reach. When a package is white-listed, it will be downloaded and made available to Reach instances.
 
-####/whitelist/:pkg_id
+#### /whitelist/:pkg_id
 Add a package to the white list.
 
-####/unwhitelist/:pkg_id
+#### /unwhitelist/:pkg_id
 Remove a package from the white list.
 
-####/whitelist
+#### /whitelist
 Get all packages on the white list.
 
 # Starting and Stopping the Server
