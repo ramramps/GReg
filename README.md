@@ -1,5 +1,4 @@
 # Graph Registry (GReg)
-=========
 
 ## Current state
 > Stable
