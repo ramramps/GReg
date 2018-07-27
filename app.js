@@ -14,14 +14,15 @@ var express = require('express')
     , stats = require('./routes/stats')
     , basic_auth = require('./lib/basic_auth')
     , error = require('./lib/error')
-	, stats_update = require('./lib/stats_update');
+  , stats_update = require('./lib/stats_update')
+  , gdpr = require('./lib/gdpr');
 
 ////////////////////////
 // DB
 ////////////////////////
 
-  var mongoDbName = process.env.GREG_DB_NAME;
-  var mongoDbUrl = process.env.GREG_DB_URL;
+  var mongoDbName = process.env.GREG_DB_NAME || "greg-dev";
+  var mongoDbUrl = process.env.GREG_DB_URL || "mongodb://localhost:27017/";
 	var mongoUri = mongoDbUrl + mongoDbName;	
 
   mongoose.connect(mongoUri, function(err) {
@@ -45,6 +46,7 @@ var express = require('express')
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(pkg.postPut);
+    app.use(gdpr.postPut);
 		app.use(passport.initialize());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
@@ -141,8 +143,12 @@ var express = require('express')
 
 	setInterval(function(){
 		stats_update.synchronize_user_stats(function(){ console.log('synchronize user stats'); });
-	}, 1000 * 60 * 20 + 2000 ); // every 20 minutes 
-
+  }, 1000 * 60 * 20 + 2000 ); // every 20 minutes 
+  
+////////////////////////
+// GDPR
+////////////////////////
+app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 
 ////////////////////////
 // Server
