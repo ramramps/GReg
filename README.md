@@ -3,6 +3,21 @@
 ## Current state
 > Stable
 
+## Installation
+Run the command ```npm install ``` to get the latest packages
+### The following keys must be set in the environment variables. 
+[note that this is not set in config file. This has to be in environment variables]
+ 1. GREG_DB_NAME -  Database name. 
+ 2. GREG_DB_URL - mongodb URL
+ 3. accessKeyId - AWS access key
+ 4. secretAccessKey - AWS secret key.
+ 5. NODE_ENV - Node Environment [dev / production]
+ 6. GREG_USE_OXYGEN - specify true or false. if false, basic authentication will be used.
+ 7. PORT - Port where the server will run. default: 8080
+ 8. OXYGEN_VALIDATION_URL - Validation URL for oxygen authentication
+
+ Once the enviornment variables are set, run ``` node app.js ```
+
 ## Response Format
 All requests from the database are returned in JSON format with the following format:
 
@@ -93,6 +108,10 @@ Get all packages on the white list.
 # Starting and Stopping the Server
 - To start the server `./start-server`
 - To stop the server `./stop-server`
+
+## GDPR
+
+All the required keys for GDPR is in S3. contact ``` dynamo.reach@autodesk.com``` for details.
 
 # Log Files
 The package manager `./start-server` script uses [foreverjs](https://github.com/foreverjs/forever). It is configured to write three log files to `/logs`, `ERR`,`OUT`, and `LOG`. These log files are rotated weekly using [logrotate](http://www.linuxcommand.org/man_pages/logrotate8.html). The logrotate configuration file, and a cron job for running logrotate can be found in `/logrotate`.
