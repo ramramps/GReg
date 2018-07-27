@@ -6,6 +6,7 @@
 ## Installation
 Run the command ```npm install ``` to get the latest packages
 ### The following keys must be set in the environment variables. 
+[note that this is not set in config file. This has to be in environment variables]
  1. GREG_DB_NAME -  Database name. 
  2. GREG_DB_URL - mongodb URL
  3. accessKeyId - AWS access key
