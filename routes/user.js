@@ -20,14 +20,22 @@ exports.by_name = function(req, res){
 	.populate('last_updated_package', 'name latest_version_update deprecated')
 	.exec(function(err, user) {
 
-    if ( err || !user )
-    {
-      res.send( error.fail("There are no packages") );
-      return;
-    }
+    if (err || !user) {
+        res.send(error.fail('User not found'));
+        return;
+      }
 
-    var data = error.success_with_content('Found user', user);
-    return res.send( data );
+      const sanitizedUser = {
+        username: user.username,
+        maintains: user.maintains,
+        last_updated_package: user.last_updated_package,
+        num_maintained_packages: user.num_maintained_packages,
+        num_downloads_for_maintained_packages: user.num_downloads_for_maintained_packages,
+        num_votes_for_maintained_packages: user.num_votes_for_maintained_packages,
+      };
+
+      const data = error.success_with_content('Found user', sanitizedUser);
+      return res.send(data);
 
   });
 
@@ -51,14 +59,22 @@ exports.by_id = function(req, res){
 	.populate('last_updated_package', 'name latest_version_update deprecated')
 	.exec( function(err, user) {
 
-    if ( err || !user )
-    {
-      res.send( error.fail("There are no packages") );
-      return;
-    }
+    if (err || !user) {
+        res.send(error.fail('User not found'));
+        return;
+      }
 
-    var data = error.success_with_content('Found user', user);
-    return res.send( data );
+      const sanitizedUser = {
+        username: user.username,
+        maintains: user.maintains,
+        last_updated_package: user.last_updated_package,
+        num_maintained_packages: user.num_maintained_packages,
+        num_downloads_for_maintained_packages: user.num_downloads_for_maintained_packages,
+        num_votes_for_maintained_packages: user.num_votes_for_maintained_packages,
+      };
+
+      const data = error.success_with_content('Found user', sanitizedUser);
+      return res.send(data);
 
   });
 
