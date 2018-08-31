@@ -64,6 +64,7 @@ var express = require('express')
 
   app.get('/package/:id', pkg.by_id );
   app.get('/package/:engine/:name', pkg.by_engine_and_name );
+  app.get('/package/:name', pkg.by_package_name );
 
 // download pkg contents
 

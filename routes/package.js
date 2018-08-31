@@ -474,6 +474,31 @@ exports.by_engine_and_name = function(req, res) {
 };
 
 /**
+ * Lookup a package by name.  Returns package id for matches.
+ *
+ * @param {Object} HTTP request 
+ * @param {Object} HTTP response
+ * @api public
+ */
+
+exports.by_package_name = function(req, res) {
+
+  var name = req.params.name;
+  packages.by_package_name( name, function(err, pkg) {
+
+    if ( err || !pkg )
+    {
+      return res.send( 404, error.fail("There is no package with that package name") );
+    }
+
+    var data = error.success_with_content('Found package', pkg);
+    return res.send( data );
+
+  });
+
+};
+
+/**
  * Add a new package
  *
  * @param {Object} HTTP request 
