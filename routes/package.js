@@ -492,7 +492,22 @@ exports.by_package_name = function(req, res) {
     }
 
     var data = error.success_with_content('Found package', pkg);
-    return res.send( data );
+
+    var output = [];
+
+    data.content.forEach(element => {
+
+      var match = {
+        package_name: element.name,
+        package_id: element.id,
+        maintainers: element.maintainers
+      }
+
+      output.push(match);
+
+    });
+
+    return res.send( output );
 
   });
 
