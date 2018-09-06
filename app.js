@@ -15,6 +15,7 @@ var express = require('express')
     , basic_auth = require('./lib/basic_auth')
     , error = require('./lib/error')
   , stats_update = require('./lib/stats_update')
+  , package_deletion = require('./lib/package_deletion')
   , gdpr = require('./lib/gdpr');
 
 ////////////////////////
@@ -150,6 +151,13 @@ var express = require('express')
 // GDPR
 ////////////////////////
 app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
+
+////////////////////////
+// Pkg Deletion Requests
+////////////////////////
+setInterval(function(){
+  package_deletion.remove_packages(function(data){ console.log(data); });
+}, 1000 * 60 * 60 * 24 * 7 ); // once a week
 
 ////////////////////////
 // Server
