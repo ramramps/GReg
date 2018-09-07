@@ -75,7 +75,7 @@ var express = require('express')
 
   app.get('/packages', pkg.all );
   app.get('/packages/:engine', pkg.by_engine );
-  app.get('/package_name/:name', pkg.by_package_name );
+  app.get('/package_id/:name', pkg.by_package_name );
 
 // stats
 
