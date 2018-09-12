@@ -156,8 +156,12 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 // Pkg Deletion Requests
 ////////////////////////
 setInterval(function(){
-  package_deletion.remove_packages(function(data){ console.log(data); });
-}, 1000 * 60 * 60 * 24 * 7 ); // once a week
+  package_deletion.remove_packages(function(data) { 
+    // TODO - this response should be sent to slack notification channel
+    console.log(data); 
+  });
+}, 1000 *60 * 60 * 24 * 7 ); // once a week
+
 
 ////////////////////////
 // Server
