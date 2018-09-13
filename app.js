@@ -16,6 +16,7 @@ var express = require('express')
     , error = require('./lib/error')
   , stats_update = require('./lib/stats_update')
   , package_deletion = require('./lib/package_deletion')
+  , request = require('request')
   , gdpr = require('./lib/gdpr');
 
 ////////////////////////
@@ -157,8 +158,19 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 ////////////////////////
 setInterval(function(){
   package_deletion.remove_packages(function(data) { 
-    // TODO - this response should be sent to slack notification channel
-    console.log(data); 
+    // Data returned from callback will be sent to Slack #dynamo-notify
+    var options = {
+      uri: 'Webhook Url',
+      method: 'POST',
+      json: {
+        "text" : data.toString()
+      }
+    };
+    
+    request(options, function (error, response, body) {
+      if(error) { console.log(error); }
+      else { console.log(body) }
+    });
   });
 }, 1000 *60 * 60 * 24 * 7 ); // once a week
 
