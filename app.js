@@ -17,6 +17,7 @@ var express = require('express')
   , stats_update = require('./lib/stats_update')
   , package_deletion = require('./lib/package_deletion')
   , request = require('request')
+  , secrets = require("./secrets")
   , gdpr = require('./lib/gdpr');
 
 ////////////////////////
@@ -156,24 +157,28 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 ////////////////////////
 // Pkg Deletion Requests
 ////////////////////////
-setInterval(function(){
-  package_deletion.remove_packages(function(data) { 
-    // Data returned from callback will be sent to Slack #dynamo-notify
-    var options = {
-      uri: 'Webhook Url',
-      method: 'POST',
-      json: {
-        "text" : data.toString()
-      }
-    };
-    
-    request(options, function (error, response, body) {
-      if(error) { console.log(error); }
-      else { console.log(body) }
-    });
-  });
-}, 1000 *60 * 60 * 24 * 7 ); // once a week
 
+let packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
+
+if(packageDeletionEnabled) {
+  setInterval(function(){
+    package_deletion.remove_packages(function(data) { 
+      // Data returned from callback will be sent to Slack #dynamo-notify
+      var options = {
+        uri: secrets.mailgun.dynamoNotify,
+        method: 'POST',
+        json: {
+          "text" : data.toString()
+        }
+      };
+      
+      request(options, function (error, response, body) {
+        if(error) { console.log(error); }
+        else { console.log('Webhook status: ' + body) }
+      });
+    });
+  }, 1000 * 60 * 60 * 24); // daily
+}
 
 ////////////////////////
 // Server
