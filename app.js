@@ -17,7 +17,7 @@ var express = require('express')
   , stats_update = require('./lib/stats_update')
   , package_deletion = require('./lib/package_deletion')
   , request = require('request')
-  , secrets = require("./secrets")
+  , secrets = require("./lib/secrets")
   , gdpr = require('./lib/gdpr');
 
 ////////////////////////
