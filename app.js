@@ -15,6 +15,9 @@ var express = require('express')
     , basic_auth = require('./lib/basic_auth')
     , error = require('./lib/error')
   , stats_update = require('./lib/stats_update')
+  , package_deletion = require('./lib/package_deletion')
+  , request = require('request')
+  , secrets = require("./lib/secrets")
   , gdpr = require('./lib/gdpr');
 
 ////////////////////////
@@ -74,6 +77,7 @@ var express = require('express')
 
   app.get('/packages', pkg.all );
   app.get('/packages/:engine', pkg.by_engine );
+  app.get('/package_id/:name', pkg.by_package_name );
 
 // stats
 
@@ -149,6 +153,32 @@ var express = require('express')
 // GDPR
 ////////////////////////
 app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
+
+////////////////////////
+// Pkg Deletion Requests
+////////////////////////
+
+let packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
+
+if(packageDeletionEnabled) {
+  setInterval(function(){
+    package_deletion.remove_packages(function(data) { 
+      // Data returned from callback will be sent to Slack #dynamo-notify
+      var options = {
+        uri: secrets.mailgun.dynamoNotify,
+        method: 'POST',
+        json: {
+          "text" : data.toString()
+        }
+      };
+      
+      request(options, function (error, response, body) {
+        if(error) { console.log(error); }
+        else { console.log('Webhook status: ' + body) }
+      });
+    });
+  }, 1000 * 60 * 60 * 24); // daily
+}
 
 ////////////////////////
 // Server
