@@ -158,7 +158,7 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 // Pkg Deletion Requests
 ////////////////////////
 
-let packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
+var packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
 
 if(packageDeletionEnabled) {
   setInterval(function(){
