@@ -41,7 +41,7 @@ function getRandId() {
  * @param {*} authDetails endpoint and auth details for a product
  */
 function constructMockWebhookPayload(task, authDetails) {
-    var date = new Date();
+    var date = "aStableDate";
     var payload = {
         'version': 1,
         'hook': {
@@ -100,6 +100,8 @@ describe('POST /gdprDeleteRequest', function () {
         var task = generateRandomTask();
         task.user_email = "ЕЀЁName@gmail.com";
         task.user_name = "ЕЀЁName";
+        task.user_o2_id = "aStableID";
+        task.number = "aStableID"
 
         var name = task.user_name;
         var email = task.user_email;
@@ -112,7 +114,7 @@ describe('POST /gdprDeleteRequest', function () {
             client_id: "a client id",
             callback_url: "updateTaskURL"
         };
-        var signature = "INCORRECT_SIGNATURE";
+        var signature = "sha1hash=90ec17a14d60deb97e0c1323133a7d5cfb0da03d";
         var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
 
         request
