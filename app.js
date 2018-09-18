@@ -158,9 +158,14 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 // Pkg Deletion Requests
 ////////////////////////
 
+// Check if package deletion functionality is enabled on the machine
 var packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
 
-if(packageDeletionEnabled) {
+if(packageDeletionEnabled === false) { console.log("Package manager deletion tool is disabled")}
+
+else if(packageDeletionEnabled) {
+  console.log("Package manager deletion tool is enabled")
+
   setInterval(function(){
     package_deletion.remove_packages(function(data) { 
       // Data returned from callback will be sent to Slack #dynamo-notify
