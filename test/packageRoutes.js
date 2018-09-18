@@ -46,7 +46,7 @@ var ds_pkg_datas = [];
 describe('Package route tests.', function(){
     
     before(function(done){
-        user.initDebugUser();
+        user.initDebugUser("test","testemail","testId");
         done();
     })
     
