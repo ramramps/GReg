@@ -161,9 +161,7 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 // Check if package deletion functionality is enabled on the machine
 var packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
 
-if(packageDeletionEnabled === false) { console.log("Package manager deletion tool is disabled")}
-
-else if(packageDeletionEnabled) {
+if(packageDeletionEnabled) {
   console.log("Package manager deletion tool is enabled")
 
   setInterval(function(){
@@ -184,6 +182,7 @@ else if(packageDeletionEnabled) {
     });
   }, 1000 * 60 * 60 * 24); // daily
 }
+else { console.log("Package manager deletion tool is disabled") }
 
 ////////////////////////
 // Server
