@@ -158,9 +158,14 @@ app.post('/gdprDeleteRequest', gdpr.handleGDPRRRequest);
 // Pkg Deletion Requests
 ////////////////////////
 
+// Check if package deletion functionality is enabled on the machine
 var packageDeletionEnabled = process.env.PACKAGE_DELETION_ENABLED === 'true' ? true : false; 
+// Determine if running on Prod or Dev
+var environment = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV'; 
 
 if(packageDeletionEnabled) {
+  console.log("Package manager deletion tool is enabled")
+
   setInterval(function(){
     package_deletion.remove_packages(function(data) { 
       // Data returned from callback will be sent to Slack #dynamo-notify
@@ -168,7 +173,7 @@ if(packageDeletionEnabled) {
         uri: secrets.mailgun.dynamoNotify,
         method: 'POST',
         json: {
-          "text" : data.toString()
+          "text" : environment + ': ' + data.toString()
         }
       };
       
@@ -179,6 +184,7 @@ if(packageDeletionEnabled) {
     });
   }, 1000 * 60 * 60 * 24); // daily
 }
+else { console.log("Package manager deletion tool is disabled") }
 
 ////////////////////////
 // Server
