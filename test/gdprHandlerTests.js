@@ -91,21 +91,23 @@ describe('POST /gdprDeleteRequest', function () {
         var email = task.user_email;
         var id = task.user_o2_id;
         //generate test user.
-        user.initDebugUser(name, email, id);
+        user.initDebugUser(name, email, id, () => {
+            var authDetails = {
+                webhook_endpoint: "gdprDeleteRequestHandler",
+                client_id: "a client id",
+                callback_url: "updateTaskURL"
+            };
+            var signature = "INCORRECT_SIGNATURE";
+            var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
 
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var signature = "INCORRECT_SIGNATURE";
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+            request
+                .post('/gdprDeleteRequest')
+                .set('x-adsk-signature', signature)
+                .send(testWebhookPayload)
+                .expect(403, done);
 
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect(403, done);
+        });
+
 
     });
 
@@ -121,22 +123,23 @@ describe('POST /gdprDeleteRequest', function () {
         var email = task.user_email;
         var id = task.user_o2_id;
         //generate test user.
-        user.initDebugUser(name, email, id);
+        user.initDebugUser(name, email, id, () => {
 
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var signature = "sha1hash=90ec17a14d60deb97e0c1323133a7d5cfb0da03d";
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+            var authDetails = {
+                webhook_endpoint: "gdprDeleteRequestHandler",
+                client_id: "a client id",
+                callback_url: "updateTaskURL"
+            };
+            var signature = "sha1hash=90ec17a14d60deb97e0c1323133a7d5cfb0da03d";
+            var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
 
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect("GDPR Package Manager : Delete request for the task " + task.number)
-            .expect(200, done);
+            request
+                .post('/gdprDeleteRequest')
+                .set('x-adsk-signature', signature)
+                .send(testWebhookPayload)
+                .expect("GDPR Package Manager : Delete request for the task " + task.number)
+                .expect(200, done);
+        });
 
     });
 
@@ -152,23 +155,23 @@ describe('POST /gdprDeleteRequest', function () {
         var email = task.user_email;
         var id = task.user_o2_id;
         //generate test user.
-        user.initDebugUser(name, email, id);
+        user.initDebugUser(name, email, id, () => {
 
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
-        var signature = generateHash(testWebhookPayload);
+            var authDetails = {
+                webhook_endpoint: "gdprDeleteRequestHandler",
+                client_id: "a client id",
+                callback_url: "updateTaskURL"
+            };
+            var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+            var signature = generateHash(testWebhookPayload);
 
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect("GDPR Package Manager : Delete request for the task " + task.number)
-            .expect(200, done);
-
+            request
+                .post('/gdprDeleteRequest')
+                .set('x-adsk-signature', signature)
+                .send(testWebhookPayload)
+                .expect("GDPR Package Manager : Delete request for the task " + task.number)
+                .expect(200, done);
+        });
     });
 
     it('should close task if user is not in database', function (done) {
@@ -183,43 +186,7 @@ describe('POST /gdprDeleteRequest', function () {
         var email = task.user_email;
         var id = task.user_o2_id;
         //make sure test user is gone.
-        user.cleanupDebugUser(name);
-
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
-        var signature = generateHash(testWebhookPayload);
-
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect("Task updated")
-            .expect(200, done);
-
-    });
-
-    it(`should close task if user is not in database even
-     if they have empty email and db contains another user with empty email`, function (done) {
-
-            var task = generateRandomTask();
-            task.user_email = "";
-            task.user_name = "aValidName";
-            task.user_o2_id = "ao2StableID";
-            task.number = "aStableID"
-
-            var name = task.user_name;
-            var email = task.user_email;
-            var id = task.user_o2_id;
-
-            //make sure test user is gone.
-            user.cleanupDebugUser(name);
-            user.initDebugUser("anotherUser", "", "anotherUserId");
-
-
+        user.cleanupDebugUser(name, () => {
             var authDetails = {
                 webhook_endpoint: "gdprDeleteRequestHandler",
                 client_id: "a client id",
@@ -234,7 +201,44 @@ describe('POST /gdprDeleteRequest', function () {
                 .send(testWebhookPayload)
                 .expect("Task updated")
                 .expect(200, done);
+        });
 
+
+
+    });
+
+   it(`should close task if user is not in database even
+     if they have empty email and db contains another user with empty email`, function (done) {
+
+            var task = generateRandomTask();
+            task.user_email = "";
+            task.user_name = "aValidName";
+            task.user_o2_id = "ao2StableID";
+            task.number = "aStableID"
+
+            var name = task.user_name;
+            var email = task.user_email;
+            var id = task.user_o2_id;
+
+            //make sure test user is gone.
+            user.cleanupDebugUser(name, () => {
+                user.initDebugUser("anotherUser", "", "anotherUserId", () => {
+                    var authDetails = {
+                        webhook_endpoint: "gdprDeleteRequestHandler",
+                        client_id: "a client id",
+                        callback_url: "updateTaskURL"
+                    };
+                    var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+                    var signature = generateHash(testWebhookPayload);
+
+                    request
+                        .post('/gdprDeleteRequest')
+                        .set('x-adsk-signature', signature)
+                        .send(testWebhookPayload)
+                        .expect("Task updated")
+                        .expect(200, done);
+                });
+            });
         });
 
     it(`should close task if user is not in database even
@@ -251,25 +255,29 @@ describe('POST /gdprDeleteRequest', function () {
             var id = task.user_o2_id;
 
             //make sure test user is gone.
-            user.cleanupDebugUser(name);
-            user.initDebugUser("anotherUser", "anotherEmail", "");
+            user.cleanupDebugUser(name, () => {
+                user.initDebugUser("anotherUser", "anotherEmail", "", () => {
+                    var authDetails = {
+                        webhook_endpoint: "gdprDeleteRequestHandler",
+                        client_id: "a client id",
+                        callback_url: "updateTaskURL"
+                    };
+                    var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+                    var signature = generateHash(testWebhookPayload);
 
-
-            var authDetails = {
-                webhook_endpoint: "gdprDeleteRequestHandler",
-                client_id: "a client id",
-                callback_url: "updateTaskURL"
-            };
-            var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
-            var signature = generateHash(testWebhookPayload);
-
-            request
-                .post('/gdprDeleteRequest')
-                .set('x-adsk-signature', signature)
-                .send(testWebhookPayload)
-                .expect("Task updated")
-                .expect(200, done);
+                    request
+                        .post('/gdprDeleteRequest')
+                        .set('x-adsk-signature', signature)
+                        .send(testWebhookPayload)
+                        .expect("Task updated")
+                        .expect(200, done);
+                });
+            });
         });
+
+
+
+
 
 
     it('should respond with 200 and close task if user has empty email and o2-id', function (done) {
@@ -285,23 +293,22 @@ describe('POST /gdprDeleteRequest', function () {
         var id = task.user_o2_id;
 
         //make sure test user is gone.
-        user.cleanupDebugUser(name);
+        user.cleanupDebugUser(name, () => {
+            var authDetails = {
+                webhook_endpoint: "gdprDeleteRequestHandler",
+                client_id: "a client id",
+                callback_url: "updateTaskURL"
+            };
+            var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+            var signature = generateHash(testWebhookPayload);
 
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
-        var signature = generateHash(testWebhookPayload);
-
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect("Task updated")
-            .expect(200, done);
-
+            request
+                .post('/gdprDeleteRequest')
+                .set('x-adsk-signature', signature)
+                .send(testWebhookPayload)
+                .expect("Task updated")
+                .expect(200, done);
+        });
     });
 
     it('should respond with 200 and close task if user has empty email and o2-id and another user is in db with empty data', function (done) {
@@ -317,24 +324,24 @@ describe('POST /gdprDeleteRequest', function () {
         var id = task.user_o2_id;
 
         //make sure test user is gone.
-        user.cleanupDebugUser(name);
-        user.initDebugUser("anotherUser", "", "");
+        user.cleanupDebugUser(name, () => {
+            user.initDebugUser("anotherUser", "", "", () => {
+                var authDetails = {
+                    webhook_endpoint: "gdprDeleteRequestHandler",
+                    client_id: "a client id",
+                    callback_url: "updateTaskURL"
+                };
+                var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
+                var signature = generateHash(testWebhookPayload);
 
-
-        var authDetails = {
-            webhook_endpoint: "gdprDeleteRequestHandler",
-            client_id: "a client id",
-            callback_url: "updateTaskURL"
-        };
-        var testWebhookPayload = constructMockWebhookPayload(task, authDetails);
-        var signature = generateHash(testWebhookPayload);
-
-        request
-            .post('/gdprDeleteRequest')
-            .set('x-adsk-signature', signature)
-            .send(testWebhookPayload)
-            .expect("Task updated")
-            .expect(200, done);
+                request
+                    .post('/gdprDeleteRequest')
+                    .set('x-adsk-signature', signature)
+                    .send(testWebhookPayload)
+                    .expect("Task updated")
+                    .expect(200, done);
+            });
+        });
 
     });
 
